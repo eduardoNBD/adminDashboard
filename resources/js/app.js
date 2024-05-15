@@ -104,6 +104,56 @@ function hidePasswordInput(input){
     input.type = input.type == "password" ? "text" : "password";
 }
 
+function reformatDate(datetime,format = "d/m/y"){
+    let arrDateTime = datetime.split(" "); 
+    let date = arrDateTime[0].split("-");   
+    let finalDate = new Date(date[0],parseInt(date[1])-1,parseInt(date[2])); 
+    let diffDays  = datediff(new Date().setHours(0,0,0),finalDate)
+    let finalString = "";
+     
+    if(Math.abs(diffDays) < 2){
+        switch(diffDays){
+            case -1:
+                finalString+= "Ayer";
+            break;
+            case 0: 
+                finalString+= "Hoy";
+            break;
+            case 1:
+                finalString+= "Mañana";
+            break; 
+        }
+    }else{
+        for(var i = 0; i < format.length; i++ )
+        {
+            switch(format[i].toLowerCase()){
+                case "y":
+                    finalString+= finalDate.getFullYear();
+                break;
+                case "m": 
+                    finalString+= finalDate.getMonth() < 10 ? "0"+(finalDate.getMonth()+1) : (finalDate.getMonth()+1);
+                break;
+                case "d":
+                    finalString+= finalDate.getDate() < 10 ? "0"+finalDate.getDate() : finalDate.getDate();
+                break;
+                default:
+                    finalString+=format[i];
+                break
+            }
+        }
+    }
+
+    if(arrDateTime[1]){
+        finalString+=" "+arrDateTime[1];
+    }
+
+    return finalString;
+}
+
+function datediff(first, second) {        
+    return Math.round((second - first) / (1000 * 60 * 60 * 24));
+}
+
 //Init
 
 window.onresize = resizeWindow;

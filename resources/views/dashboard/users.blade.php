@@ -42,10 +42,10 @@
             <hr>
             <section id="userList" class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:p-4">  
             </section>
+            <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                         
+            </nav>
         </div> 
-        <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-                     
-        </nav>
     </div>
 </section>
 <div id="popup-modal" tabindex="-1" class="hidden flex bg-[#0000006b] overflow-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full">

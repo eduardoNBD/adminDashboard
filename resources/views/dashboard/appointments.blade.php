@@ -180,9 +180,9 @@
                 
                 data.forEach(appointment => { 
                     let rowHTML = '<tr class="border-b border-gray-200">'+
-                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"><a href="#" class="font-bold text-[#526270]">#'+appointment.identifier+'</a></td>'+
-                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"><a href="#" class="font-bold text-[#526270]">'+(appointment.client_id != null ? appointment.client_id : "Sin cliente Definido")+'</a></td>'+
-                            '<td class="px-4 py-3 "><span class="block text-center md:inline-block rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">'+dateFormat(appointment.date+' '+appointment.begin)+'</span></td>'+
+                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"><a href="{{$menu['baseURL'].$menu['route']['appointments']['edit']('')}}'+appointment.id+'" class="font-bold text-[#526270]">#'+appointment.identifier+'</a></td>'+
+                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap font-bold text-[#526270]">'+(appointment.client_id != null ? appointment.client_id : "Sin cliente Definido")+'</td>'+
+                            '<td class="px-4 py-3 "><span class="block text-center md:inline-block rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">'+reformatDate(appointment.date+' '+appointment.begin)+'</span></td>'+
                             '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell">'+(appointment.service_id != null ? appointment.service_id : "Sin servicio Definido")+'</td>'+
                             '<td class="px-4 py-3 flex items-center justify-end">'+
                                 '<div class="group relative">'+
@@ -273,11 +273,6 @@
             const s = document.querySelector("#simple-search").value;
             window.history.pushState({}, 'Citas - Dashboard', "{{$menu['baseURL'].$menu['route']['appointments']['root']}}/"+currentPage+"?s="+s);
             getPagination(currentPage);
-        }
-
-        function dateFormat(date){
-            reformatDate = date;
-            return reformatDate;
         }
         
         if(document.querySelector("#simple-search").value)

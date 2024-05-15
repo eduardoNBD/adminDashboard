@@ -11,11 +11,44 @@ use App\Models\Product;
 use App\Models\Client;
 use App\Models\User;
 use App\Models\Appointment;
+use App\Models\Log;
 
 class DashboardController extends Controller
 {
     public function index(){
-        return view("dashboard.home");
+        $appointment = new Appointment;
+
+        $appointments = $appointment->select([
+                                        'appointments.id',
+                                        'appointments.identifier',
+                                        'appointments.date',
+                                        'appointments.begin',
+                                        'services.name as service_id',
+                                        DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client_id")
+                                    ])
+                                    ->where("appointments.status",1)
+                                    ->where("appointments.date",">=",date("Y-m-d"))
+                                    ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
+                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id')->orderBy('date')->orderBy('begin')->take(5)->get();
+        
+        $appoToday = $appointment->select([DB::raw("COUNT(id) as total")])
+                                    ->where("appointments.status","!=",0)
+                                    ->where("appointments.date",date("Y-m-d"))->get()[0]->total;
+
+        $appoPendi = $appointment->select([DB::raw("COUNT(id) as total")])
+                                    ->where("appointments.status",1)
+                                    ->where("appointments.date",date("Y-m-d"))->get()[0]->total;
+
+        $appoFinis = $appointment->select([DB::raw("COUNT(id) as total")])
+                                    ->where("appointments.status",2)
+                                    ->where("appointments.date",date("Y-m-d"))->get()[0]->total;
+
+        return view("dashboard.home", [ 
+            'appointments' => $appointments,
+            'appoToday' => $appoToday, 
+            'appoPendi' => $appoPendi, 
+            'appoFinis' => $appoFinis, 
+        ]);
     }
 
     public function appointments($page = 1 ){
@@ -173,7 +206,19 @@ class DashboardController extends Controller
         $services = Service::where("status",1)->get();
         $products = Product::where("status",1)->get();
         $clients = Client::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->get();
-        $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->get();
+        $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->where("role",0)->get();
+        $appointments = Appointment::select([DB::raw("CONCAT('#',identifier) as name"),
+                                            'appointments.id', 
+                                            'appointments.date',
+                                            'appointments.begin',
+                                            'appointments.service_id',
+                                            'appointments.client_id',
+                                            'appointments.user_id',
+                                            'appointments.notes',])
+                                    ->where("appointments.status",1)
+                                    ->where("appointments.date",">=",date("Y-m-d"))
+                                    ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
+                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id')->get();;
 
         return view("dashboard.selling", [
             'title' => $title, 
@@ -181,6 +226,8 @@ class DashboardController extends Controller
             'products' => $products,
             'clients' => $clients,
             'users' => $users,
+            'appointments' => $appointments,
+            'id' => $id,
         ]);
     }
 
@@ -220,10 +267,12 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function profile(){
+    public function profile(){ 
+        
         return view("dashboard.profile", [
             'user' => Auth::user(), 
             'roles' => User::getRoles(),
+            'logs' => Log::where("user",Auth::user()->id)->get(),
         ]);
     }
 }

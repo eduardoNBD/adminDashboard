@@ -6,43 +6,21 @@
     <hr class="mt-2"/>
     <table class="w-full text-sm text-left text-gray-700"> 
         <tbody>
-            <tr class="border-b">
-                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
-                    <a href="#" class="font-bold text-[#526270] block">Cliente A</a>
-                    Servicio A
-                </th>
-                <th scope="row" class="px-4 py-3 font-medium text-right whitespace-nowrap"><span class="rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">Hoy 9:30 am</span></th>
-            </tr>
-            <tr class="border-b">
-                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
-                    <a href="#" class="font-bold text-[#526270] block">Cliente E</a>
-                    Servicio A
-                </th>
-                <th scope="row" class="px-4 py-3 font-medium text-right whitespace-nowrap"><span class="rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">Hoy 2:30 pm</span></th>
-            </tr>
-            <tr class="border-b">
-                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
-                    <a href="#" class="font-bold text-[#526270] block">Cliente B</a> 
-                    Servicio A
-                </th>
-                <th scope="row" class="px-4 py-3 font-medium text-right whitespace-nowrap"><span class="rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">Hoy 5:00 pm</span></th>
-            </tr>
-            <tr class="border-b">
-                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
-                    <a href="#" class="font-bold text-[#526270] block">Cliente C</a>
-                    Servicio A
-                </th>
-                <th scope="row" class="px-4 py-3 font-medium text-right whitespace-nowrap"><span class="rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">Hoy 7:00 pm</span></th>
-            </tr>
-            <tr class="border-b">
-                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
-                    <a href="#" class="font-bold text-[#526270] block">Cliente D</a>
-                    Servicio A
-                </th>
-                <th scope="row" class="px-4 py-3 font-medium text-right whitespace-nowrap">
-                    <span class="rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">Mañana 10:00 am</span>
-                </th>
-            </tr> 
+            @if (count($data))
+                @foreach ($data as $row) 
+                    <tr class="border-b">
+                        <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
+                            <a href="{{$menu['baseURL'].$menu['route']['appointments']['edit']($row->id)}}" class="font-bold text-[#526270] block">{{$row->client_id}}</a>
+                            {{$row->service_id}}
+                        </td>
+                        <td scope="row" class="px-4 py-3 font-medium text-right whitespace-nowrap"><span class="rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">{{App\Http\Controllers\Controller::parseDate($row->date." ".$row->begin)}}</span></td>
+                    </tr>
+                @endforeach
+            @else 
+                <tr>
+                    <td colspan="2"><h1 class="text-center py-4 text-4xl">Sin Citas Proximas</h1></td>
+                </tr>
+            @endif
         </tbody>
     </table> 
 </section>

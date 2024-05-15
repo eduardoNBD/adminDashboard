@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AppointmentsController;
+use App\Http\Controllers\SellingsController;
 use App\Http\Middleware\Authenticate;
 
 /*
@@ -96,3 +97,9 @@ Route::post("/appointments/create",[AppointmentsController::class,"create"])->mi
 Route::post("/appointments/update/{id}",[AppointmentsController::class,"update"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
 Route::get("/appointments/delete/{id}",[AppointmentsController::class,"delete"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
 Route::get("/appointments/list",[AppointmentsController::class,"list"])->middleware('auth');
+
+//ENDPOINTS APPOINTMENTS    
+Route::post("/sellings/create",[SellingsController::class,"create"])->middleware('auth');
+Route::post("/sellings/update/{id}",[SellingsController::class,"update"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
+Route::get("/sellings/delete/{id}",[SellingsController::class,"delete"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
+Route::get("/sellings/list",[SellingsController::class,"list"])->middleware('auth');

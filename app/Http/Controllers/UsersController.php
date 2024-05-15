@@ -99,7 +99,7 @@ class UsersController extends Controller
                 
             }
 
-            return response()->json(["status" => 0, "message" => $messages.'--'.$id]);
+            return response()->json(["status" => 0, "message" => $messages ]);
         }
 
         $user = User::findOr($id, function () {

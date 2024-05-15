@@ -8,7 +8,7 @@
             @include('../components/textContent', [
                 'color' => 'bg-gradient-to-r from-violet-700 to-violet-500',
                 'title' => 'Numero de citas para hoy',
-                'subtitle' => '4 Citas',
+                'subtitle' => $appoToday.' Citas',
                 'icon' =>
                     '<svg class="ml-auto text-white" xmlns="http://www.w3.org/2000/svg"  width="50"  height="50"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.4"  stroke-linecap="round"  stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.5 21h-4.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h10" /><path d="M18 18m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M18 16.5v1.5l.5 .5" /></svg>',
             ])
@@ -16,8 +16,8 @@
         <section class="sm:col-span-12 md:col-span-4">
             @include('../components/textContent', [
                 'color' => 'bg-gradient-to-r from-purple-700 to-purple-500',
-                'title' => 'Numero de citas para hoy',
-                'subtitle' => '4 Citas',
+                'title' => 'Numero de citas pendientes hoy',
+                'subtitle' => $appoPendi.' Citas',
                 'icon' =>
                     '<svg class="ml-auto text-white" xmlns="http://www.w3.org/2000/svg"  width="50"  height="50"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.4"  stroke-linecap="round"  stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.5 21h-4.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h10" /><path d="M18 18m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M18 16.5v1.5l.5 .5" /></svg>',
             ])
@@ -25,14 +25,14 @@
         <section class="sm:col-span-12 md:col-span-4">
             @include('../components/textContent', [
                 'color' => 'bg-gradient-to-r from-purple-700 to-purple-500',
-                'title' => 'Numero de citas para hoy',
-                'subtitle' => '4 Citas',
+                'title' => 'Numero de citas Atendidas hoy',
+                'subtitle' => $appoFinis.' Citas',
                 'icon' =>
                     '<svg class="ml-auto text-white" xmlns="http://www.w3.org/2000/svg"  width="50"  height="50"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.4"  stroke-linecap="round"  stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.5 21h-4.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h10" /><path d="M18 18m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M18 16.5v1.5l.5 .5" /></svg>',
             ])
         </section>
         <section class="sm:col-span-12 md:col-span-4">
-            @include('../components/recentsAppointment', ['title' => 'Proximas citas'])
+            @include('../components/recentsAppointment', ['title' => 'Proximas citas', 'data' => $appointments])
         </section>
         <section class="sm:col-span-12 md:col-span-4">
             @include('../components/pendingPayments', ['title' => 'Pagos pendientes del periodo:'])

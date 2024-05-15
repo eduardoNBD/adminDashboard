@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use App\Models\Appointment;
+use App\Models\Selling;
 use App\Models\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class AppointmentsController extends Controller
+class SellingsController extends Controller
 {
     public function create(Request $request){
-        
+        /*
         $rules = [  
             'date' => 'required|date|after_or_equal:'.date("Y-m-d"),
             'begin'  => 'required',
@@ -99,9 +99,9 @@ class AppointmentsController extends Controller
         $log->detail = json_encode(["id" => $appointment->id,"identifier" => $appointment->identifier]);
         $log->user = Auth::id();
         
-        $log->save();
+        $log->save();*/
         
-        return response()->json(["status" => 1, "message" => "Cita registrada"]);
+        return response()->json(["status" => 0, "message" => "Cita registrada"]);
     } 
 
     public function update(Request $request, $id){

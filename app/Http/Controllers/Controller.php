@@ -51,4 +51,54 @@ class Controller extends BaseController
 
         return $dest;
     }
+    
+    public static function parseDate($date, $format = "d/m/y H:i"){
+        $now = time(); 
+        $currDate = strtotime($date);
+        $datediff = round(($currDate - $now )/ (60 * 60 * 24));
+
+        if(abs($datediff) < 2){
+            $finalString = match (true) {
+                $datediff == -1 => "Ayer", 
+                $datediff == 0 => "Hoy", 
+                $datediff == 1 => "Mañana", 
+            };
+
+            $finalString.= " ".date("H:i",$currDate);
+        }
+        else{
+            $finalString = date($format, strtotime($date));
+        }
+
+        echo $finalString;
+    }
+
+    public static function timeAgo($date){
+        $finalString = "";
+
+        $now = new \DateTime;
+        $ago = new \DateTime($date);
+        $diff = $now->diff($ago); 
+
+        if($diff->y != 0){
+            $finalString = "Hace ".$diff->y.($diff->y == 1 ? " año" : " años");
+        }
+        elseif($diff->m != 0){
+            $finalString = "Hace ".$diff->m.($diff->m == 1 ? " mes" : " meses");
+        }
+        elseif($diff->d != 0){
+            $finalString = "Hace ".$diff->d.($diff->d == 1 ? " día" : " días");
+        }
+        elseif($diff->h != 0){
+            $finalString = "Hace ".$diff->h.($diff->h == 1 ? " hora" : " horas");
+        }
+        elseif($diff->i != 0){
+            $finalString = "Hace ".$diff->i.($diff->i == 1 ? " minuto" : " minutos");
+        }
+        else{
+            $finalString = "Hace poco";
+        }
+
+        return $finalString; 
+    }
 }
