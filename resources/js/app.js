@@ -1,8 +1,8 @@
 //VARS
 let isOpen = false;
+const monthsNamesEsp = ["Enero","Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
 //Functions 
-
 const resizeWindow = (event) => { 
     if(window.innerWidth < 768)
     {
@@ -104,11 +104,12 @@ function hidePasswordInput(input){
     input.type = input.type == "password" ? "text" : "password";
 }
 
-function reformatDate(datetime,format = "d/m/y"){
-    let arrDateTime = datetime.split(" "); 
-    let date = arrDateTime[0].split("-");   
-    let finalDate = new Date(date[0],parseInt(date[1])-1,parseInt(date[2])); 
-    let diffDays  = datediff(new Date().setHours(0,0,0),finalDate)
+function reformatDate(datetime,format = "d/m/y"){console.log(datetime);
+    
+    let finalDate = new Date(datetime); 
+    finalDate     = new Date(finalDate.toLocaleString("en-US", {timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}));
+
+    let diffDays  = datediff(new Date(),finalDate)
     let finalString = "";
      
     if(Math.abs(diffDays) < 2){
@@ -143,11 +144,7 @@ function reformatDate(datetime,format = "d/m/y"){
         }
     }
 
-    if(arrDateTime[1]){
-        finalString+=" "+arrDateTime[1];
-    }
-
-    return finalString;
+    return finalString+" "+(finalDate.getHours() < 10 ? "0"+finalDate.getHours() : finalDate.getHours())+":"+(finalDate.getMinutes() < 10 ? "0"+finalDate.getMinutes() : finalDate.getMinutes());
 }
 
 function datediff(first, second) {        

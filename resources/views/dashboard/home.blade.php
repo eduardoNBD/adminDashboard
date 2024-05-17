@@ -3,7 +3,7 @@
 @section('title', 'Home - Dashboard') 
 
 @section('content')
-    <div class="grid gap-3 grid-cols-1 md:grid-cols-12">
+    <div class="grid gap-3 grid-cols-1 md:grid-cols-12"> 
         <section class="sm:col-span-12 md:col-span-4">
             @include('../components/textContent', [
                 'color' => 'bg-gradient-to-r from-violet-700 to-violet-500',
@@ -35,7 +35,7 @@
             @include('../components/recentsAppointment', ['title' => 'Proximas citas', 'data' => $appointments])
         </section>
         <section class="sm:col-span-12 md:col-span-4">
-            @include('../components/pendingPayments', ['title' => 'Pagos pendientes del periodo:'])
+            @include('../components/pendingPayments', ['title' => 'Top 5 ventas de empleados de la semana', 'data' =>  $profitsWeeks])
         </section>
         <div class="sm:col-span-12 md:col-span-4">
             <section class="bg-white relative shadow-md rounded-lg p-4 h-full">
@@ -49,20 +49,20 @@
                 </div>
             </section>
         </div>
-    </div>
+    </div>  
 @stop
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-
+        const chartValues  = {!! json_encode($chartValues)!!}; 
         const ctx = document.getElementById('myChart').getContext("2d");;
         const cfg = {
             type: 'bar',
             data: {
-                    labels: ['Dic', 'Ene', 'Feb', 'Mar'],
+                    labels: chartValues.map(element => monthsNamesEsp[element.month-1]),
                     datasets: [{ 
-                        data: [3500, 4400, 2400, 3400], 
+                        data: chartValues.map(element => element.total), 
                         backgroundColor:["#4f46e5"],
                         hoverBackgroundColor:["#6d28d9"]
                     }
@@ -72,8 +72,18 @@
                 plugins: {
                     legend: {
                         display: false, 
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function (tooltipItem, data) { 
+                                return tooltipItem[0].label;
+                            },
+                            label: function (tooltipItem, data) { 
+                                return 'Total: $' + tooltipItem.formattedValue;
+                            }
+                        }
                     }
-                }
+                },
             }
         };
         

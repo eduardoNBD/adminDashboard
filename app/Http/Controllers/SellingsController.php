@@ -6,54 +6,65 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use App\Models\Selling;
 use App\Models\Log;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator; 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule; 
 
 class SellingsController extends Controller
 {
     public function create(Request $request){
-        /*
+        
         $rules = [  
-            'date' => 'required|date|after_or_equal:'.date("Y-m-d"),
-            'begin'  => 'required',
-            'end'  => 'required|after:begin',  
+            'type.*' => 'required|in:Servicios,Productos', 
+            'price.*' => 'required|numeric',
+            'qty.*' => 'required|integer|min:1',
+            'users.*' => 'required|exists:users,id',
         ];
 
         $textRules = [
-            'date.required'  => "Campo <strong>fecha</strong> es requerido",
-            'date.date'  => "Campo <strong>fecha</strong> debe ser una fecha valida",
-            'date.after_or_equal'  => "Campo <strong>fecha</strong> debe ser una fecha actual o superior",
-            'begin.required'  => "Campo <strong>hora de inicio</strong> es requerido",
-            'end.required'  => "Campo <strong>hora de fin</strong> es requerido",
-            'end.after'  => "Campo <strong>hora de fin</strong> debe ser superior a la hora de inicio",
+            'type.*.required' => 'El campo <strong>tipo</strong> es obligatorio.',
+            'type.*.in' => 'El <strong>tipo</strong> debe ser Servicios o Productos.', 
+            'price.*.required' => 'El campo <strong>precio</strong> es obligatorio.',
+            'price.*.numeric' => 'El <strong>precio</strong> debe ser un número.', 
+            'qty.*.required' => 'El campo <strong>cantidad</strong> es obligatorio.',
+            'qty.*.integer' => 'La <strong>cantidad</strong> debe ser un número entero.',
+            'qty.*.min' => 'La <strong>cantidad</strong> debe ser mayor o igual a 1.', 
         ];
 
-        if($request->input("client")){  
-            $rules['client'] = 'exists:clients,id';
-            $textRules['client.exists'] = "Seleciona un cliente valido";
+        if(is_array($request->input("items"))){
+            foreach ($request->input("users") as $key => $value) {
+                $rules["users.{$key}"] = "required|exists:users,id";
+                $textRules["users.{$key}.required"] = 'El campo <strong>usuario</strong> en la fila <strong>'.($key+1).'</strong> es requerido';
+                $textRules["users.{$key}.exists"] = 'El campo <strong>usuario</strong> en la fila <strong>'.($key+1).'</strong> debe ser un usuario valido';
+        
+            }
+
+            foreach ($request->input("items") as $key => $value) {
+                $rules["items.{$key}"] = [
+                    'required',
+                    Rule::exists($request->input("type")[$key] == 'Servicios' ? 'services' : 'products', 'id')
+                ];
+
+                $textRules["items.{$key}.required"] = $request->input("type")[$key] == 'Servicios' ? 'El campo <strong>servicio</strong> en la fila <strong>'.($key+1).'</strong> es requerido' : 'El campo <strong>producto</strong> en la fila <strong>'.($key+1).'</strong> es requerido';
+                $textRules["items.{$key}.exists"] = $request->input("type")[$key] == 'Servicios' ? 'El campo <strong>servicio</strong> en la fila <strong>'.($key+1).'</strong> debe ser un servicio valido' : 'El campo <strong>producto</strong> en la fila <strong>'.($key+1).'</strong> debe ser un producto valido';
+            }
+        }else{
+            return response()->json(["status" => 0, "message" => "Es necesario agregar servicios o productos"]);
+        }
+        
+
+        if($request->input("clients")){  
+            $rules['clients'] = 'exists:clients,id';
+            $textRules['clients.exists'] = "Seleciona un cliente valido";
         }
 
-        if($request->input("user")){  
-            $rules['user'] = 'exists:users,id';
-            $textRules['user.exists'] = "El usuario en <strong>Atendido por</strong> debe ser valido";
-        }
-
-        if($request->input("service")){
-            $rules['service'] = 'exists:services,id';
-            $textRules['service.exists'] = "Seleciona un servicio valido";
-        }
-
-        if($request->input("date") && $request->input("begin") ){
-            $rules['dateTimeBegin'] = 'after_or_equal:'.date("Y-m-d H:i:s");
-            $textRules['dateTimeBegin.after_or_equal'] = "La fecha y hora de inicio debe ser superior a la actual";
-        }
-
-        if($request->input("date") && $request->input("end") ){
-            $rules['dateTimeEnd'] = 'after:dateTimeBegin';
-            $textRules['dateTimeEnd.after'] = "La hora de fin debe ser superior a la hora de inicio";
+        if($request->input("appointment")){  
+            $rules['appointment'] = 'exists:appointments,id';
+            $textRules['appointment.exists'] = "Seleciona un cita valida";
         }
 
         $validator = Validator::make(request()->all(),$rules,$textRules);
@@ -71,79 +82,111 @@ class SellingsController extends Controller
             return response()->json(["status" => 0, "message" => $messages]);
         }  
         
-        $latest = Appointment::latest()->first();
+        $appointment = Appointment::findOr($request->input("appointment"), function () {
+            return false;
+        });
+
+        if(!$appointment){
+            return response()->json(["status" => 0, "message" => "Cita no encontrado"]);
+        }
+
+        if($appointment->status == 0 || $appointment->status == 2)
+        {
+            return response()->json(["status" => 0, "message" => "Cita Cancelada o ya se cobro"]);
+        }
+        
+        $latest = Selling::latest()->first();
 
         if ($latest) {
-            $latestId = $latest->identifier + 1; 
+            $latestId = $latest->no + 1; 
         } else {
             $latestId = 1;
         }
 
-        $appointment = new Appointment;
-
-        $appointment->user_id = $request->input("user");
-        $appointment->modify_by  = Auth::id();
-        $appointment->service_id  = $request->input("service");
-        $appointment->client_id  = $request->input("client");
-        $appointment->date = $request->input("date");       
-        $appointment->begin = $request->input("begin");      
-        $appointment->end = $request->input("end");        
-        $appointment->notes = $request->input("notes");      
-        $appointment->identifier = $latestId;
-
-        $appointment->save();
+        $selling = new Selling;
         
+        $selling->subtotal = $request->input("subtotal");
+        $selling->notes    = $request->input("notes");
+        $selling->status   = $request->input("status");
+        $selling->detail   = json_encode([
+            "types" => $request->input("type"),
+            "items" => $request->input("items"),
+            "price" => $request->input("price"),
+            "qty" => $request->input("qty"),
+            "users" => $request->input("users"),
+        ]);
+         
+        $selling->appointment = $appointment->id;
+        $selling->client = $request->input("clients");
+        $selling->no     = $latestId;
+        $selling->modify_by = Auth::id();
+        $selling->save(); 
+        
+        if($request->input("status") == 2){
+            $appointment->status = 2;
+            $appointment->save();
+        }
+
         $log = new Log;
 
-        $log->action = "create_appointment";
-        $log->detail = json_encode(["id" => $appointment->id,"identifier" => $appointment->identifier]);
+        $log->action = "create_selling";
+        $log->detail = json_encode(["id" => $selling->id, "name" => $selling->no, "appointment" => $appointment->no]);
         $log->user = Auth::id();
         
-        $log->save();*/
-        
-        return response()->json(["status" => 0, "message" => "Cita registrada"]);
+        $log->save();
+
+        return response()->json(["status" => 1, "message" => "Venta guardado"]);
     } 
 
     public function update(Request $request, $id){
-
+        
         $rules = [  
-            'date' => 'required|date|after_or_equal:'.date("Y-m-d"),
-            'begin'  => 'required',
-            'end'  => 'required|after:begin',  
+            'type.*' => 'required|in:Servicios,Productos', 
+            'price.*' => 'required|numeric',
+            'qty.*' => 'required|integer|min:1',
+            'users.*' => 'required|exists:users,id',
         ];
 
         $textRules = [
-            'date.required'  => "Campo <strong>fecha</strong> es requerido",
-            'date.date'  => "Campo <strong>fecha</strong> debe ser una fecha valida",
-            'date.after_or_equal'  => "Campo <strong>fecha</strong> debe ser una fecha actual o superior",
-            'begin.required'  => "Campo <strong>hora de inicio</strong> es requerido",
-            'end.required'  => "Campo <strong>hora de fin</strong> es requerido",
-            'end.after'  => "Campo <strong>hora de fin</strong> debe ser superior a la hora de inicio",
+            'type.*.required' => 'El campo <strong>tipo</strong> es obligatorio.',
+            'type.*.in' => 'El <strong>tipo</strong> debe ser Servicios o Productos.', 
+            'price.*.required' => 'El campo <strong>precio</strong> es obligatorio.',
+            'price.*.numeric' => 'El <strong>precio</strong> debe ser un número.', 
+            'qty.*.required' => 'El campo <strong>cantidad</strong> es obligatorio.',
+            'qty.*.integer' => 'La <strong>cantidad</strong> debe ser un número entero.',
+            'qty.*.min' => 'La <strong>cantidad</strong> debe ser mayor o igual a 1.', 
         ];
 
-        if($request->input("client")){  
-            $rules['client'] = 'exists:clients,id';
-            $textRules['client.exists'] = "Seleciona un cliente valido";
+        if(is_array($request->input("items"))){
+            foreach ($request->input("users") as $key => $value) {
+                $rules["users.{$key}"] = "required|exists:users,id";
+                $textRules["users.{$key}.required"] = 'El campo <strong>usuario</strong> en la fila <strong>'.($key+1).'</strong> es requerido';
+                $textRules["users.{$key}.exists"] = 'El campo <strong>usuario</strong> en la fila <strong>'.($key+1).'</strong> debe ser un usuario valido';
+        
+            }
+
+            foreach ($request->input("items") as $key => $value) {
+                $rules["items.{$key}"] = [
+                    'required',
+                    Rule::exists($request->input("type")[$key] == 'Servicios' ? 'services' : 'products', 'id')
+                ];
+
+                $textRules["items.{$key}.required"] = $request->input("type")[$key] == 'Servicios' ? 'El campo <strong>servicio</strong> en la fila <strong>'.($key+1).'</strong> es requerido' : 'El campo <strong>producto</strong> en la fila <strong>'.($key+1).'</strong> es requerido';
+                $textRules["items.{$key}.exists"] = $request->input("type")[$key] == 'Servicios' ? 'El campo <strong>servicio</strong> en la fila <strong>'.($key+1).'</strong> debe ser un servicio valido' : 'El campo <strong>producto</strong> en la fila <strong>'.($key+1).'</strong> debe ser un producto valido';
+            }
+        }else{
+            return response()->json(["status" => 0, "message" => "Es necesario agregar servicios o productos"]);
+        }
+        
+
+        if($request->input("clients")){  
+            $rules['clients'] = 'exists:clients,id';
+            $textRules['clients.exists'] = "Seleciona un cliente valido";
         }
 
-        if($request->input("user")){  
-            $rules['user'] = 'exists:users,id';
-            $textRules['user.exists'] = "El usuario en <strong>Atendido por</strong> debe ser valido";
-        }
-
-        if($request->input("service")){
-            $rules['service'] = 'exists:services,id';
-            $textRules['service.exists'] = "Seleciona un servicio valido";
-        }
-
-        if($request->input("date") && $request->input("begin") ){
-            $rules['dateTimeBegin'] = 'after_or_equal:'.date("Y-m-d H:i:s");
-            $textRules['dateTimeBegin.after_or_equal'] = "La fecha y hora de inicio debe ser superior a la actual";
-        }
-
-        if($request->input("date") && $request->input("end") ){
-            $rules['dateTimeEnd'] = 'after:dateTimeBegin';
-            $textRules['dateTimeEnd.after'] = "La hora de fin debe ser superior a la hora de inicio";
+        if($request->input("appointment")){  
+            $rules['appointment'] = 'exists:appointments,id';
+            $textRules['appointment.exists'] = "Seleciona un cita valida";
         }
 
         $validator = Validator::make(request()->all(),$rules,$textRules);
@@ -158,10 +201,23 @@ class SellingsController extends Controller
                 
             }
 
-            return response()->json(["status" => 0, "message" => $messages.'--'.$id]);
+            return response()->json(["status" => 0, "message" => $messages]);
+        }  
+
+        $selling = Selling::findOr($id, function () {
+            return false;
+        });
+
+        if(!$selling){
+            return response()->json(["status" => 0, "message" => "Producto no encontrado"]);
         }
 
-        $appointment = Appointment::findOr($id, function () {
+        if($selling->status == 0)
+        {
+            return response()->json(["status" => 0, "message" => "Producto Eliminado"]);
+        }
+ 
+        $appointment = Appointment::findOr($request->input("appointment"), function () {
             return false;
         });
 
@@ -169,115 +225,129 @@ class SellingsController extends Controller
             return response()->json(["status" => 0, "message" => "Cita no encontrado"]);
         }
 
-        if($appointment->status == 0)
+        if($appointment->status == 0  )
         {
-            return response()->json(["status" => 0, "message" => "Cita Eliminado"]);
+            return response()->json(["status" => 0, "message" => "Cita Cancelada o ya se cobro"]);
         }
 
         $prevData = [
-            "user_id" => $appointment->user_id,
-            "service_id" => $appointment->service_id,
-            "client_id" => $appointment->client_id,
-            "date" => $appointment->date,
-            "begin" => $appointment->begin,
-            "end" => $appointment->end,
-            "notesnotes" => $appointment->user_id, 
+            "subtotal" => $selling->subtotal, 
+            "notes" => $selling->notes, 
+            "status" => $selling->status, 
+            "detail" => $selling->detail, 
+            "appointment" => $selling->appointment, 
+            "client" => $selling->client,  
         ];
-
-        $appointment->user_id = $request->input("user");
-        $appointment->modify_by  = Auth::id();
-        $appointment->service_id  = $request->input("service");
-        $appointment->client_id  = $request->input("client");
-        $appointment->date = $request->input("date");       
-        $appointment->begin = $request->input("begin");      
-        $appointment->end = $request->input("end");        
-        $appointment->notes = $request->input("notes");     
-
-        $appointment->save();
+        
+        $selling->subtotal = $request->input("subtotal");
+        $selling->notes    = $request->input("notes");
+        $selling->status   = $request->input("status");
+        $selling->detail   = json_encode([
+            "types" => $request->input("type"),
+            "items" => $request->input("items"),
+            "price" => $request->input("price"),
+            "qty" => $request->input("qty"),
+            "users" => $request->input("users"),
+        ]);
+         
+        $selling->appointment = $appointment->id;
+        $selling->client = $request->input("clients"); 
+        $selling->modify_by = Auth::id();
+        $selling->save(); 
+        
+        if($request->input("status") == 2){
+            $appointment->status = 2;
+            $appointment->save();
+        }
 
         $newData = [
-            "user_id" => $appointment->user_id,
-            "service_id" => $appointment->service_id,
-            "client_id" => $appointment->client_id,
-            "date" => $appointment->date,
-            "begin" => $appointment->begin,
-            "end" => $appointment->end,
-            "notesnotes" => $appointment->user_id, 
+            "subtotal" => $selling->subtotal, 
+            "notes" => $selling->notes, 
+            "status" => $selling->status, 
+            "detail" => $selling->detail, 
+            "appointment" => $selling->appointment, 
+            "client" => $selling->client,  
         ];
 
         $log = new Log;
 
-        $log->action = "update_appointment";
+        $log->action = "update_selling";
         $log->detail = json_encode([
-            "id" => $appointment->id,
-            "identifier" => $appointment->identifier,
+            "id" => $selling->id,
+            "name" =>  $selling->no,
             "prevData" => $prevData,
             "newData" => $newData
         ]);
+
         $log->user = Auth::id();
         
         $log->save();
 
-        return response()->json(["status" => 1, "message" => "CIta guardado " ]);
+        return response()->json(["status" => 0, "message" => "Producto guardado " ]);
     }
 
     public function list(Request $request){ 
-        $appointment = new Appointment;
+        $selling = new Selling;
 
-        $appointments = $appointment->where("appointments.status",1)
-                                    ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
-                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id')
+        $sellings = $selling->whereIn("sellings.status",[1,2])
+                                    ->leftJoin('clients', 'clients.id', '=', 'sellings.client')
+                                    ->leftJoin('appointments', 'appointments.id', '=', 'sellings.appointment')
         ;
 
         if($request->input("s"))
-        {
-            $appointments->where('identifier', 'like', $request->input("s") . '%')
-                         ->orWhere(DB::raw("CONCAT(clients.name,' ',clients.lastname)"), 'like', $request->input("s") . '%');
+        { 
+            $sellings->where(function ($query) use ($request) {
+                $query->where('sellings.no', 'like', $request->input("s") . '%')
+                      ->orWhere(DB::raw("CONCAT(clients.name,' ',clients.lastname)"), 'like', $request->input("s") . '%');
+            });
         }
 
         $perPage = 10; 
         $page = $request->input("page") ?: 1; 
     
-        $totalUsers = $appointments->count();
+        $totalUsers = $sellings->count();
         $totalPages = ceil($totalUsers / $perPage);
 
         $page = min($page, $totalPages);
+         
         $fields = [
-            'appointments.id',
-            'appointments.identifier',
-            'appointments.date',
-            'appointments.begin',
-            'services.name as service_id',
-            DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client_id")
+            'sellings.id',
+            'sellings.no',
+            'sellings.subtotal', 
+            DB::raw('sellings.updated_at as updated_at'), 
+            'sellings.status',
+            'sellings.client as client_id', 
+            'appointments.no as appointments',
+            DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client")
         ];
         
-        $appointments = $appointments->paginate($perPage, $fields, 'appointments', $page);
-         
-        return response()->json(["status" => 1, 'appointments' => $appointments, 's' => $request->input("s")] );
+        $sellings = $sellings->paginate($perPage, $fields, 'sellings', $page);
+ 
+        return response()->json(["status" => 1, 'sellings' => $sellings, 's' => $request->input("s")] );
     } 
 
     public function delete(Request $request, $id){ 
-        $appointment = Appointment::findOr($id, function () {
+        $product = Product::findOr($id, function () {
             return false;
         });
-
-        if(!$appointment){
-            return response()->json(["status" => 0, "message" => "Cita no encontrada"]);
+         
+        if(!$product){
+            return response()->json(["status" => 0, "message" => "Producto no encontrado"]);
         }
         
-        $appointment->status = 0;
-        $appointment->save(); 
+        $product->status = 0;
+        $product->save(); 
 
         $log = new Log;
 
-        $log->action = "delete_appointment";
-        $log->detail = json_encode(["id" => $appointment->id,"identifier" => $appointment->identifier]);
+        $log->action = "delete_product";
+        $log->detail = json_encode(["id" => $product->id,"name" => $product->name ]);
         $log->user = Auth::id();
         
         $log->save();
 
-        return response()->json(["status" => 1, "appointment" => $appointment]);
-    }  
+        return response()->json(["status" => 1, "product" => $product]);
+    } 
 }
 
 
@@ -288,6 +358,5 @@ class SellingsController extends Controller
                 
                 
                 
-                
-                
+              
                 

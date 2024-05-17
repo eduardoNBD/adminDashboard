@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use App\Models\Product;
+use App\Models\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;  
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,8 @@ class ProductsController extends Controller
         $validator = Validator::make(request()->all(), [
             'name' => 'required|unique:products',
             'key' => 'required|unique:products',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
+            'qty' => 'required|numeric'
         ],
         [
             'name.required' => 'Campo <strong>Nombre de producto</strong> requerido',
@@ -25,6 +27,8 @@ class ProductsController extends Controller
             'key.unique' => 'Ya existe un producto con esa clave', 
             'price.required' => 'Campo <strong>Precio</strong> requerido', 
             'price.numeric' => 'Campo <strong>Precio</strong> debe ser numero', 
+            'qty.required' => 'Campo <strong>Cantidad</strong> requerido', 
+            'qty.numeric' => 'Campo <strong>Cantidad</strong> debe ser numero', 
         ]);
 
         if ($validator->fails()){
@@ -54,10 +58,19 @@ class ProductsController extends Controller
         $product->name   = $request->input("name");
         $product->key    = $request->input("key");
         $product->price  = $request->input("price");
+        $product->qty    = $request->input("qty");
         $product->image  = $fileName;
         $product->modify_by = Auth::id();
         $product->save(); 
         
+        $log = new Log;
+
+        $log->action = "create_product";
+        $log->detail = json_encode(["id" => $product->id, "name" => $product->name]);
+        $log->user = Auth::id();
+        
+        $log->save();
+
         return response()->json(["status" => 1, "message" => "Producto guardado"]);
     } 
 
@@ -66,7 +79,8 @@ class ProductsController extends Controller
         $validator = Validator::make(request()->all(), [
             'name' => 'required|unique:products,name,'.$id,
             'key' => 'required|unique:products,key,'.$id,
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
+            'qty' => 'required|numeric'
         ],
         [
             'name.required' => 'Campo <strong>Nombre de producto</strong> requerido',
@@ -75,6 +89,8 @@ class ProductsController extends Controller
             'key.unique' => 'Ya existe un producto con esa clave', 
             'price.required' => 'Campo <strong>Precio</strong> requerido', 
             'price.numeric' => 'Campo <strong>Precio</strong> debe ser numero', 
+            'qty.required' => 'Campo <strong>Cantidad</strong> requerido', 
+            'qty.numeric' => 'Campo <strong>Cantidad</strong> debe ser numero', 
         ]);
 
         if ($validator->fails()){
@@ -114,13 +130,44 @@ class ProductsController extends Controller
                 unlink(storage_path("../storage/app/").'/'.$product->image);
             }  
         }
+
+        $prevData = [
+            "name"  => $product->name, 
+            "key"   => $product->key,              
+            "price" => $product->price,
+            "qty"   => $product->qty,              
+            "image" => $product->image,
+        ];
         
         $product->name   = $request->input("name");
         $product->key    = $request->input("key");
         $product->price  = $request->input("price");
+        $product->qty    = $request->input("qty");
         $product->image  = $fileName;
         $product->modify_by = Auth::id();
         $product->save(); 
+
+        $newData = [
+            "name"  => $product->name, 
+            "key"   => $product->key,              
+            "price" => $product->price,
+            "qty"   => $product->qty,              
+            "image" => $product->image,
+        ];
+
+        $log = new Log;
+
+        $log->action = "update_product";
+        $log->detail = json_encode([
+            "id" => $product->id,
+            "name" =>  $product->name,
+            "prevData" => $prevData,
+            "newData" => $newData
+        ]);
+
+        $log->user = Auth::id();
+        
+        $log->save();
 
         return response()->json(["status" => 1, "message" => "Producto guardado " ]);
     }
@@ -131,8 +178,10 @@ class ProductsController extends Controller
 
         if($request->input("s"))
         {
-            $products->where('name', 'like', $request->input("s") . '%')
-                     ->orWhere('key', 'like', $request->input("s") . '%');
+            $products->where(function ($query) use ($request) {
+                $query->where('name', 'like', $request->input("s") . '%')
+                      ->orWhere('key', 'like', $request->input("s") . '%');
+            });
         }
 
         $perPage = 10; 
@@ -144,7 +193,7 @@ class ProductsController extends Controller
 
         $page = min($page, $totalPages);
 
-        $products = $products->paginate($perPage, ['id', 'name', 'key', 'price', 'image'], 'products', $page);
+        $products = $products->paginate($perPage, ['id', 'name', 'key', 'price', 'image','status'], 'products', $page);
          
         return response()->json(["status" => 1, 'products' => $products, 's' => $request->input("s")] );
     } 
@@ -160,6 +209,14 @@ class ProductsController extends Controller
         
         $product->status = 0;
         $product->save(); 
+
+        $log = new Log;
+
+        $log->action = "delete_product";
+        $log->detail = json_encode(["id" => $product->id,"name" => $product->name ]);
+        $log->user = Auth::id();
+        
+        $log->save();
 
         return response()->json(["status" => 1, "product" => $product]);
     }  

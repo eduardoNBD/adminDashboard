@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->bigInteger('identifier'); 
+            $table->bigInteger('no'); 
             $table->foreignUuid('user_id')->nullable()->constrained()->references('id')->on('users')->onDelete('cascade');
             $table->foreignUuid('modify_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreignUuid('service_id')->nullable()->constrained()->references('id')->on('services')->onDelete('cascade'); 

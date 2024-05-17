@@ -1,6 +1,6 @@
 @extends('layouts.dashboard',[ 'current_route'  => '/dashboard/sellings'])
 
-@section('title', 'Selling - Dashboard') 
+@section('title', $title.' - Dashboard') 
 
 @section('styles')
     <style> 
@@ -37,26 +37,26 @@
 @stop
 @section('content') 
 <section class="bg-white px-0 md:px-5 pt-5 pb-5 w-full lg:w-5/6 rounded-lg m-auto mt-5">
-    <h1 class="text-center text-2xl font-bold text-[#526270] pb-4">Crear Venta</h1>
+    <h1 class="text-center text-2xl font-bold text-[#526270] pb-4">{{$title}}</h1>
     <hr />
     <form onsubmit="submitForm('{{$id ? $menu['baseURL']."/sellings/update/".$id : $menu['baseURL']."/sellings/create" }}','{{$menu['baseURL'].$menu['route']['sellings']['root']}}')" action="#" method="POST">
         @csrf <!-- {{ csrf_field() }} -->
         <div class="grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-2 m-2 md:m-10 md:mt-6"> 
             <div class="col-span-2 md:col-span-1">
                 <div class="autocomplete relative group">
-                    <input type="text" name="appointments" id="appointments" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                    <input type="text" autocomplete="off" name="appointments" id="appointments" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
                     <label for="appointments" class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Citas</label>
                 </div>
             </div>  
             <div class="col-span-2 md:col-span-1">
                 <div class="autocomplete relative group">
-                    <input type="text" name="clients" id="clients" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                    <input type="text" autocomplete="off" name="clients" id="clients" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
                     <label for="clients" class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Clientes</label>
                 </div>
             </div>  
             <div class="col-span-2 md:col-span-1  mt-[18px]">
                 <div class="relative z-0 group">
-                    <input type="text" name="notes" id="notes" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                    <input type="text" value="{{$selling->notes}}" autocomplete="off" name="notes" id="notes" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
                     <label for="notes" class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Notas de venta</label>
                 </div>
             </div> 
@@ -74,17 +74,24 @@
             </div>
             <hr class="col-span-2 mt-4" />
             <div class="col-span-2 mt-4 text-right">
+                <label id="errorMessage" class="text-red-600 text-left block"></label>
                 <input name="sell" type="submit" class="bg-violet-600 text-white border-violet-600 border-2 rounded-md px-10 py-1 mr-2" value="Cobrar" />
                 <input name="save" type="submit" class="bg-violet-600 text-white border-violet-600 border-2 rounded-md px-10 py-1" value="Guardar" />
             </div>
         </div>
     </form>
-</section>
-
+</section>  
 @stop
 
 @section('scripts')
 <script>
+    const appointments  = {!! json_encode($appointments)!!};
+    const clients  = {!! json_encode($clients)!!};
+    const services = {!! json_encode($services)!!};
+    const products = {!! json_encode($products)!!};
+    const users    = {!! json_encode($users)!!};
+    const types    = [{name:"Productos"},{name:"Servicios"}];
+    const selling  = {!! json_encode($selling) !!};
     const newRow = '<div class="overflow-x-auto overflow-y-none h-[200px] item-row">'+
                         '<div class="grid grid-cols-4 gap-4 min-w-[700px]">'+
                             '<div class="col-span-4">'+
@@ -94,7 +101,7 @@
                             '</div>'+
                             '<div class="pl-1">'+
                                 '<div class="autocomplete relative group">'+
-                                    '<input value="Servicios" type="text" name="type[]" class="types block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
+                                    '<input value="'+types[1].name+'" data-object=\''+JSON.stringify(types[1]).trim()+'\' type="text" name="type[]" class="types block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
                                     '<label for="type" class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tipo</label>'+
                                 '</div>'+
                             '</div>'+
@@ -114,7 +121,7 @@
                                     '<label class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Precio</label>'+
                                 '</div>'+
                                 '<div class="relative z-0 mt-1 group">'+
-                                    '<input min="1" onchange="changeQty()" value="1" type="number" name="qty[]" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
+                                    '<input min="1" onchange="changeQty()" value="1" type="number" name="qty[]" class="qty block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
                                     '<label class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Cantidad</label>'+
                                 '</div>'+
                             '</div>'+
@@ -132,6 +139,12 @@
         var currentFocus; 
         
         inp.addEventListener("input", (e) => {
+
+            if(inp.dataset.object){
+                if(JSON.parse(inp.dataset.object).name.trim() != inp.value.trim()){
+                    inp.dataset.object = "";
+                }
+            }
             var a, b, i, indexed = 0,exist = false, val = e.target.value; 
 
             closeAllLists();
@@ -161,8 +174,8 @@
                     b.innerHTML += arr[i].name.substr(val.length); 
                     b.innerHTML += "<input type='hidden' value='"+arr[i].name+"'  data-object='" + JSON.stringify(arr[i]) + "'>"; 
                     b.addEventListener("click", (e) => {
-                        inp.value = event.target.getElementsByTagName("input")[0].value; 
-                        inp.dataset.object = event.target.getElementsByTagName("input")[0].dataset.object;
+                        inp.value = event.currentTarget.getElementsByTagName("input")[0].value; 
+                        inp.dataset.object = event.currentTarget.getElementsByTagName("input")[0].dataset.object;
                          
                         if(callback)callback(inp);
                         closeAllLists();
@@ -211,8 +224,8 @@
                     b.innerHTML += "<input type='hidden' value='" + arr[i].name + "'  data-object='" + JSON.stringify(arr[i]) + "'>"; 
 
                     b.addEventListener("click", (e) => { 
-                        inp.value = event.target.parentNode.getElementsByTagName("input")[0].value; 
-                        inp.dataset.object = event.target.parentNode.getElementsByTagName("input")[0].dataset.object;
+                        inp.value = event.currentTarget.getElementsByTagName("input")[0].value; 
+                        inp.dataset.object = event.currentTarget.getElementsByTagName("input")[0].dataset.object;
 
                         if(callback)callback(inp);
                         closeAllLists();
@@ -246,7 +259,11 @@
                 
             }
         });
-    
+        
+        inp.addEventListener("focusout", (event) => {
+            event.target.value = event.target.dataset.object ? event.target.value : "";
+        });
+
         inp.addEventListener("keydown", function(e) {
             var x = document.getElementById(this.id + "autocomplete-list");
             if (x) x = x.getElementsByTagName("div");
@@ -298,7 +315,7 @@
         });
     }
 
-    function handleAddItem(callback){
+    async function handleAddItem(callback){
         var temp       = document.createElement('div');
         temp.innerHTML = (newRow);
 
@@ -319,7 +336,7 @@
 
         autocomplete(userNode, users);
         autocomplete(typeNode, types, (input) => {  
-            var row = event.target.parentNode.parentNode.parentNode.parentNode;
+            var row = event.currentTarget.parentNode.parentNode.parentNode.parentNode;
              
             if(input.value == "Servicios")
             {
@@ -333,7 +350,7 @@
             }
         });
 
-        if(callback)callback();
+        if(callback) await callback();
     }
 
     function calcTotal(){
@@ -360,13 +377,6 @@
     function handleDeleteItem(){
         event.target.parentNode.parentNode.parentNode.parentNode.remove();
     }
-
-    const appointments  = JSON.parse('{{json_encode($appointments)}}'.replaceAll("&quot;",'"'));
-    const clients  = JSON.parse('{{json_encode($clients)}}'.replaceAll("&quot;",'"'));
-    const services = JSON.parse('{{json_encode($services)}}'.replaceAll("&quot;",'"'));
-    const products = JSON.parse('{{json_encode($products)}}'.replaceAll("&quot;",'"'));
-    const users    = JSON.parse('{{json_encode($users)}}'.replaceAll("&quot;",'"'));
-    const types    = [{name:"Productos"},{name:"Servicios"}];
 
     autocomplete(document.querySelector("#clients"), clients);
     autocomplete(document.querySelector("#appointments"), appointments, (input) => {  
@@ -407,20 +417,53 @@
     });
 
     function submitForm(url,redirect)
-    {
-        //showLoader();
+    { 
+        showLoader();
         event.preventDefault();
-        
+       
         const data = new FormData(); 
+        const appoValue = document.querySelector('#appointments').dataset.object ? JSON.parse(document.querySelector('#appointments').dataset.object).id : "";
+        const clientValue = document.querySelector('#clients').dataset.object ? JSON.parse(document.querySelector('#clients').dataset.object).id : "";
         
-        event.target.querySelectorAll("input").forEach(input => {
-            if(input.dataset.object){ 
-                data.append(input.name,JSON.parse(input.dataset.object).id);
-            }else{ 
-                data.append(input.name,input.value);
+        data.append("appointment", appoValue);
+        data.append("clients", clientValue);
+        data.append("notes", document.querySelector('#notes').value);
+        data.append("status", event.submitter.name == "save" ? 1 : 2);
+
+        document.querySelectorAll('.item-row').forEach((item) => {
+            let inputs = item.querySelectorAll('input');
+
+            data.append(inputs[0].name,JSON.parse(inputs[0].dataset.object).name);
+
+            if(JSON.parse(inputs[0].dataset.object).name == "Servicios"){
+                let item = inputs[1].dataset.object ? JSON.parse(inputs[1].dataset.object)?.id : "";
+                data.append("items[]",item);
+            }else if(JSON.parse(inputs[0].dataset.object).name == "Productos"){
+                let item = inputs[2].dataset.object ? JSON.parse(inputs[2].dataset.object)?.id : "";
+                data.append("items[]",item);
+            }else{
+                data.append("items[]","");
             }
+
+
+            data.append(inputs[3].name, inputs[3].value); 
+            data.append(inputs[4].name, inputs[4].value); 
+
+            let user = inputs[5].dataset.object? JSON.parse(inputs[5].dataset.object).id : "";
+            data.append(inputs[5].name,user);
         });
 
+        let allRows = document.querySelectorAll("#detailContent .item-row");
+        let total   = 0;
+
+        allRows.forEach(element => {
+            const inputsArr = element.querySelectorAll("input");
+ 
+            total+= inputsArr[3].value * inputsArr[4].value;
+        });
+
+        data.append("subtotal",total.toFixed(2));
+        
         fetch(url, { 
             headers: { 
                 "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -447,5 +490,73 @@
         .catch((err) => console.error("error:", err));
     }
 
+    if(selling.id){
+        const client = clients.filter(client => client.id == selling.client);  
+        const appointment = appointments.filter(appointment => appointment.id == selling.appointment);
+
+        if(client.length != 0){
+            let eClient = document.querySelector("#clients");
+            eClient.dataset.object = JSON.stringify(client[0]); 
+            eClient.value = client[0].name;
+        }
+
+        if(appointment.length != 0){
+            let eAppointment = document.querySelector("#appointments");
+            eAppointment.dataset.object = JSON.stringify(appointment[0]); 
+            eAppointment.value = appointment[0].name;
+        }
+
+        let detail = JSON.parse(selling.detail);
+         
+        detail.types.forEach((element,index) => {
+            let type = element;
+            let item = detail.items[index];
+            let qty  = detail.qty[index];
+            let price = detail.price[index];
+            let user = detail.users[index];
+
+            handleAddItem(()=> {  
+                var typeNode = getLastElement(".types");
+                var priceNode   = getLastElement(".prices");
+                var userNode   = getLastElement(".users");
+                var qtyNode   = getLastElement(".qty");
+                var serviceNode   = getLastElement(".services");
+                var productNode   = getLastElement(".products");
+
+                typeNode.value = type; 
+                typeNode.dataset.object = JSON.stringify(types.filter(t => t.name == type)[0]);
+
+                if(type == types[1].name){
+                    serviceNode.parentNode.style.display = "inherit";
+                    productNode.parentNode.style.display = "none"; 
+
+                    var service = services.filter(service => service.id == item)[0];
+
+                    serviceNode.value = service.name;
+                    serviceNode.dataset.object = JSON.stringify(service);
+                }else{
+                    productNode.parentNode.style.display = "inherit";
+                    serviceNode.parentNode.style.display = "none"; 
+
+                    let product = products.filter(product => product.id == item)[0];
+
+                    productNode.value = product.name;
+                    productNode.dataset.object = JSON.stringify(product);
+                }
+
+                var userItem = users.filter(u => u.id == user)[0];
+
+                userNode.value = userItem.name;
+                userNode.dataset.object = JSON.stringify(userItem);
+
+                priceNode.value = price;
+                qtyNode.value   = qty;
+                 
+                calcTotal();
+            });
+        });
+
+        console.log(detail);
+    }
   </script>
 @stop

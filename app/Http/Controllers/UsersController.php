@@ -141,7 +141,7 @@ class UsersController extends Controller
                   ->orWhere('username', 'like', $request->input("s") . '%');
         }
 
-        $perPage = 10; 
+        $perPage = 9; 
         $page = $request->input("page") ?: 1; 
     
         $totalUsers = $users->count();
@@ -168,5 +168,13 @@ class UsersController extends Controller
 
         return response()->json(["status" => 1, "services" => $user]);
     }  
+
+    public function updateUser(Request $request, $id){ 
+
+
+        return response()->json(["status" => 0]);
+    }
 }
+
+
 

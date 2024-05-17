@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request; 
 use App\Models\Client;
+use App\Models\Log;
 use Illuminate\Support\Facades\Validator; 
 use Illuminate\Support\Facades\Auth;
 
@@ -48,6 +49,14 @@ class ClientsController extends Controller
         $client->phone    = $request->input("phone");
         $client->modify_by = Auth::id();
         $client->save(); 
+
+        $log = new Log;
+
+        $log->action = "create_client";
+        $log->detail = json_encode(["id" => $client->id, "name" => $client->name." ".$client->lastname]);
+        $log->user = Auth::id();
+        
+        $log->save();
         
         return response()->json(["status" => 1, "message" => "Cliente guardado"]);
     } 
@@ -95,12 +104,39 @@ class ClientsController extends Controller
             return response()->json(["status" => 0, "message" => "Cliente Eliminado"]);
         }
 
+        $prevData = [
+            "name"     => $client->name,
+            "lastname" => $client->lastname,
+            "email"    => $client->email,
+            "phone"    => $client->phone,
+        ];
+
         $client->name     = $request->input("name");
         $client->lastname = $request->input("lastname");
         $client->email    = $request->input("email");
         $client->phone    = $request->input("phone");
         $client->modify_by = Auth::id();
         $client->save(); 
+
+        $newData = [
+            "name"     => $client->name,
+            "lastname" => $client->lastname,
+            "email"    => $client->email,
+            "phone"    => $client->phone,
+        ];
+
+        $log = new Log;
+
+        $log->action = "update_client";
+        $log->detail = json_encode([
+            "id" => $client->id,
+            "name" =>  $client->name." ".$client->lastname,
+            "prevData" => $prevData,
+            "newData" => $newData
+        ]);
+        $log->user = Auth::id();
+        
+        $log->save();
 
         return response()->json(["status" => 1, "message" => "Cliente guardado " ]);
     }
@@ -112,10 +148,12 @@ class ClientsController extends Controller
 
         if($request->input("s"))
         {
-            $clients->where('name', 'like', $request->input("s") . '%')
+            $clients->where(function ($query) use ($request) {
+                $query->where('name', 'like', $request->input("s") . '%')
                     ->orWhere('lastname', 'like', $request->input("s") . '%')
                     ->orWhere('phone', 'like', $request->input("s") . '%')
                     ->orWhere('email', 'like', $request->input("s") . '%');
+            });
         }
 
         $perPage = 10; 
@@ -143,6 +181,14 @@ class ClientsController extends Controller
         
         $client->status = 0;
         $client->save(); 
+
+        $log = new Log;
+
+        $log->action = "delete_client";
+        $log->detail = json_encode(["id" => $client->id,"name" => $client->name." ".$client->lastname]);
+        $log->user = Auth::id();
+        
+        $log->save();
 
         return response()->json(["status" => 1, "clients" => $client]);
     }  

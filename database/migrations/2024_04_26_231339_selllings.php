@@ -16,8 +16,9 @@ return new class extends Migration
             $table->double('subtotal');
             $table->string('notes');
             $table->json('detail');
-            $table->foreignUuid('appointment')->references('id')->on('appointments')->onDelete('restrict')->nullable();
-            $table->foreignUuid('client')->references('id')->on('users')->onDelete('restrict')->nullable();
+            $table->bigInteger('no'); 
+            $table->foreignUuid('appointment')->nullable()->references('id')->on('appointments')->onDelete('restrict');
+            $table->foreignUuid('client')->nullable()->references('id')->on('clients')->onDelete('restrict');
             $table->timestamp('created_at');
             $table->timestamp('updated_at');   
             $table->tinyInteger('status')->default('1');
@@ -33,3 +34,5 @@ return new class extends Migration
         //
     }
 };
+
+

@@ -35,6 +35,8 @@
 
             const data = new FormData(event.target); 
             
+            data.append("timezone",Intl.DateTimeFormat().resolvedOptions().timeZone);
+            
             fetch("{{$menu['baseURL']."/auth/login"}}", {  
                 method: "post", 
                 body: data,

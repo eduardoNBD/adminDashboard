@@ -74,7 +74,7 @@ class AppointmentsController extends Controller
         $latest = Appointment::latest()->first();
 
         if ($latest) {
-            $latestId = $latest->identifier + 1; 
+            $latestId = $latest->no + 1; 
         } else {
             $latestId = 1;
         }
@@ -89,14 +89,14 @@ class AppointmentsController extends Controller
         $appointment->begin = $request->input("begin");      
         $appointment->end = $request->input("end");        
         $appointment->notes = $request->input("notes");      
-        $appointment->identifier = $latestId;
+        $appointment->no = $latestId;
 
         $appointment->save();
         
         $log = new Log;
 
         $log->action = "create_appointment";
-        $log->detail = json_encode(["id" => $appointment->id,"identifier" => $appointment->identifier]);
+        $log->detail = json_encode(["id" => $appointment->id,"no" => $appointment->no]);
         $log->user = Auth::id();
         
         $log->save();
@@ -158,7 +158,7 @@ class AppointmentsController extends Controller
                 
             }
 
-            return response()->json(["status" => 0, "message" => $messages.'--'.$id]);
+            return response()->json(["status" => 0, "message" => $messages ]);
         }
 
         $appointment = Appointment::findOr($id, function () {
@@ -210,7 +210,7 @@ class AppointmentsController extends Controller
         $log->action = "update_appointment";
         $log->detail = json_encode([
             "id" => $appointment->id,
-            "identifier" => $appointment->identifier,
+            "no" => $appointment->no,
             "prevData" => $prevData,
             "newData" => $newData
         ]);
@@ -230,9 +230,12 @@ class AppointmentsController extends Controller
         ;
 
         if($request->input("s"))
-        {
-            $appointments->where('identifier', 'like', $request->input("s") . '%')
-                         ->orWhere(DB::raw("CONCAT(clients.name,' ',clients.lastname)"), 'like', $request->input("s") . '%');
+        { 
+            $appointments->where(function ($query) use ($request) {
+                $query->where('no', 'like', $request->input("s") . '%')
+                      ->orWhere(DB::raw("CONCAT(clients.name,' ',clients.lastname)"), 'like', $request->input("s") . '%')
+                      ->orWhere('services.name', 'like', $request->input("s") . '%');
+            });
         }
 
         $perPage = 10; 
@@ -244,7 +247,7 @@ class AppointmentsController extends Controller
         $page = min($page, $totalPages);
         $fields = [
             'appointments.id',
-            'appointments.identifier',
+            'appointments.no',
             'appointments.date',
             'appointments.begin',
             'services.name as service_id',
@@ -271,7 +274,7 @@ class AppointmentsController extends Controller
         $log = new Log;
 
         $log->action = "delete_appointment";
-        $log->detail = json_encode(["id" => $appointment->id,"identifier" => $appointment->identifier]);
+        $log->detail = json_encode(["id" => $appointment->id,"no" => $appointment->no]);
         $log->user = Auth::id();
         
         $log->save();

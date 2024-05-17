@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('key');
             $table->double('price');
             $table->string('image');
+            $table->bigInteger('qty'); 
             $table->tinyInteger('status')->default('1');
             $table->timestamp('created_at');
             $table->timestamp('updated_at');   
@@ -32,3 +33,9 @@ return new class extends Migration
         //
     }
 };
+
+
+
+
+
+                

@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
-
+ 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use App\Models\Service;
 use App\Models\Product;
 use App\Models\Client;
 use App\Models\User;
 use App\Models\Appointment;
 use App\Models\Log;
+use App\Models\Selling;
 
 class DashboardController extends Controller
 {
@@ -20,13 +22,14 @@ class DashboardController extends Controller
 
         $appointments = $appointment->select([
                                         'appointments.id',
-                                        'appointments.identifier',
+                                        'appointments.no',
                                         'appointments.date',
                                         'appointments.begin',
+                                        'appointments.status',
                                         'services.name as service_id',
                                         DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client_id")
                                     ])
-                                    ->where("appointments.status",1)
+                                    ->where("appointments.status", 1)
                                     ->where("appointments.date",">=",date("Y-m-d"))
                                     ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
                                     ->leftJoin('services', 'services.id', '=', 'appointments.service_id')->orderBy('date')->orderBy('begin')->take(5)->get();
@@ -47,7 +50,9 @@ class DashboardController extends Controller
             'appointments' => $appointments,
             'appoToday' => $appoToday, 
             'appoPendi' => $appoPendi, 
-            'appoFinis' => $appoFinis, 
+            'appoFinis' => $appoFinis,  
+            'chartValues' => Selling::getTotalSellings(),
+            'profitsWeeks' => Selling::getTotalSellingsWeek()
         ]);
     }
 
@@ -197,17 +202,18 @@ class DashboardController extends Controller
     public function sellings($page = 1 ){
         return view("dashboard.sellings", [
             'page' => $page, 
+            'status' => Selling::getStatus(), 
         ]);
     }
 
     public function selling($id = null){ 
         $title = $id ? "Actualizar Venta" : "Crear Venta";
-        
+        $selling = new Selling;
         $services = Service::where("status",1)->get();
         $products = Product::where("status",1)->get();
         $clients = Client::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->get();
         $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->where("role",0)->get();
-        $appointments = Appointment::select([DB::raw("CONCAT('#',identifier) as name"),
+        $appointments = Appointment::select([DB::raw("CONCAT('#',no) as name"),
                                             'appointments.id', 
                                             'appointments.date',
                                             'appointments.begin',
@@ -215,10 +221,31 @@ class DashboardController extends Controller
                                             'appointments.client_id',
                                             'appointments.user_id',
                                             'appointments.notes',])
-                                    ->where("appointments.status",1)
+                                    ->where("appointments.status",[1,2])
                                     ->where("appointments.date",">=",date("Y-m-d"))
                                     ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
-                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id')->get();;
+                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id'); 
+                                    
+
+         if($id){ 
+            $selling = Selling::findOr($id, function () {
+                return false;
+            });
+    
+            if(!$selling){
+                return redirect('/dashboard/sellings');
+            }
+    
+            if($selling->status == 0){
+                return redirect('/dashboard/sellings');
+            }
+
+            $title.=" #".$selling->no;
+
+            $appointments->orWhere("appointments.id",$selling->appointment); 
+        } 
+
+        $appointments = $appointments->get();
 
         return view("dashboard.selling", [
             'title' => $title, 
@@ -228,6 +255,7 @@ class DashboardController extends Controller
             'users' => $users,
             'appointments' => $appointments,
             'id' => $id,
+            'selling' => $selling,  
         ]);
     }
 
@@ -272,7 +300,7 @@ class DashboardController extends Controller
         return view("dashboard.profile", [
             'user' => Auth::user(), 
             'roles' => User::getRoles(),
-            'logs' => Log::where("user",Auth::user()->id)->get(),
+            'logs' => Log::where("user",Auth::user()->id)->orderBy('created_at', 'desc')->take(5)->get(),
         ]);
     }
 }

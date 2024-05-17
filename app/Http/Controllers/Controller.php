@@ -101,4 +101,11 @@ class Controller extends BaseController
 
         return $finalString; 
     }
+
+    public static function differenceInHours($hour){
+        $starttimestamp = strtotime(date("Y-m-d H:s"));
+        $endtimestamp = strtotime(date("Y-m-d")." ".$hour);
+        $difference = ($endtimestamp - $starttimestamp)/3600;
+        return $difference;
+    }
 }

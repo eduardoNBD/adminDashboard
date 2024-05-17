@@ -84,7 +84,7 @@
             "bg-gradient-to-r from-green-400 to-blue-500",
         ];
 
-        const roles = <?php echo json_encode($roles); ?>;;
+        const roles = <?=json_encode($roles); ?>;
 
         function getPagination(currentPage){ 
             const s = document.querySelector("#simple-search").value;

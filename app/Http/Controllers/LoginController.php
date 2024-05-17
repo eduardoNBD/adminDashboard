@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -81,6 +82,7 @@ class LoginController extends Controller
         ];
 
         if(Auth::attempt($credentials)){
+            Session::put('timezone', $request->input("timezone"));
             return response()->json(["status" => 1, "message" => "Logged"]);
         }
         else{
