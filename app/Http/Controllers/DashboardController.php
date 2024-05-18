@@ -52,7 +52,8 @@ class DashboardController extends Controller
             'appoPendi' => $appoPendi, 
             'appoFinis' => $appoFinis,  
             'chartValues' => Selling::getTotalSellings(),
-            'profitsWeeks' => Selling::getTotalSellingsWeek()
+            'profitsWeeks' => Selling::getTotalSellingsWeek(),
+            'topProducts' => Selling::getTopProducts(),
         ]);
     }
 

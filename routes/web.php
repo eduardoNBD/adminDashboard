@@ -89,6 +89,7 @@ Route::get("/clients/list",[ClientsController::class,"list"])->middleware('auth'
 //ENDPOINTS USERS    
 Route::post("/users/create",[UsersController::class,"create"])->middleware('auth');
 Route::post("/users/update/{id}",[UsersController::class,"update"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
+Route::post("/users/updateProfile/",[UsersController::class,"updateProfile"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
 Route::get("/users/delete/{id}",[UsersController::class,"delete"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
 Route::get("/users/list",[UsersController::class,"list"])->middleware('auth');
 

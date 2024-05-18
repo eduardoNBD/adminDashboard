@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use App\Models\User;
+use App\Models\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator; 
@@ -124,7 +125,7 @@ class UsersController extends Controller
 
         $user->save();
 
-        return response()->json(["status" => 1, "message" => "Servicio guardado " ]);
+        return response()->json(["status" => 1, "message" => "Usuario guardado " ]);
     }
 
     public function list(Request $request){ 
@@ -160,19 +161,72 @@ class UsersController extends Controller
         });
 
         if(!$user){
-            return response()->json(["status" => 0, "message" => "Servicio no encontrado"]);
+            return response()->json(["status" => 0, "message" => "Usuario no encontrado"]);
         }
         
         $user->status = 0;
         $user->save(); 
 
-        return response()->json(["status" => 1, "services" => $user]);
+        return response()->json(["status" => 1, "user" => $user]);
     }  
 
-    public function updateUser(Request $request, $id){ 
+    public function updateProfile(Request $request){ 
+        $validator = Validator::make(request()->all(), [
+            'name' => 'required',
+            'lastname' => 'required', 
+            'phone' => 'required|unique:users,phone,'.Auth::id(),
+        ],
+        [ 
+            'name.required' => 'Campo <strong>Nombre</strong> es requerido',
+            'lastname.required' => 'Campo <strong>Apellido</strong> es requerido',   
+            'phone.required' => 'Campo <strong>Teléfono</strong> es requerido',  
+            'phone.unique' => 'Ya existe un usuario con ese telefono',  
+        ]);
 
+        if ($validator->fails()){
+            $messages = "";
 
-        return response()->json(["status" => 0]);
+            foreach ($validator->messages()->toArray() as $key => $errMessages) {
+                foreach ($errMessages as $key => $errMessage) {
+                    $messages.= $errMessage."<br>";
+                }
+                
+            }
+
+            return response()->json(["status" => 0, "message" => $messages ]);
+        }
+
+        $user = User::findOr(Auth::id(), function () {
+            return false;
+        });
+
+        if(!$user){
+            return response()->json(["status" => 0, "message" => "Usuario no encontrado"]);
+        }
+
+        if($user->status == 0)
+        {
+            return response()->json(["status" => 0, "message" => "Usuario Eliminado"]);
+        }
+
+        $user->name     = $request->input("name");
+        $user->lastname = $request->input("lastname"); 
+        $user->phone = $request->input("phone");  
+
+        $user->save();
+
+        Auth::setUser($user);
+
+        $log = new Log;
+
+        $log->action = "update_profile";
+        $log->detail = "{}";
+
+        $log->user = Auth::id();
+        
+        $log->save();
+
+        return response()->json(["status" => 1, "message" => "Perfil guardado " ]);
     }
 }
 

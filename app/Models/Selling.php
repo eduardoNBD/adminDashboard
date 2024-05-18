@@ -72,4 +72,37 @@ class Selling extends CustomModel
 
         return $rows;
     }
+
+    public static function getTopProducts(){
+        $rows = DB::select("SELECT
+            product_id,
+            SUM(item_qty) AS total_sold,
+            products.name AS product_name,
+            products.qty AS product_qty
+        FROM (
+            SELECT
+                JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.items[', numbers.idx, ']'))) AS product_id,
+                JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.types[', numbers.idx, ']'))) AS item_type,
+                JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.qty[', numbers.idx, ']'))) AS item_qty,
+                JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.users[', numbers.idx, ']'))) AS user_id, 
+                updated_at
+            FROM sellings
+            JOIN (
+                SELECT 0 AS idx UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4  
+            ) AS numbers
+            WHERE JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.items[', numbers.idx, ']'))) IS NOT NULL
+            AND JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.types[', numbers.idx, ']'))) = 'Productos'
+            AND sellings.updated_at >= DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY)
+            AND sellings.updated_at < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY), INTERVAL 7 DAY)
+        ) AS detail_expanded
+        INNER JOIN products ON products.id = detail_expanded.product_id
+        GROUP BY product_id, products.name
+        ORDER BY total_sold DESC
+        LIMIT 5");
+
+        return $rows;
+    }
 }
+ 
+
+ 

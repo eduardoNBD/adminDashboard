@@ -41,16 +41,16 @@
                                 <div class=" mt-[18px]">
                                     <div class="relative z-0 group">
                                         <input value="{{$user->username}}" readOnly type="text" name="floating_email" id="floating_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                        <label htmlFor="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Nombre de usuario
                                         </label>
                                     </div>
                                 </div>
                                 <div class=" mt-[18px]">
                                     <div class="relative z-0 group">
-                                        <input value="{{$user->email}}" type="text" name="floating_email" id="floating_email"  
+                                        <input value="{{$user->email}}" readonly type="text" name="floating_email" id="floating_email"  
                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder="" required />
-                                        <label htmlFor="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Email
                                         </label>
                                     </div>
@@ -62,7 +62,7 @@
                                 <div class=" mt-[18px]">
                                     <div class="relative z-0 group">
                                         <input type="text" name="floating_email" id="floating_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                        <label htmlFor="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Contraseña
                                         </label>
                                     </div>
@@ -71,7 +71,7 @@
                                     <div class="relative z-0 group">
                                         <input type="text" name="floating_email" id="floating_email"  
                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder="" required />
-                                        <label htmlFor="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Nueva Contraseña
                                         </label>
                                     </div>
@@ -80,7 +80,7 @@
                                     <div class="relative z-0 group">
                                         <input type="text" name="floating_email" id="floating_email"  
                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder="" required />
-                                        <label htmlFor="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Confirmar Nueva Contraseña
                                         </label>
                                     </div>
@@ -92,40 +92,44 @@
                         </div>
                     </div>
                     <div id="information" class="invisible opacity-0 z-10 h-0 overflow-hidden tabs-content transition-all duration-[0.2s]">
-                        <div class="w-full">
-                            <h3 class="font-medium text-gray-900 text-left px-6">Información</h3>
-                            <div class="grid gap-4 grid-cols-1 md:grid-cols-2 m-2 md:m-10 md:mt-2"> 
-                                <div class=" mt-[18px]">
-                                    <div class="relative z-0 group">
-                                        <input value="{{$user->name}}" readOnly type="text" name="name" id="name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                        <label htmlFor="name" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Nombre
-                                        </label>
+                        <form onsubmit="saveInformation('{{$menu['baseURL']."/users/updateProfile/"}}')">
+                            <div class="w-full">
+                                <h3 class="font-medium text-gray-900 text-left px-6">Información</h3>
+                                <div class="grid gap-4 grid-cols-1 md:grid-cols-2 m-2 md:m-10 md:mt-2"> 
+                                    <div class=" mt-[18px]">
+                                        <div class="relative z-0 group">
+                                            <input value="{{$user->name}}" type="text" name="name" id="name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" "/>
+                                            <label for="name" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                Nombre
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class=" mt-[18px]">
+                                        <div class="relative z-0 group">
+                                            <input value="{{$user->lastname}}" type="text" name="lastname" id="lastname"  
+                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=""/>
+                                            <label for="lastname" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                Apellido
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class=" mt-[18px]">
+                                        <div class="relative z-0 group">
+                                            <input value="{{$user->phone}}" type="text" name="phone" id="phone"  
+                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=""/>
+                                            <label for="phone" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                Telefono
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class=" mt-[18px]">
-                                    <div class="relative z-0 group">
-                                        <input value="{{$user->lastname}}" type="text" name="lastname" id="lastname"  
-                                               class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder="" required />
-                                        <label htmlFor="lastname" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Apellido
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class=" mt-[18px]">
-                                    <div class="relative z-0 group">
-                                        <input value="{{$user->phone}}" type="text" name="phone" id="phone"  
-                                               class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder="" required />
-                                        <label htmlFor="phone" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Telefono
-                                        </label>
-                                    </div>
+                                <div class="my-4 mx-4 md:mx-10">
+                                    <p id="messageSuccessInf" class="text-emerald-500 text-center"></p>
+                                    <p id="messageErrorInf" class="text-red-500 text-center"></p>
+                                    <button class="bg-indigo-600 hover:bg-indigo-800 text-white w-full text-center p-2 border-[1px] border-gray-200 rounded-md cursor-pointer">Guardar</button>
                                 </div>
                             </div>
-                            <div class="my-4 mx-4 md:mx-10">
-                                <button class="bg-indigo-600 hover:bg-indigo-800 text-white w-full text-center p-2 border-[1px] border-gray-200 rounded-md cursor-pointer">Guardar</button>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                     <div id="logger" class="invisible opacity-0 z-10 h-0 overflow-hidden tabs-content transition-all duration-[0.2s]">
                         <div class="w-full clear-both">
@@ -165,6 +169,43 @@
         document.querySelector(content).classList.remove("invisible","opacity-0","z-10","h-0","overflow-hidden")
     }
 
+    function saveInformation(url){
+        showLoader();
+        event.preventDefault();
+        
+        const data = new FormData(event.target); 
+        
+        document.querySelector("#messageSuccessInf").innerHTML = "";
+        document.querySelector("#messageErrorInf").innerHTML = "";
+
+        fetch(url, { 
+            headers: { 
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },  
+            method: "post", 
+            body: data,
+        })
+        .then((res) => res.json())
+        .then((json) => {
+            
+            hideLoader();
+
+            if(json.status){
+                document.querySelector("#messageSuccessInf").innerHTML = json.message;
+                setTimeout(() => {
+                    document.querySelector("#messageSuccessInf").innerHTML = "";
+                }, "10000");
+            }
+            else{
+                document.querySelector("#messageErrorInf").innerHTML = json.message;
+                
+                setTimeout(() => {
+                    document.querySelector("#messageErrorInf").innerHTML = "";
+                }, "10000");
+            }
+        })
+        .catch((err) => console.error("error:", err)); 
+    }
 </script>
 @stop
 

@@ -276,14 +276,15 @@ class SellingsController extends Controller
             "id" => $selling->id,
             "name" =>  $selling->no,
             "prevData" => $prevData,
-            "newData" => $newData
+            "newData" => $newData,
+            "appointment" => $appointment->no
         ]);
 
         $log->user = Auth::id();
         
         $log->save();
 
-        return response()->json(["status" => 0, "message" => "Producto guardado " ]);
+        return response()->json(["status" => 1, "message" => "Producto guardado " ]);
     }
 
     public function list(Request $request){ 
