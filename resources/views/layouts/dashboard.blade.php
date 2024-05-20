@@ -37,7 +37,7 @@
                 </div>
             </div> 
             <div class="flex bg-[#ededed] border-t-[1px] border-gray-200 ">
-                <div class="md:flex md:w-64 md:flex-col z-10" id="NavBarContent">
+                <div class="md:flex md:w-64 md:flex-col z-30 shadow-md transition-all ease-in-out delay-150" id="NavBarContent">
                     <div class="h-screen flex flex-col flex-grow pt-5 overflow-y-auto bg-white">
                         <div class="flex flex-col flex-1 px-1">
                             <div class="space-y-4"> 
