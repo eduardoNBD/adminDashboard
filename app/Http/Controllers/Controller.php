@@ -7,6 +7,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController
 {
@@ -15,9 +16,11 @@ class Controller extends BaseController
     public function __construct()
     { 
         require getcwd()."/../config/menu.php";
-        
+        $user = Auth::user();
+         
         view()->share('menu', [
             'menu' => $menu,
+            'menuWorker' => $menuWorker,
             'route' => $routes,
             'url' => "/".Request::path(),
             'baseURL' => URL::to('/')
@@ -104,8 +107,9 @@ class Controller extends BaseController
 
     public static function differenceInHours($hour){
         $starttimestamp = strtotime(date("Y-m-d H:s"));
-        $endtimestamp = strtotime(date("Y-m-d")." ".$hour);
-        $difference = ($endtimestamp - $starttimestamp)/3600;
+        $endtimestamp   = strtotime($hour);
+        $difference     = ($endtimestamp - $starttimestamp)/3600;
+
         return $difference;
     }
 }

@@ -226,8 +226,11 @@ class AppointmentsController extends Controller
 
         $appointments = $appointment->where("appointments.status",1)
                                     ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
-                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id')
-        ;
+                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id');
+
+        if(Auth::user()->role == "0"){
+            $appointments->where("user_id",Auth::id());
+        }
 
         if($request->input("s"))
         { 

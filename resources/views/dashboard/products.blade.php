@@ -93,10 +93,17 @@
             const s = document.querySelector("#simple-search").value;
             fetch('{{$menu['baseURL']."/products/list?page="}}'+currentPage+'&s='+s, { 
                 headers: { 
-                    "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json', 
                 },   
             })
-            .then((res) => res.json())
+            .then((res) => { 
+                if (!res.ok) { 
+                    location.href = baseURLDashboard;
+                }
+
+                return res.json();
+            })
             .then((json) => { console.log(json);
                 if(json.status)
                 {
@@ -135,10 +142,17 @@
         {
             fetch('{{$menu['baseURL']."/products/delete/"}}'+currentProduct, { 
                 headers: { 
-                    "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json', 
                 },    
             })
-            .then((res) => res.json())
+            .then((res) => { 
+                if (!res.ok) { 
+                    location.href = baseURLDashboard;
+                }
+
+                return res.json();
+            })
             .then((json) => { console.log(json);
                 if(json.status){ 
                     currentProduct = "";

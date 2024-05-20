@@ -131,10 +131,19 @@
         {
             fetch('{{$menu['baseURL']."/users/delete/"}}'+currentUser, { 
                 headers: { 
-                    "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },    
+                    "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },   
+                credentials: 'include'
             })
-            .then((res) => res.json())
+            .then((res) => { 
+                if (!res.ok) { 
+                    location.href = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
+                }
+
+                return res.json();
+            })
             .then((json) => { console.log(json);
                 if(json.status){ 
                     currentUser = "";

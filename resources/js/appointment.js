@@ -248,3 +248,9 @@ if(appointment.id){
     }
     
 }
+
+if(user.role == "0"){
+    document.querySelector("#users").readOnly = true;
+    document.querySelector("#users").value = user.name;
+    document.querySelector("#users").dataset.object = JSON.stringify(user);
+}

@@ -328,26 +328,26 @@ class SellingsController extends Controller
     } 
 
     public function delete(Request $request, $id){ 
-        $product = Product::findOr($id, function () {
+        $selling = Selling::findOr($id, function () {
             return false;
         });
          
-        if(!$product){
+        if(!$selling){
             return response()->json(["status" => 0, "message" => "Producto no encontrado"]);
         }
         
-        $product->status = 0;
-        $product->save(); 
+        $selling->status = 0;
+        $selling->save(); 
 
         $log = new Log;
 
         $log->action = "delete_product";
-        $log->detail = json_encode(["id" => $product->id,"name" => $product->name ]);
+        $log->detail = json_encode(["id" => $selling->id,"name" => $selling->no ]);
         $log->user = Auth::id();
         
         $log->save();
 
-        return response()->json(["status" => 1, "product" => $product]);
+        return response()->json(["status" => 1, "product" => $selling]);
     } 
 }
 

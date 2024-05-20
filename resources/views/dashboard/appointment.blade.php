@@ -96,6 +96,7 @@
     const services = JSON.parse('{{json_encode($services)}}'.replaceAll("&quot;",'"'));
     const users = JSON.parse('{{json_encode($users)}}'.replaceAll("&quot;",'"'));
     const appointment = JSON.parse('{{json_encode($appointment)}}'.replaceAll("&quot;",'"'));
+    const user = users.filter(user => user.id == "{{Auth::user()->id}}")[0];
 </script>
 <script src="{{ asset('../resources/js/appointment.js') }}"></script> 
 @stop

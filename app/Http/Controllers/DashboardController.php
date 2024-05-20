@@ -21,19 +21,24 @@ class DashboardController extends Controller
         $appointment = new Appointment;
 
         $appointments = $appointment->select([
-                                        'appointments.id',
-                                        'appointments.no',
-                                        'appointments.date',
-                                        'appointments.begin',
-                                        'appointments.status',
-                                        'services.name as service_id',
-                                        DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client_id")
-                                    ])
-                                    ->where("appointments.status", 1)
-                                    ->where("appointments.date",">=",date("Y-m-d"))
-                                    ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
-                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id')->orderBy('date')->orderBy('begin')->take(5)->get();
+                                'appointments.id',
+                                'appointments.no',
+                                'appointments.date',
+                                'appointments.begin',
+                                'appointments.status',
+                                'services.name as service_id',
+                                DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client_id")
+                            ])
+                            ->where("appointments.status", 1)
+                            ->where("appointments.date",">=",date("Y-m-d"));
         
+        if(Auth::user()->role == "0" ){
+            $appointments->where("appointments.user_id", Auth::id());
+        }
+
+        $appointments = $appointments->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
+                            ->leftJoin('services', 'services.id', '=', 'appointments.service_id')->orderBy('date')->orderBy('begin')->take(5)->get();
+
         $appoToday = $appointment->select([DB::raw("COUNT(id) as total")])
                                     ->where("appointments.status","!=",0)
                                     ->where("appointments.date",date("Y-m-d"))->get()[0]->total;
@@ -69,7 +74,7 @@ class DashboardController extends Controller
         $appointment = new Appointment;
         $services = Service::where("status",1)->get();
         $clients = Client::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->get();
-        $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->where("role",0)->get();
+        $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id","role"])->where("status",1)->get();
 
         if($id)
         { 
@@ -82,6 +87,10 @@ class DashboardController extends Controller
             }
     
             if($appointment->status == 0){
+                return redirect('/dashboard/appointments');
+            }
+
+            if(Auth::user()->role == "0" && $appointment->user_id != Auth::id() ){
                 return redirect('/dashboard/appointments');
             }
 
@@ -213,7 +222,7 @@ class DashboardController extends Controller
         $services = Service::where("status",1)->get();
         $products = Product::where("status",1)->get();
         $clients = Client::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->get();
-        $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->where("role",0)->get();
+        $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id", "role"])->where("status",1)->get();
         $appointments = Appointment::select([DB::raw("CONCAT('#',no) as name"),
                                             'appointments.id', 
                                             'appointments.date',

@@ -17,12 +17,22 @@ function submitForm(url,redirect)
     
     fetch(url, { 
         headers: { 
-            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json', 
         },  
         method: "post", 
         body: data,
     })
-    .then((res) => res.json())
+    .then((res) => { 
+        if (!res.ok) { 
+            setTimeout(() => {
+                document.querySelector("#errorMessage").innerHTML = ""; 
+                location.href = baseURLDashboard;
+            }, "5000");
+        }
+
+        return res.json();
+    })
     .then((json) => {
         
         hideLoader();

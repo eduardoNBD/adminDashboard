@@ -4,7 +4,7 @@
         <meta charset="UTF-8"> 
         <meta name="viewport" content="width=device-width,initial-scale=1.0"> 
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
+        <!--<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet"> -->
         <link href="{{ asset('../resources/css/build.css') }}" rel="stylesheet"> 
         @yield('styles') 
     </head>
@@ -41,7 +41,7 @@
                     <div class="h-screen flex flex-col flex-grow pt-5 overflow-y-auto bg-white">
                         <div class="flex flex-col flex-1 px-1">
                             <div class="space-y-4"> 
-                                @foreach ($menu['menu'] as $key => $group)
+                                @foreach ((Auth::user()->role == 1 ? $menu['menu'] : $menu['menuWorker']) as $key => $group)
                                     <nav class="flex-1 space-y-2">
                                         @foreach ($group as $keyR => $route)
                                             <a href="{{$menu['baseURL'].$route['route']}}" class="{{$route['route'] == $current_route ? "bg-indigo-600 text-white" : "text-[#526270] hover:text-white hover:bg-indigo-600"}} group flex items-center px-4 py-2.5 text-sm font-medium transition-all duration-200 rounded-lg">
@@ -75,6 +75,9 @@
             <div class="rounded-full h-20 w-20 bg-violet-800 animate-ping"></div>
         </div>
         <script src="{{ asset('../resources/js/app.js') }}"></script> 
+        <script>
+            const baseURLDashboard = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
+         </script>
         @yield('scripts') 
     </body>
 </html>

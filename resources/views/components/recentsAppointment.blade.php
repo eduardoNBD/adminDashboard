@@ -11,10 +11,10 @@
                     <tr class="border-b">
                         <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
                             <a href="{{$menu['baseURL'].$menu['route']['appointments']['edit']($row->id)}}" class="font-bold text-[#526270] flex block">
-                                <span title="{{App\Http\Controllers\Controller::differenceInHours($row->begin) > 0 ? "Proximamente" : "Tarde"}}" class="{{App\Http\Controllers\Controller::differenceInHours($row->begin) > 0 ? "" : "text-red-800"}}"><svg  xmlns="http://www.w3.org/2000/svg" class="mr-1" width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clock"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 7v5l3 3" /></svg></span>
-                                {{$row->client_id}}
+                                <span title="{{App\Http\Controllers\Controller::differenceInHours($row->date." ".$row->begin) > 0 ? "Proximamente" : "Tarde"}}" class="{{App\Http\Controllers\Controller::differenceInHours($row->date." ".$row->begin) > 0 ? "" : "text-red-800"}}"><svg  xmlns="http://www.w3.org/2000/svg" class="mr-1" width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clock"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 7v5l3 3" /></svg></span>
+                                {{$row->client_id ? $row->client_id : "Cliente no registrado"}}
                             </a>
-                            {{$row->service_id}}
+                            {{$row->service_id ? $row->service_id : "Sin servicio definido"}}
                         </td>
                         <td scope="row" class="px-4 py-3 font-medium text-right whitespace-nowrap"><span class="rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">{{App\Http\Controllers\Controller::parseDate($row->date." ".$row->begin)}}</span></td>
                     </tr>

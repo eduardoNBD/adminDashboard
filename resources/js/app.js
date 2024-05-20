@@ -145,7 +145,7 @@ function reformatDate(datetime,format = "d/m/y"){console.log(datetime);
     }
 
     return finalString+" "+(finalDate.getHours() < 10 ? "0"+finalDate.getHours() : finalDate.getHours())+":"+(finalDate.getMinutes() < 10 ? "0"+finalDate.getMinutes() : finalDate.getMinutes());
-}
+} 
 
 function datediff(first, second) {        
     return Math.round((second - first) / (1000 * 60 * 60 * 24));

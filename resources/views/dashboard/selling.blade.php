@@ -466,12 +466,20 @@
         
         fetch(url, { 
             headers: { 
-                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },  
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json', 
+            },   
+            credentials: 'include',
             method: "post", 
             body: data,
         })
-        .then((res) => res.json())
+        .then((res) => { 
+            if (!res.ok) { 
+                location.href = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
+            }
+
+            return res.json();
+        })
         .then((json) => {
             
             hideLoader();
@@ -560,3 +568,5 @@
     }
   </script>
 @stop
+
+
