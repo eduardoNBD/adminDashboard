@@ -131,7 +131,7 @@ class UsersController extends Controller
     public function list(Request $request){ 
         $user = new User;
 
-        $users = $user->where("status",1);
+        $users = $user->whereIn("status", $request->input("status"));
 
         if($request->input("s"))
         {
@@ -150,7 +150,7 @@ class UsersController extends Controller
 
         $page = min($page, $totalPages);
 
-        $users = $users->paginate($perPage, ['id', 'name', 'lastname', 'username','email', 'role', 'phone'], 'users', $page);
+        $users = $users->paginate($perPage, ['id', 'name', 'lastname', 'username','email', 'role', 'phone', 'status'], 'users', $page);
          
         return response()->json(["status" => 1, 'users' => $users, 's' => $request->input("s")] );
     } 
@@ -168,7 +168,30 @@ class UsersController extends Controller
         $user->save(); 
 
         return response()->json(["status" => 1, "user" => $user]);
-    }  
+    } 
+    
+    public function recover(Request $request, $id){ 
+        $user = User::findOr($id, function () {
+            return false;
+        });
+
+        if(!$user){
+            return response()->json(["status" => 0, "message" => "Usuario no encontrado"]);
+        }
+        
+        $user->status = 1;
+        $user->save(); 
+
+        $log = new Log;
+
+        $log->action = "recover_user";
+        $log->detail = json_encode(["id" => $user->id,"name" => $user->name ]);
+        $log->user = Auth::id();
+        
+        $log->save();
+
+        return response()->json(["status" => 1, "user" => $user]);
+    } 
 
     public function updateProfile(Request $request){ 
         $validator = Validator::make(request()->all(), [

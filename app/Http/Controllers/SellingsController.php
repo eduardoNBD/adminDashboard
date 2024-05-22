@@ -135,7 +135,7 @@ class SellingsController extends Controller
         
         $log->save();
 
-        return response()->json(["status" => 1, "message" => "Venta guardado"]);
+        return response()->json(["status" => 1, "message" => "Venta guardada"]);
     } 
 
     public function update(Request $request, $id){
@@ -284,13 +284,13 @@ class SellingsController extends Controller
         
         $log->save();
 
-        return response()->json(["status" => 1, "message" => "Producto guardado " ]);
+        return response()->json(["status" => 1, "message" => "Venta guardada " ]);
     }
 
     public function list(Request $request){ 
         $selling = new Selling;
 
-        $sellings = $selling->whereIn("sellings.status",[1,2])
+        $sellings = $selling->whereIn("sellings.status",$request->input("status"))
                                     ->leftJoin('clients', 'clients.id', '=', 'sellings.client')
                                     ->leftJoin('appointments', 'appointments.id', '=', 'sellings.appointment')
         ;
@@ -302,6 +302,7 @@ class SellingsController extends Controller
                       ->orWhere(DB::raw("CONCAT(clients.name,' ',clients.lastname)"), 'like', $request->input("s") . '%');
             });
         }
+        
 
         $perPage = 10; 
         $page = $request->input("page") ?: 1; 
@@ -315,11 +316,12 @@ class SellingsController extends Controller
             'sellings.id',
             'sellings.no',
             'sellings.subtotal', 
+            'sellings.detail', 
             DB::raw('sellings.updated_at as updated_at'), 
             'sellings.status',
             'sellings.client as client_id', 
             'appointments.no as appointments',
-            DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client")
+            DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client"),
         ];
         
         $sellings = $sellings->paginate($perPage, $fields, 'sellings', $page);
@@ -333,7 +335,7 @@ class SellingsController extends Controller
         });
          
         if(!$selling){
-            return response()->json(["status" => 0, "message" => "Producto no encontrado"]);
+            return response()->json(["status" => 0, "message" => "Venta no encontrada"]);
         }
         
         $selling->status = 0;
@@ -341,13 +343,13 @@ class SellingsController extends Controller
 
         $log = new Log;
 
-        $log->action = "delete_product";
+        $log->action = "delete_selling";
         $log->detail = json_encode(["id" => $selling->id,"name" => $selling->no ]);
         $log->user = Auth::id();
         
         $log->save();
 
-        return response()->json(["status" => 1, "product" => $selling]);
+        return response()->json(["status" => 1, "selling" => $selling]);
     } 
 }
 

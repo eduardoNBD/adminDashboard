@@ -13,6 +13,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    static $monthsNamesEsp = ["Enero","Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
     public function __construct()
     { 
         require getcwd()."/../config/menu.php";

@@ -213,6 +213,8 @@ class DashboardController extends Controller
         return view("dashboard.sellings", [
             'page' => $page, 
             'status' => Selling::getStatus(), 
+            'services' => Service::get(),
+            'products' => Product::get(),
         ]);
     }
 
@@ -311,6 +313,34 @@ class DashboardController extends Controller
             'user' => Auth::user(), 
             'roles' => User::getRoles(),
             'logs' => Log::where("user",Auth::user()->id)->orderBy('created_at', 'desc')->take(5)->get(),
+        ]);
+    }
+
+    public function userDetail($id){
+        
+        $user = User::findOr($id, function () {
+            return false;
+        });
+
+        if(!$user){
+            return redirect('/dashboard/users');
+        }
+
+        if($user->status == 0){
+            return redirect('/dashboard/users');
+        }
+
+        $sellings = Selling::getTotalSellingsMonthsByUser($id);
+        
+        for ($i=0; $i < count($sellings); $i++) { 
+            $sellings[$i]->month = self::$monthsNamesEsp[intval($sellings[$i]->month)-1];
+        }
+         
+        $user->role = User::getRoles($user->role);
+
+        return view("dashboard.userDetail", [
+            'user' => $user,   
+            'sellings' =>  $sellings, 
         ]);
     }
 }

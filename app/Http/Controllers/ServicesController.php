@@ -140,8 +140,8 @@ class ServicesController extends Controller
     }
 
     public function list(Request $request){ 
-        $service = new Service;
-        $services = $service->where("status",1);
+        $service = new Service; 
+        $services = $service->whereIn("status",$request->input("status"));
 
         if($request->input("s"))
         {
@@ -180,6 +180,29 @@ class ServicesController extends Controller
         $log = new Log;
 
         $log->action = "delete_service";
+        $log->detail = json_encode(["id" => $service->id,"name" => $service->name ]);
+        $log->user = Auth::id();
+        
+        $log->save();
+
+        return response()->json(["status" => 1, "services" => $service]);
+    }  
+
+    public function recover(Request $request, $id){ 
+        $service = Service::findOr($id, function () {
+            return false;
+        });
+
+        if(!$service){
+            return response()->json(["status" => 0, "message" => "Servicio no encontrado"]);
+        }
+        
+        $service->status = 1;
+        $service->save(); 
+
+        $log = new Log;
+
+        $log->action = "recover_service";
         $log->detail = json_encode(["id" => $service->id,"name" => $service->name ]);
         $log->user = Auth::id();
         

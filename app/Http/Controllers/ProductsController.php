@@ -174,7 +174,7 @@ class ProductsController extends Controller
 
     public function list(Request $request){ 
         $product = new Product;
-        $products = $product->where("status",1);
+        $products = $product->whereIn("status",$request->input("status"));
 
         if($request->input("s"))
         {
@@ -220,5 +220,28 @@ class ProductsController extends Controller
 
         return response()->json(["status" => 1, "product" => $product]);
     }  
+
+    public function recover(Request $request, $id){ 
+        $product = Product::findOr($id, function () {
+            return false;
+        });
+
+        if(!$product){
+            return response()->json(["status" => 0, "message" => "Producto no encontrado"]);
+        }
+        
+        $product->status = 1;
+        $product->save(); 
+
+        $log = new Log;
+
+        $log->action = "recover_product";
+        $log->detail = json_encode(["id" => $product->id,"name" => $product->name ]);
+        $log->user = Auth::id();
+        
+        $log->save();
+
+        return response()->json(["status" => 1, "product" => $product]);
+    } 
 }
 

@@ -20,7 +20,8 @@ $routes = [
     "users" => [
         "root" => "/dashboard/users",
         "new" => "/dashboard/users/user",
-        "edit" => function($id) { return "/dashboard/users/user/" . $id; }
+        "edit" => function($id) { return "/dashboard/users/user/" . $id; },
+        "detail" => function($id) { return "/dashboard/users/detail/" . $id; }
     ],
     "clients" => [
         "root" => "/dashboard/clients",

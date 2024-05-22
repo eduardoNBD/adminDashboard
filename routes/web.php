@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AppointmentsController;
+use App\Http\Controllers\LogsController;
 use App\Http\Controllers\SellingsController;
 use App\Http\Middleware\Authenticate;
 
@@ -60,22 +61,23 @@ Route::post("/appointments/create",[AppointmentsController::class,"create"])->mi
 Route::post("/appointments/update/{id}",[AppointmentsController::class,"update"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
 Route::get("/appointments/delete/{id}",[AppointmentsController::class,"delete"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
 Route::get("/appointments/list",[AppointmentsController::class,"list"])->middleware('auth');
-
+Route::get("/appointments/user/{id}",[AppointmentsController::class,"getAppointmentsByUser"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 /*------------------------------------------------------------------------------*/
 
 /*--------------------------------ROUTES PRODUCTS----------------------------------*/
-
-//ENDPOINTS PRODUCTS    
-Route::post("/products/create",[ProductsController::class,"create"])->middleware(['auth', 'roles:1']);
-Route::post("/products/update/{id}",[ProductsController::class,"update"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
-Route::get("/products/delete/{id}",[ProductsController::class,"delete"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
-Route::get("/products/list",[ProductsController::class,"list"])->middleware(['auth', 'roles:1']);
 
 //VIEWS PRODUCTS
 Route::get("/dashboard/products",[DashboardController::class,"products"])->middleware('auth');
 Route::get("/dashboard/products/{page}",[DashboardController::class,"products"])->middleware('auth')->where('page', '[0-9]+');
 Route::get("/dashboard/products/product",[DashboardController::class,"product"])->middleware('auth');
 Route::get("/dashboard/products/product/{id}",[DashboardController::class,"product"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
+
+//ENDPOINTS PRODUCTS    
+Route::post("/products/create",[ProductsController::class,"create"])->middleware(['auth', 'roles:1']);
+Route::post("/products/update/{id}",[ProductsController::class,"update"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
+Route::get("/products/delete/{id}",[ProductsController::class,"delete"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
+Route::get("/products/recover/{id}",[ProductsController::class,"recover"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
+Route::get("/products/list",[ProductsController::class,"list"])->middleware(['auth', 'roles:1']);
 
 /*------------------------------------------------------------------------------*/
 
@@ -91,6 +93,7 @@ Route::get("/dashboard/services/service/{id}",[DashboardController::class,"servi
 Route::post("/services/create",[ServicesController::class,"create"])->middleware(['auth', 'roles:1']);
 Route::post("/services/update/{id}",[ServicesController::class,"update"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 Route::get("/services/delete/{id}",[ServicesController::class,"delete"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
+Route::get("/services/recover/{id}",[ServicesController::class,"recover"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 Route::get("/services/list",[ServicesController::class,"list"])->middleware(['auth', 'roles:1']);
 
 /*------------------------------------------------------------------------------*/
@@ -119,13 +122,25 @@ Route::get("/dashboard/users",[DashboardController::class,"users"])->middleware(
 Route::get("/dashboard/users/{page}",[DashboardController::class,"users"])->middleware(['auth', 'roles:1'])->where('page', '[0-9]+');
 Route::get("/dashboard/users/user",[DashboardController::class,"user"])->middleware(['auth', 'roles:1']);
 Route::get("/dashboard/users/user/{id}",[DashboardController::class,"user"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
+Route::get("/dashboard/users/detail/{id}",[DashboardController::class,"userDetail"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 Route::get("/dashboard/profile",[DashboardController::class,"profile"])->middleware('auth');
 
 //ENDPOINTS USERS    
 Route::post("/users/create",[UsersController::class,"create"])->middleware(['auth', 'roles:1']);
 Route::post("/users/update/{id}",[UsersController::class,"update"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 Route::post("/users/updateProfile/",[UsersController::class,"updateProfile"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
+Route::get("/users/recover/{id}",[UsersController::class,"recover"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 Route::get("/users/delete/{id}",[UsersController::class,"delete"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 Route::get("/users/list",[UsersController::class,"list"])->middleware(['auth', 'roles:1']);
 
 /*------------------------------------------------------------------------------*/
+
+
+/*--------------------------------ROUTES LOGS----------------------------------*/
+
+//ENDPOINTS LOGS
+Route::get("/logs/user/{id}",[LogsController::class,"getLogsByUser"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
+
+/*------------------------------------------------------------------------------*/
+
+

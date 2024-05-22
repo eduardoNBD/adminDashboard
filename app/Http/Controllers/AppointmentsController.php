@@ -226,7 +226,10 @@ class AppointmentsController extends Controller
 
         $appointments = $appointment->where("appointments.status",1)
                                     ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
-                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id');
+                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id')
+                                    ->orderByRaw('CASE WHEN date >= CURDATE() THEN 0 ELSE 1 END')
+                                    ->orderBy('date')
+                                    ->orderBy('begin');
 
         if(Auth::user()->role == "0"){
             $appointments->where("user_id",Auth::id());
@@ -240,12 +243,14 @@ class AppointmentsController extends Controller
                       ->orWhere('services.name', 'like', $request->input("s") . '%');
             });
         }
+        
+        $appointments->orderBy('appointments.date')->orderBy('appointments.begin');
 
         $perPage = 10; 
         $page = $request->input("page") ?: 1; 
     
-        $totalUsers = $appointments->count();
-        $totalPages = ceil($totalUsers / $perPage);
+        $totalAppointments = $appointments->count();
+        $totalPages = ceil($totalAppointments / $perPage);
 
         $page = min($page, $totalPages);
         $fields = [
@@ -284,6 +289,37 @@ class AppointmentsController extends Controller
 
         return response()->json(["status" => 1, "appointment" => $appointment]);
     }  
+
+    public function getAppointmentsByUser(Request $request, $id){ 
+        $appointment = new Appointment;
+
+        $appointments = $appointment->where("appointments.status",1)
+                                    ->where("user_id",$id)
+                                    ->where(DB::raw("CONCAT(appointments.date,' ',appointments.begin)"),">=",date("Y-m-d H:s"))
+                                    ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
+                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id'); 
+
+        $perPage = 5; 
+        $page = $request->input("page") ?: 1; 
+    
+        $totalAppointments = $appointments->count();
+        $totalPages = ceil($totalAppointments / $perPage);
+
+        $page = min($page, $totalPages);
+        $fields = [
+            'appointments.id',
+            'appointments.user_id',
+            'appointments.no',
+            'appointments.date',
+            'appointments.begin',
+            'services.name as service_id',
+            DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client_id")
+        ];
+        
+        $appointments = $appointments->paginate($perPage, $fields, 'appointments', $page);
+         
+        return response()->json(["status" => 1, 'appointments' => $appointments, 's' => $request->input("s")] );
+    }
 }
 
 

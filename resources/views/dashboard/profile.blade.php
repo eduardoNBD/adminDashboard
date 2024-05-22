@@ -17,7 +17,7 @@
             <section class="relative">
                 <ul class="flex gap-1 m-2"> 
                     <li class="flex-1">
-                        <button onClick="changeTab('#profile')" class="btn-tab bg-indigo-600 text-white w-full text-center p-2 border-[1px] border-gray-200 rounded-md cursor-pointer h-full">
+                        <button onClick="changeTab('#profile')" class="btn-tab bg-indigo-600 text-white w-full text-center p-2 border-[1px] border-indigo-600 rounded-md cursor-pointer h-full">
                             Perfil
                         </button>
                     </li>
@@ -165,25 +165,6 @@
 
 @section('scripts') 
 <script>
-    function changeTab(content){
-
-        const allTabs = document.querySelectorAll(".btn-tab");
-        const allContent = document.querySelectorAll(".tabs-content");
-        
-        allTabs.forEach(element => {
-            element.classList.add("hover:bg-indigo-600","hover:text-white");
-            element.classList.remove("bg-indigo-600","text-white");
-        });
-
-        allContent.forEach(element => {
-            element.classList.add("invisible","opacity-0","z-10","h-0","overflow-hidden"); 
-        });
-
-        event.currentTarget.classList.remove("hover:bg-indigo-600","hover:text-white");
-        event.currentTarget.classList.add("bg-indigo-600","text-white");
-        
-        document.querySelector(content).classList.remove("invisible","opacity-0","z-10","h-0","overflow-hidden")
-    }
 
     function saveInformation(url){
         showLoader();

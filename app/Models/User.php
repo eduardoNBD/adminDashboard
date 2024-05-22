@@ -47,7 +47,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public static function getRoles(){
+    public static function getRoles($role = null){
+        if($role != null){
+            return self::$roles[$role];
+        }
+
         return self::$roles;
     }
 }

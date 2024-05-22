@@ -4,13 +4,13 @@
         <meta charset="UTF-8"> 
         <meta name="viewport" content="width=device-width,initial-scale=1.0"> 
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <!--<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet"> -->
+        <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet"> --> 
         <link href="{{ asset('../resources/css/build.css') }}" rel="stylesheet"> 
         @yield('styles') 
     </head>
     <body> 
         <div class="h-screen">
-            <div class="flex p-2 w-full bg-white">
+            <div class="flex p-2 fixed z-40 w-full bg-white">
                 <div class="flex gap-2 w-6/12 md:w-64">
                     <button class="px-2 border-1 md:hidden sm:block" id="buttonNav" onclick="openNavbar()"> 
                         <img class="w-5 h-5 ml-auto" src="{{ asset('../resources/img/menuIconOpen.svg') }}" alt="buttonMenu" id="buttonMEnu">
@@ -37,8 +37,8 @@
                 </div>
             </div> 
             <div class="flex bg-[#ededed] border-t-[1px] border-gray-200 ">
-                <div class="md:flex md:w-64 md:flex-col z-30 shadow-md transition-all ease-in-out delay-150" id="NavBarContent">
-                    <div class="h-screen flex flex-col flex-grow pt-5 overflow-y-auto bg-white">
+                <div class="md:flex md:w-64 md:flex-col z-30 shadow-md transition-all ease-in-out delay-150 fixed" id="NavBarContent">
+                    <div class="h-screen flex flex-col flex-grow pt-5 overflow-y-auto bg-white mt-20">
                         <div class="flex flex-col flex-1 px-1">
                             <div class="space-y-4"> 
                                 @foreach ((Auth::user()->role == 1 ? $menu['menu'] : $menu['menuWorker']) as $key => $group)
@@ -64,8 +64,8 @@
                         </div>
                     </div>
                 </div> 
-                <div class="flex flex-col flex-1"> 
-                    <main class="p-2">  
+                <div class="flex flex-col flex-1 mt-20"> 
+                    <main class="p-2 ml-[0px] md:ml-[254px]">  
                         @yield('content')
                     </main>
                 </div>

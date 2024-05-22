@@ -131,7 +131,15 @@ class Log extends Model
                             <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
                                 Elimino venta <span class="font-bold">#'.$detail->name.' '.($detail->appointment ? "con la cita #".$detail->appointment : "").'</span>
                             <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
-                        </a>';  
+                        </a>'; 
+            case 'update_profile':
+                return '<a href="#" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                            <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
+                                Actualizo perfil
+                            <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
+                        </a>'; 
+            default:
+                return $log->action;
         }
     }
 

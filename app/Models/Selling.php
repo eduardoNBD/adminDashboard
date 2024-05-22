@@ -40,6 +40,7 @@ class Selling extends CustomModel
             ) AS MONTHS
             LEFT JOIN sellings ON MONTH(sellings.updated_at) = MONTHS.month
                 AND sellings.updated_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 4 MONTH)
+                AND sellings.status = 2
             GROUP BY MONTHS.month;");
 
         return $rows;
@@ -64,11 +65,46 @@ class Selling extends CustomModel
                 SELECT 0 AS idx UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 
             ) AS numbers
             WHERE JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.qty[', numbers.idx, ']'))) IS NOT NULL AND sellings.updated_at >= DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY)
-        AND sellings.updated_at < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY), INTERVAL 6 DAY)
+                AND sellings.updated_at < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY), INTERVAL 6 DAY)
+                AND sellings.status = 2
         ) AS detail_expanded
         INNER JOIN users ON users.id = user_id
         GROUP BY user_id, users.username, fullname
         ORDER BY total DESC LIMIT 5");
+
+        return $rows;
+    }
+
+    public static function getTotalSellingsMonthsByUser($id){
+        $rows = DB::select("SELECT 
+            MONTHS.month, 
+            COALESCE(SUM(detail_expanded.subtotal), 0) AS total
+        FROM (
+            SELECT MONTH(CURRENT_DATE()) - 3 AS month UNION ALL
+            SELECT MONTH(CURRENT_DATE()) - 2 UNION ALL
+            SELECT MONTH(CURRENT_DATE()) - 1 UNION ALL
+            SELECT MONTH(CURRENT_DATE())
+        ) AS MONTHS
+        LEFT JOIN (
+            SELECT
+                s.subtotal,
+                JSON_UNQUOTE(JSON_EXTRACT(s.detail, CONCAT('$.users[', numbers.idx, ']'))) AS user_id,
+                s.updated_at,
+                s.status
+            FROM sellings s
+            JOIN (
+                SELECT 0 AS idx UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+                -- Ajusta según el número máximo de elementos en tus arrays
+            ) AS numbers
+            WHERE JSON_UNQUOTE(JSON_EXTRACT(s.detail, CONCAT('$.users[', numbers.idx, ']'))) IS NOT NULL
+                 
+        ) AS detail_expanded
+        ON MONTH(detail_expanded.updated_at) = MONTHS.month
+            AND detail_expanded.updated_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 4 MONTH)
+            AND detail_expanded.status = 2
+            AND detail_expanded.user_id = '".$id."' 
+        GROUP BY MONTHS.month, detail_expanded.user_id
+        ORDER BY MONTHS.month, detail_expanded.user_id;");
 
         return $rows;
     }

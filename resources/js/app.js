@@ -4,18 +4,18 @@ const monthsNamesEsp = ["Enero","Febrero", "Marzo", "Abril", "Mayo", "Junio", "J
 
 //Functions 
 const resizeWindow = (event) => { 
-    if(window.innerWidth < 768)
+    if(window.innerWidth < 960)
     {
-        document.querySelector("#NavBarContent").classList.add("absolute","left-[-254px]");  
+        document.querySelector("#NavBarContent").classList.add("left-[-254px]");  
     }
     else
     { 
-        document.querySelector("#NavBarContent").classList.remove("absolute","left-[-254px]");
+        document.querySelector("#NavBarContent").classList.remove("left-[-254px]");
     }
 };
 
 const openNavbar = () => {
-    if(window.innerWidth < 768)
+    if(window.innerWidth < 960)
     {
         isOpen = !isOpen;
 
@@ -149,6 +149,27 @@ function reformatDate(datetime,format = "d/m/y"){console.log(datetime);
 
 function datediff(first, second) {        
     return Math.round((second - first) / (1000 * 60 * 60 * 24));
+}
+
+
+function changeTab(content){
+
+    const allTabs = document.querySelectorAll(".btn-tab");
+    const allContent = document.querySelectorAll(".tabs-content");
+    
+    allTabs.forEach(element => {
+        element.classList.add("border-gray-200","hover:bg-indigo-600","hover:text-white","bg-white");
+        element.classList.remove("border-indigo-600","bg-indigo-600","text-white");
+    });
+
+    allContent.forEach(element => {
+        element.classList.add("invisible","opacity-0","z-10","h-0","overflow-hidden"); 
+    });
+
+    event.currentTarget.classList.remove("hover:bg-indigo-600","hover:text-white","bg-white");
+    event.currentTarget.classList.add("bg-indigo-600","text-white");
+    
+    document.querySelector(content).classList.remove("invisible","opacity-0","z-10","h-0","overflow-hidden")
 }
 
 //Init
