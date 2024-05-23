@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\Log;
 use Illuminate\Support\Facades\Validator; 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ClientsController extends Controller
 {
@@ -144,7 +145,7 @@ class ClientsController extends Controller
     public function list(Request $request){ 
         $client = new Client; 
  
-        $clients = $client->where("status",1);
+        $clients = $client->whereIn("status",$request->input("status"));
 
         if($request->input("s"))
         {
@@ -165,7 +166,18 @@ class ClientsController extends Controller
 
         $page = min($page, $totalPages);
 
-        $clients = $clients->paginate($perPage, ['id', 'name', 'lastname', 'email', 'phone'], 'clients', $page);
+        $clients = $clients->select([
+            'clients.id',
+            'clients.name',
+            'clients.lastname',
+            'clients.email',
+            'clients.phone',
+            'clients.status',
+            DB::raw('(SELECT appointments.date FROM appointments WHERE appointments.client_id = clients.id AND status = 2 ORDER BY appointments.date DESC LIMIT 1) as last_appointment_date'),
+            DB::raw('(SELECT appointments.begin FROM appointments WHERE appointments.client_id = clients.id AND status = 2 ORDER BY appointments.date DESC LIMIT 1) as last_appointment_begin'),
+            DB::raw('(SELECT COUNT(*) FROM appointments WHERE appointments.client_id = clients.id AND status = 2 ) as total_appointments'), 
+            DB::raw('(SELECT sellings.detail FROM sellings WHERE sellings.appointment = (SELECT appointments.id FROM appointments WHERE appointments.client_id = clients.id ORDER BY appointments.date DESC LIMIT 1) ORDER BY sellings.created_at DESC LIMIT 1) as last_selling_detail')
+        ])->paginate($perPage, ['*'], 'clients', $page);
          
         return response()->json(["status" => 1, 'clients' => $clients, 's' => $request->input("s")] );
     } 
@@ -192,5 +204,28 @@ class ClientsController extends Controller
 
         return response()->json(["status" => 1, "clients" => $client]);
     }  
+
+    public function recover(Request $request, $id){ 
+        $client = Client::findOr($id, function () {
+            return false;
+        });
+
+        if(!$client){
+            return response()->json(["status" => 0, "message" => "Cliente no encontrado"]);
+        }
+        
+        $client->status = 1;
+        $client->save(); 
+
+        $log = new Log;
+
+        $log->action = "recover_client";
+        $log->detail = json_encode(["id" => $client->id,"name" => $client->name ]);
+        $log->user = Auth::id();
+        
+        $log->save();
+
+        return response()->json(["status" => 1, "client" => $client]);
+    } 
 }
 

@@ -65,6 +65,9 @@ class DashboardController extends Controller
     public function appointments($page = 1 ){
         return view("dashboard.appointments", [
             'page' => $page, 
+            'status' => Appointment::getStatus(), 
+            'services' => Service::get(),
+            'products' => Product::get(),
         ]);
     }
 
@@ -110,6 +113,8 @@ class DashboardController extends Controller
     public function clients($page = 1 ){
         return view("dashboard.clients", [
             'page' => $page, 
+            'services' => Service::get(),
+            'products' => Product::get(),
         ]);
     }
 

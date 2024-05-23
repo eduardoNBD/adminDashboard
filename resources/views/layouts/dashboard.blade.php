@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>@yield('title')</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('../resources/img/fav.png') }}">
         <meta charset="UTF-8"> 
         <meta name="viewport" content="width=device-width,initial-scale=1.0"> 
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -14,9 +15,9 @@
                 <div class="flex gap-2 w-6/12 md:w-64">
                     <button class="px-2 border-1 md:hidden sm:block" id="buttonNav" onclick="openNavbar()"> 
                         <img class="w-5 h-5 ml-auto" src="{{ asset('../resources/img/menuIconOpen.svg') }}" alt="buttonMenu" id="buttonMEnu">
-                    </button>
-                    <div class="mt-2 rounded-full bg-gradient-to-tr from-violet-500 to-pink-400 w-[50px] h-[50px]" ></div>
-                    <p class="content-center">LOGO</p>
+                    </button> 
+                    <img class="h-14 hidden md:inline-block my-auto" src="{{ asset('../resources/img/logo.svg') }}" alt="logo" id="logo">
+                    <img class="h-[80px] -my-3 sm:inline-block md:hidden" src="{{ asset('../resources/img/fav.svg') }}" alt="logo" id="logo">
                 </div>
                 <div class="w-6/12 md:w-full">
                     <button type="button" class="group relative flex items-center float-end justify-center  px-4 py-3 text-sm font-medium text-gray-900 transition-all duration-200 rounded-lg hover:bg-gray-100">

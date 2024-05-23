@@ -29,6 +29,20 @@
                             />
                         </div>
                     </form>
+                    <ul class="items-center w-full text-sm font-medium  bg-white border  rounded-lg flex">
+                        <li class="w-full ">
+                            <div class="flex items-center ps-3">
+                                <input id="cancel" name="status" type="checkbox" onchange="getPagination(currentPage)" value="0" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                                <label for="cancel" class="w-full py-3 ms-2 text-sm font-medium text-gray-600">Eliminado</label>
+                            </div>
+                        </li>
+                        <li class="w-full ">
+                            <div class="flex items-center ps-3">
+                                <input id="pending" name="status" type="checkbox" onchange="getPagination(currentPage)" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" checked>
+                                <label for="pending" class="w-full py-3 ms-2 text-sm font-medium text-gray-600">Disponible</label>
+                            </div>
+                        </li> 
+                    </ul>
                 </div>
                 <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                     <a href={{$menu['baseURL'].$menu['route']['clients']['new']}} class="flex items-center justify-center text-white bg-indigo-600 hover:bg-violet-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2">
@@ -60,7 +74,7 @@
     <div id="popup-modal" tabindex="-1" class="hidden flex bg-[#0000006b] overflow-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full">
         <div class="relative p-4 w-full max-w-md max-h-full">
             <div class="relative bg-white rounded-lg shadow ">
-                <button onclick="closeModel()" type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
+                <button onclick="closeModal('#popup-modal')" type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                     </svg>
@@ -74,7 +88,7 @@
                     <button  onclick="confirmDelete()" data-modal-hide="popup-modal" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                         Si
                     </button>
-                    <button onclick="closeModel()" data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">No, cancelar</button>
+                    <button onclick="closeModal('#popup-modal')" data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">No, cancelar</button>
                 </div>
             </div>
         </div>
@@ -82,16 +96,38 @@
     <div id="popup-detail" tabindex="-1" class="hidden flex -mt-16 md:mt-0 bg-[#0000006b] overflow-hidden fixed top-14 right-0 left-0 z-50 justify-center  w-full md:inset-0 h-full">
         <div class="relative p-4 w-full max-w-lg max-h-full">
             <div class="relative bg-white rounded-lg shadow overflow-hidden">
-                <button onclick="closeModelDetail()" type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
+                <button onclick="closeModal('#popup-detail')" type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                     </svg>
                     <span class="sr-only">Close modal</span>
                 </button> 
-                <h2 class="bg-violet-500 text-2xl text-center text-white py-4">Detalle de usuario</h2> 
+                <h2 class="bg-violet-500 text-2xl text-center text-white py-4">Detalle de cliente</h2> 
                 <div id="contentDetail">
                     
                 </div> 
+            </div>
+        </div>
+    </div>
+    <div id="popup-recovery" tabindex="-1" class="hidden flex bg-[#0000006b] overflow-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative bg-white rounded-lg shadow ">
+                <button onclick="closeModal('#popup-recovery')" type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="p-4 md:p-5 text-center">
+                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                    </svg>
+                    <h3 class="mb-5 text-lg font-normal text-gray-500 ">¿Estas seguro de habilitar el producto?</h3>
+                    <button  onclick="confirmRecover()"  data-modal-hide="popup-modal" type="button" class="text-white bg-emerald-600 hover:bg-emerald-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                        Si 
+                    </button>
+                    <button onclick="closeModal('#popup-recovery')" data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">No, cancelar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -103,10 +139,13 @@
     let currentClient = "";
     let currentPage    = {{$page}};
     let totalPages     = 0;
+    const services = {!! json_encode($services)!!};
+    const products = {!! json_encode($products)!!};
 
     function getPagination(currentPage){ 
+        const status = Array.from(document.querySelectorAll("[name='status']:checked")).map(checked => { return "status[]="+checked.value }).join("&");
         const s = document.querySelector("#simple-search").value;
-        fetch('{{$menu['baseURL']."/clients/list?page="}}'+currentPage+'&s='+s, { 
+        fetch('{{$menu['baseURL']."/clients/list?page="}}'+currentPage+'&s='+s+'&'+status, { 
             headers: { 
                 "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },   
@@ -140,9 +179,16 @@
         currentClient = client;
     }
 
-    function closeModel(){
+    function recoveryClient(client){
+        document.querySelector("#popup-recovery").classList.remove("hidden");
+
+        currentClient = client;
+    }
+
+
+    function closeModal(id){
         currentClient = "";
-        document.querySelector("#popup-modal").classList.add("hidden");
+        document.querySelector(id).classList.add("hidden");
     }
 
     function confirmDelete()
@@ -166,6 +212,79 @@
         .catch((err) => console.error("error:", err)); 
     }
 
+    function confirmRecover(){
+        fetch('{{$menu['baseURL']."/clients/recover/"}}'+currentClient, { 
+            headers: { 
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json', 
+            },  
+        })
+        .then((res) => { 
+            if (!res.ok) { 
+                location.href = baseURLDashboard;
+            }
+
+            return res.json();
+        })
+        .then((json) => { 
+            if(json.status){ 
+                currentService = "";
+                document.querySelector("#popup-recovery").classList.add("hidden");
+                getPagination(currentPage);
+            }
+            else{
+                
+            }
+        })
+        .catch((err) => console.error("error:", err)); 
+    }
+
+    function showDetail(client){ 
+        let detail = client.last_selling_detail ? JSON.parse(client.last_selling_detail) : []; console.log(detail);
+        let rowHTML = '<div>'+ 
+                        '<section class="my-2 px-8 text-2xl text-center">'+
+                            client.name+' '+client.lastname+
+                        '</section> '+ 
+                        '<section class="my-2 px-8 text-center grid grid-cols-2">'+
+                            '<div>'+
+                                '<span class="text-gray-400">E-mail</span>'+ 
+                                '<span class="block">'+client.email+'</span>'+ 
+                            '</div>'+
+                            '<div>'+
+                                '<span class="text-gray-400">Teléfono</span>'+ 
+                                '<span class="block">'+client.phone+'</span>'+ 
+                            '</div>'+
+                        '</section> '+ 
+
+                        '<section class="bg-gray-100 pt-3 pb-1 px-3 text-center grid grid-cols-2 mb-4"> '+  
+                            (client.last_appointment_date ?  
+                                '<div>'+
+                                    '<span class="text-gray-400">Última Cita: </span>'+ 
+                                    '<span class="">'+reformatDate(client.last_appointment_date+' '+client.last_appointment_begin)+'</span>'+ 
+                                '</div>'+
+                                '<div>'+
+                                    '<span class="text-gray-400">Total de citas</span>'+ 
+                                    '<span class="">: '+client.total_appointments+'</span>'+ 
+                                '</div>'+
+                                '<div class="col-span-2 m-4">'+
+                                    '<hr>'+
+                                    '<span class="text-center col-span-2 mt-4 pb-4 block">Ultimos productos o servicios adquiridos</span>'+
+                                    (detail.types.map( (row, index) => {
+                                        item = row == "Servicios" ? services.filter(service => service.id == detail.items[index])[0] : products.filter(product => product.id == detail.items[index])[0];
+                                        return '<section class="my-2 text-left">'+
+                                            '<span>'+detail.qty[index]+' '+item.name+'</span>'+
+                                            '<span class="float-right">$ '+parseFloat(detail.price[index]).toFixed(2)+'</span>'+
+                                        '</section>';
+                                    }).join(""))+ 
+                                '</div>': 
+                                '<span class="text-gray-400 text-center col-span-2 p-4">Sin citas aun</span>')+  
+                        '</section>'+
+                    '</div>'; 
+        
+        document.querySelector("#contentDetail").innerHTML = rowHTML; 
+        document.querySelector("#popup-detail").classList.remove("hidden");
+    } 
+
     function setRows(data){ 
         document.querySelector("table tbody").innerHTML = "";
 
@@ -173,23 +292,23 @@
             data.forEach(client => {  
 
                 let rowHTML = '<tr class="border-b border-gray-200">'+
-                                '<th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">'+
-                                    '<a href="{{$menu['baseURL'].$menu['route']['clients']['edit']('')}}'+client.id+'" class="font-bold text-[#526270]">'+client.name+' '+client.lastname+'</a>'+
+                                '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">'+
+                                    '<a href="{{$menu['baseURL'].$menu['route']['clients']['edit']('')}}'+client.id+'" class="font-bold text-[#526270]">'+client.name+' '+client.lastname+'</a>'+(client.status == "0" ? '<small class="block text-red-600"><i>Eliminado</i></small>' : "")+
                                     '<span class="block md:hidden">'+client.email+'</span>'+
-                                '</th>'+
+                                '</td>'+
                                 '<td class="px-4 py-3 hidden md:block">'+client.email+'</td>'+
                                 '<td scope="row" class="px-4 py-3">'+client.phone+'</td>'+
                                 '<td class="px-4 py-3 flex items-center justify-end">'+
                                     '<div class="group relative">'+
-                                        '<button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-[#526270] hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">'+
+                                        '<button class="inline-flex items-center p-0.5 text-sm font-medium text-center text-[#526270] hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">'+
                                             '<svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">'+
                                                 '<path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />'+
                                             '</svg>'+
                                         '</button>'+
-                                        '<div id="apple-imac-27-dropdown" class="absolute left-[-140px] group-hover:block hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow">'+
-                                            '<ul class="py-1 text-sm text-gray-700" aria-labelledby="apple-imac-27-dropdown-button">'+
+                                        '<div class="absolute left-[-173px] '+(client.status == 1 ? "top-[-40px]" : "top-[-6px]")+' group-hover:block hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow">'+
+                                            (client.status ? '<ul class="py-1 text-sm text-gray-700">'+ 
                                                 '<li>'+
-                                                    '<a href="#" class="block py-2 px-4 hover:bg-gray-100">Detalle</a>'+
+                                                    '<button onclick=\'showDetail('+JSON.stringify(client)+')\' class="w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Detalle</button>'+
                                                 '</li>'+
                                                 '<li>'+
                                                     '<a href="{{$menu['baseURL'].$menu['route']['clients']['edit']('')}}'+client.id+'" class="block py-2 px-4 hover:bg-gray-100">Editar</a>'+
@@ -197,7 +316,10 @@
                                             '</ul>'+
                                             '<div class="py-1">'+
                                                 '<button onclick="deleteClient(\''+client.id+'\')" class="w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Eliminar</button>'+
-                                            '</div>'+
+                                            '</div>': 
+                                            '<div class="py-1">'+
+                                                '<button onclick="recoveryClient(\''+client.id+'\')" class="w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Recuperar</button>'+
+                                            '</div>')+
                                         '</div>'+
                                     '</div>'+
                                 '</td>'+

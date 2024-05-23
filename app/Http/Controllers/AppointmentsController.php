@@ -224,9 +224,10 @@ class AppointmentsController extends Controller
     public function list(Request $request){ 
         $appointment = new Appointment;
 
-        $appointments = $appointment->where("appointments.status",1)
+        $appointments = $appointment->whereIn("appointments.status",$request->input("status"))
                                     ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
                                     ->leftJoin('services', 'services.id', '=', 'appointments.service_id')
+                                    ->leftJoin('sellings', 'sellings.appointment', '=', 'appointments.id')
                                     ->orderByRaw('CASE WHEN date >= CURDATE() THEN 0 ELSE 1 END')
                                     ->orderBy('date')
                                     ->orderBy('begin');
@@ -258,7 +259,10 @@ class AppointmentsController extends Controller
             'appointments.no',
             'appointments.date',
             'appointments.begin',
+            'appointments.status',
             'services.name as service_id',
+            'sellings.detail',
+            'sellings.subtotal',
             DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client_id")
         ];
         

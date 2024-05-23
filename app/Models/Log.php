@@ -66,6 +66,13 @@ class Log extends Model
                                 Elimino cliente <span class="font-bold">'.$detail->name.'</span>
                             <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
                         </a>';  
+            case 'recover_client':
+                $detail = json_decode($log->detail);
+                return '<a href="'.URL::to('/').$routes['clients']['edit']($detail->id).'" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                            <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
+                                Se habilito cliente Eliminado <span class="font-bold">'.$detail->name.'</span>
+                            <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
+                        </a>'; 
             case 'create_product':
                 $detail = json_decode($log->detail);
                 return '<a href="'.URL::to('/').$routes['products']['edit']($detail->id).'" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
@@ -86,6 +93,13 @@ class Log extends Model
                 return '<a href="#" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
                             <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
                                 Elimino producto <span class="font-bold">'.$detail->name.'</span>
+                            <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
+                        </a>'; 
+            case 'recover_product':
+                $detail = json_decode($log->detail);
+                return '<a href="'.URL::to('/').$routes['products']['edit']($detail->id).'" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                            <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
+                                Se habilito producto Eliminado <span class="font-bold">'.$detail->name.'</span>
                             <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
                         </a>'; 
             case 'create_service':
@@ -110,6 +124,13 @@ class Log extends Model
                                 Elimino servicio <span class="font-bold">'.$detail->name.'</span>
                             <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
                         </a>';  
+            case 'recover_service':
+                $detail = json_decode($log->detail);
+                return '<a href="'.URL::to('/').$routes['services']['edit']($detail->id).'" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                            <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
+                                Se habilito servicio Eliminado  <span class="font-bold">'.$detail->name.'</span>
+                            <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
+                        </a>'; 
             case 'create_selling':
                 $detail = json_decode($log->detail);
                 return '<a href="'.URL::to('/').$routes['sellings']['edit']($detail->id).'" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
@@ -138,6 +159,42 @@ class Log extends Model
                                 Actualizo perfil
                             <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
                         </a>'; 
+            case 'update_password':
+                return '<a href="#" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                            <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
+                                Cambio de contraseña
+                            <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
+                        </a>'; 
+            case 'create_user':
+                $detail = json_decode($log->detail);
+                return '<a href="'.URL::to('/').$routes['users']['edit']($detail->id).'" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                            <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
+                            Creo usuario <span class="font-bold">'.$detail->name.'</span>
+                            <br/>
+                            <span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
+                        </a>'; 
+            case 'update_user':
+                $detail = json_decode($log->detail);
+                return '<a href="'.URL::to('/').$routes['users']['edit']($detail->id).'" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                            <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
+                                Actualizo usuario <span class="font-bold">'.$detail->name.'</span>
+                            <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
+                        </a>'; 
+            case 'delete_user':
+                $detail = json_decode($log->detail);
+                return '<a href="#" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                            <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
+                                Elimino usuario <span class="font-bold">'.$detail->name.'</span>
+                            <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
+                        </a>';  
+            case 'recover_user':
+                $detail = json_decode($log->detail);
+                return '<a href="'.URL::to('/').$routes['users']['edit']($detail->id).'" class="border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                            <div class="rounded-full bg-gradient-to-tr from-violet-500 to-pink-200 w-2 h-2 shadow-md inline-block mr-2"></div>
+                            Se habilito usuario Eliminado <span class="font-bold">'.$detail->name.'</span>
+                            <br/><span class="text-[#526270] text-xs ml-2 float-right">'.Controller::timeAgo($log->created_at).'</span>
+                        </a>'; 
+
             default:
                 return $log->action;
         }

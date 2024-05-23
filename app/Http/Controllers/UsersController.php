@@ -64,6 +64,14 @@ class UsersController extends Controller
 
         $user->save();
         
+        $log = new Log;
+
+        $log->action = "create_user";
+        $log->detail = json_encode(["id" => $user->id,"name" => $user->username ]);
+        $log->user = Auth::id();
+        
+        $log->save();
+
         return response()->json(["status" => 1, "message" => "Usuario guardado"]);
     } 
 
@@ -125,6 +133,14 @@ class UsersController extends Controller
 
         $user->save();
 
+        $log = new Log;
+
+        $log->action = "update_user";
+        $log->detail = json_encode(["id" => $user->id,"name" => $user->username ]);
+        $log->user = Auth::id();
+        
+        $log->save();
+
         return response()->json(["status" => 1, "message" => "Usuario guardado " ]);
     }
 
@@ -167,6 +183,14 @@ class UsersController extends Controller
         $user->status = 0;
         $user->save(); 
 
+        $log = new Log;
+
+        $log->action = "delete_user";
+        $log->detail = json_encode(["id" => $user->id,"name" => $user->username ]);
+        $log->user = Auth::id();
+        
+        $log->save();
+
         return response()->json(["status" => 1, "user" => $user]);
     } 
     
@@ -185,7 +209,7 @@ class UsersController extends Controller
         $log = new Log;
 
         $log->action = "recover_user";
-        $log->detail = json_encode(["id" => $user->id,"name" => $user->name ]);
+        $log->detail = json_encode(["id" => $user->id,"name" => $user->username ]);
         $log->user = Auth::id();
         
         $log->save();
@@ -250,6 +274,53 @@ class UsersController extends Controller
         $log->save();
 
         return response()->json(["status" => 1, "message" => "Perfil guardado " ]);
+    }
+
+    public function updatePassword(Request $request){ 
+        $validator = Validator::make(request()->all(), [
+            'password' => 'required',
+            'new_password' => 'required|confirmed',
+            'new_password_confirmation' => 'required'
+        ],
+        [ 
+            'password.required' => 'Campo <strong>Contraseña</strong> es requerido',  
+            'new_password.required' => 'Campo <strong>Nueva contraseña</strong> es requerido', 
+            'new_password_confirmation.required' => 'Campo <strong>Confirmar nueva contraseña</strong> es requerido',  
+            'new_password.confirmed' => 'Campo <strong>Nueva contraseña</strong> debe coincidir con el <strong>Confirmar nueva Contraseña</strong> ',  
+        ]);
+
+        if ($validator->fails()){
+            $messages = "";
+
+            foreach ($validator->messages()->toArray() as $key => $errMessages) {
+                foreach ($errMessages as $key => $errMessage) {
+                    $messages.= $errMessage."<br>";
+                }
+                
+            }
+
+            return response()->json(["status" => 0, "message" => $messages]);
+        } 
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->input('password'), $user->password)) {
+            return response()->json(['status' => 0, 'message' => 'La contraseña actual no es correcta.'], 400);
+        }
+     
+        $user->password = Hash::make($request->input('new_password'));
+        $user->save();
+
+        $log = new Log;
+
+        $log->action = "update_password";
+        $log->detail = "{}";
+
+        $log->user = Auth::id();
+        
+        $log->save();
+
+        return response()->json(["status" => 1, "message" => "Contraseña modificada" ]);
     }
 }
 

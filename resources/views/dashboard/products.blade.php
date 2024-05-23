@@ -170,7 +170,7 @@
             currentProduct = product;
         }
 
-        function recoveryService(product){
+        function recoveryProduct(product){
             document.querySelector("#popup-recovery").classList.remove("hidden");
 
             currentProduct = product;
@@ -264,7 +264,7 @@
                                     '<button onclick="deleteProduct(\''+product.id+'\')" class="w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Eliminar</button>'+
                                 '</div>': 
                                 '<div class="py-1">'+
-                                    '<button onclick="recoveryService(\''+product.id+'\')" class="w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Recuperar</button>'+
+                                    '<button onclick="recoveryProduct(\''+product.id+'\')" class="w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Recuperar</button>'+
                                 '</div>')+
                             '</div>'+
                         '</div>'+

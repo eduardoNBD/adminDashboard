@@ -6,7 +6,7 @@
     <section class="">
         <div class="mx-auto px-0 md:px-4 lg:px-12"> 
                 <div class="bg-white relative shadow-md sm:rounded-lg"><div class="pt-4 pl-4">Ventas 
-                    <span id="totalSellings" class="block text-center md:inline-block rounded-lg text-[10px] text-white bg-gray-600 py-1 px-2 font-bold">0</span>
+                    <span id="totalSellings" class="text-center md:inline-block rounded-lg text-[10px] text-white bg-gray-600 py-1 px-2 font-bold">0</span>
                 </div>
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
@@ -65,7 +65,7 @@
                             <th scope="col" class="px-4 py-3">Cliente</th>
                             <th scope="col" class="px-4 py-3">Fecha y hora</th> 
                             <th scope="col" class="px-4 py-3 hidden md:table-cell">Total</th> 
-                            <th scope="col" class="px-4 py-3 hidden md:table-cell">Status</th> 
+                            <th scope="col" class="px-4 py-3 hidden md:table-cell">Estatus</th> 
                             <th scope="col" class="px-4 py-3">
                                 <span class="sr-only">Actions</span>
                             </th>
@@ -125,8 +125,8 @@
     let currentSelling = "";
     let currentPage    = {{$page}};
     let totalPages     = 0;
-    const roles = <?= json_encode($status); ?>; 
-    const cRoles = ["bg-red-800","bg-yellow-600", "bg-emerald-600"];
+    const status = <?= json_encode($status); ?>; 
+    const cStatus = ["bg-red-800","bg-yellow-600", "bg-emerald-600"];
     const services = {!! json_encode($services)!!};
     const products = {!! json_encode($products)!!};
 
@@ -253,7 +253,7 @@
                             '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"><a href="{{$menu['baseURL'].$menu['route']['clients']['edit']('')}}'+selling.client_id+'" class="font-bold text-[#526270]">'+selling.client+'</a></td>'+
                             '<td class="px-4 py-3 "><span class="block text-center md:inline-block rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">'+reformatDate(selling.updated_at)+'</span></td>'+
                             '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell">$ '+selling.subtotal.toFixed(2)+'</td>'+
-                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell"><span class="rounded-lg text-[10px] text-white '+cRoles[selling.status]+' py-1 px-2 font-bold">'+roles[selling.status]+'</span></td>'+
+                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell"><span class="rounded-lg text-[10px] text-white '+cStatus[selling.status]+' py-1 px-2 font-bold">'+status[selling.status]+'</span></td>'+
                             '<td class="px-4 py-3 flex items-center justify-end">'+
                                 '<div class="group relative">'+
                                     '<button class="inline-flex items-center p-0.5 text-sm font-medium text-center text-[#526270] hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">'+
@@ -262,9 +262,9 @@
                                         '</svg>'+
                                     '</button>'+
                                     '<div class="absolute left-[-173px] '+(selling.status == 1 ? "top-[-40px]" : "top-[-6px]")+' group-hover:block hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow">'+
-                                        '<ul class="py-1 text-sm text-gray-700" aria-labelledby="apple-imac-27-dropdown-button">'+
+                                        '<ul class="py-1 text-sm text-gray-700">'+
                                             '<li>'+
-                                                '<button onclick=\'showDetail('+JSON.stringify(selling)+')\' href={Routes.buttonppointments.detail("12345sad")} class="w-full text-left py-2 px-4 hover:bg-gray-100">Detalle</button>'+
+                                                '<button onclick=\'showDetail('+JSON.stringify(selling)+')\' class="w-full text-left py-2 px-4 hover:bg-gray-100">Detalle</button>'+
                                             '</li>'+
                                             (selling.status == 1 ? '<li>'+
                                                 '<a href="{{$menu['baseURL'].$menu['route']['sellings']['edit']('')}}'+selling.id+'" class="block py-2 px-4 hover:bg-gray-100">Editar</a>'+

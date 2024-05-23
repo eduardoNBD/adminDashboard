@@ -14,4 +14,14 @@ class Appointment extends Model
     protected $table = 'appointments';
     public $keyType  = 'string';
     public $incrementing = false;
+
+    public static $status = [
+        "Eliminada",
+        "Pendiente",
+        "Completada",
+    ];
+
+    public static function getStatus(){
+        return self::$status;
+    }
 }
