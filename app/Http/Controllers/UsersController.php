@@ -322,6 +322,58 @@ class UsersController extends Controller
 
         return response()->json(["status" => 1, "message" => "Contraseña modificada" ]);
     }
+
+    public function updatePasswordForUser(Request $request,$id) {
+        $validator = Validator::make($request->all(), [ 
+            'new_password' => 'required|confirmed',
+            'new_password_confirmation' => 'required'
+        ],
+        [ 
+            'user_id.required' => 'Campo <strong>Usuario</strong> es requerido',
+            'user_id.exists' => 'El <strong>Usuario</strong> no existe',
+            'new_password.required' => 'Campo <strong>Nueva contraseña</strong> es requerido', 
+            'new_password_confirmation.required' => 'Campo <strong>Confirmar nueva contraseña</strong> es requerido',  
+            'new_password.confirmed' => 'Campo <strong>Nueva contraseña</strong> debe coincidir con el <strong>Confirmar nueva Contraseña</strong>',
+        ]);
+    
+        if ($validator->fails()){
+            $messages = "";
+    
+            foreach ($validator->messages()->toArray() as $key => $errMessages) {
+                foreach ($errMessages as $key => $errMessage) {
+                    $messages .= $errMessage . "<br>";
+                }
+            }
+    
+            return response()->json(["status" => 0, "message" => $messages]);
+        } 
+    
+        $user = User::findOr($id, function () {
+            return false;
+        });
+
+        if(!$user){
+            return response()->json(["status" => 0, "message" => "Usuario no encontrado"]);
+        }
+
+        if($user->status == 0)
+        {
+            return response()->json(["status" => 0, "message" => "Usuario Eliminado"]);
+        }
+    
+        $user->password = Hash::make($request->input('new_password'));
+        $user->save();
+    
+        $log = new Log;
+        $log->action = "update_password_for_user";
+        $log->detail = json_encode(["id" => $user->id,"name" => $user->username ]);
+        $log->user = Auth::id();
+
+        $log->save();
+    
+        return response()->json(["status" => 1, "message" => "Contraseña modificada para el usuario."]);
+    }
+    
 }
 
 

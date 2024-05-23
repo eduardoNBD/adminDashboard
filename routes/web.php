@@ -129,8 +129,9 @@ Route::get("/dashboard/profile",[DashboardController::class,"profile"])->middlew
 //ENDPOINTS USERS    
 Route::post("/users/create",[UsersController::class,"create"])->middleware(['auth', 'roles:1']);
 Route::post("/users/update/{id}",[UsersController::class,"update"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
-Route::post("/users/updateProfile/",[UsersController::class,"updateProfile"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
-Route::post("/users/updatePassword/",[UsersController::class,"updatePassword"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
+Route::post("/users/updateProfile/",[UsersController::class,"updateProfile"])->middleware('auth');
+Route::post("/users/updatePassword/",[UsersController::class,"updatePassword"])->middleware('auth');
+Route::post("/users/updatePasswordForUser/{id}",[UsersController::class,"updatePasswordForUser"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 Route::get("/users/recover/{id}",[UsersController::class,"recover"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 Route::get("/users/delete/{id}",[UsersController::class,"delete"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 Route::get("/users/list",[UsersController::class,"list"])->middleware(['auth', 'roles:1']);

@@ -244,6 +244,7 @@
                                                 (user.status == 0 ? '<small class="float-right text-xs text-white bg-red-600 rounded-lg py-1 px-2"><i>Eliminado</i></small>' : '')+
                                                 '<div class="rounded-full w-24 h-24 pt-6 -mt-14 -mb-4 m-auto text-5xl text-center text-[#555555]">'+user.username[0]+'</div>'+
                                             '</div>'+
+                                            '<div class="text-center text-[#777777] text-sm">'+user.username+'</div>'+
                                             '<div class="text-center clear-both">'+
                                                 '<strong>'+user.name+' '+user.lastname+'</strong>'+
                                             '</div>'+
