@@ -110,6 +110,10 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function calendar($page = 1 ){
+        return view("dashboard.calendar", []);
+    }
+
     public function clients($page = 1 ){
         return view("dashboard.clients", [
             'page' => $page, 
@@ -226,10 +230,10 @@ class DashboardController extends Controller
     public function selling($id = null){ 
         $title = $id ? "Actualizar Venta" : "Crear Venta";
         $selling = new Selling;
-        $services = Service::where("status",1)->get();
-        $products = Product::where("status",1)->get();
-        $clients = Client::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->where("status",1)->get();
-        $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id", "role"])->where("status",1)->get();
+        $services = Service::whereIn("status",$id ? [0,1] : [1])->get();
+        $products = Product::whereIn("status",$id ? [0,1] : [1])->get();
+        $clients = Client::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->whereIn("status",$id ? [0,1] : [1])->get();
+        $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id", "role"])->whereIn("status",$id ? [0,1] : [1])->get();
         $appointments = Appointment::select([DB::raw("CONCAT('#',no) as name"),
                                             'appointments.id', 
                                             'appointments.date',
@@ -253,7 +257,7 @@ class DashboardController extends Controller
                 return redirect('/dashboard/sellings');
             }
     
-            if($selling->status == 0){
+            if($selling->status == 0 || $selling->status == 2){
                 return redirect('/dashboard/sellings');
             }
 
@@ -265,6 +269,57 @@ class DashboardController extends Controller
         $appointments = $appointments->get();
 
         return view("dashboard.selling", [
+            'title' => $title, 
+            'services' => $services,
+            'products' => $products,
+            'clients' => $clients,
+            'users' => $users,
+            'appointments' => $appointments,
+            'id' => $id,
+            'selling' => $selling,  
+        ]);
+    }
+
+    public function invoice($id){  
+        $selling = new Selling;
+        $services = Service::get();
+        $products = Product::get();
+        $clients = Client::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id"])->get();
+        $users = User::select([DB::raw("CONCAT(name,' ',lastname) AS name"),"id", "role"])->get();
+        $appointments = Appointment::select([DB::raw("CONCAT('#',no) as name"),
+                                            'appointments.id', 
+                                            'appointments.date',
+                                            'appointments.begin',
+                                            'appointments.service_id',
+                                            'appointments.client_id',
+                                            'appointments.user_id',
+                                            'appointments.notes',])
+                                    ->where("appointments.status",[1,2])
+                                    ->where("appointments.date",">=",date("Y-m-d"))
+                                    ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
+                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id'); 
+                                    
+
+         if($id){ 
+            $selling = Selling::findOr($id, function () {
+                return false;
+            });
+    
+            if(!$selling){
+                return redirect('/dashboard/sellings');
+            }
+    
+            if($selling->status != 2){
+                return redirect('/dashboard/sellings');
+            }
+
+            $title = "Recibo de venta #".$selling->no;
+            $appointments->orWhere("appointments.id",$selling->appointment); 
+        } 
+
+        $appointments = $appointments->get();
+
+        return view("dashboard.invoice", [
             'title' => $title, 
             'services' => $services,
             'products' => $products,

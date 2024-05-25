@@ -101,23 +101,23 @@
                             '</div>'+
                             '<div class="pl-1">'+
                                 '<div class="autocomplete relative group">'+
-                                    '<input value="'+types[1].name+'" data-object=\''+JSON.stringify(types[1]).trim()+'\' type="text" name="type[]" class="types block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
+                                    '<input value="'+types[1].name+'" data-object=\''+JSON.stringify(types[1]).trim()+'\' autocomplete="off" type="text" name="type[]" class="types block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
                                     '<label for="type" class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tipo</label>'+
                                 '</div>'+
                             '</div>'+
                             '<div>'+
                                 '<div class="autocomplete relative group">'+
-                                    '<input type="text" name="services[]" class="services block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
+                                    '<input type="text" name="services[]" autocomplete="off" class="services block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
                                     '<label for="services" class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Servicios</label>'+
                                 '</div>'+
                                 '<div class="autocomplete relative group" style="display:none">'+
-                                    '<input type="text" name="products[]" class="products block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
+                                    '<input type="text" name="products[]" autocomplete="off" class="products block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
                                     '<label for="products" class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Productos</label>'+
                                 '</div>'+
                             '</div>'+
                             '<div class="flex gap-1">'+
                                 '<div class="relative z-0 mt-1 group">'+
-                                    '<input readOnly  value="0" type="text" name="price[]" class="prices block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
+                                    '<input readOnly  value="0" type="text"  name="price[]" class="prices block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
                                     '<label class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Precio</label>'+
                                 '</div>'+
                                 '<div class="relative z-0 mt-1 group">'+
@@ -127,7 +127,7 @@
                             '</div>'+
                             '<div>'+
                                 '<div class="relative z-0 mt-1 group">'+
-                                    '<input type="text" name="users[]" class="users block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
+                                    '<input type="text" name="users[]" autocomplete="off" class="users block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-[1px] border-[#526270] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />'+
                                     '<label class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Usuario</label>'+
                                 '</div>'+
                             '</div>'+
@@ -330,8 +330,18 @@
             input.parentNode.parentNode.nextSibling.querySelector("input").value = JSON.parse(input.dataset.object).price;
         });
 
-        autocomplete(prodNode, products, (input) => {  
-            input.parentNode.parentNode.nextSibling.querySelector("input").value = JSON.parse(input.dataset.object).price;
+        autocomplete(prodNode, products, (input) => { 
+            let productAdd = document.querySelectorAll('.products[data-object=\''+input.dataset.object+'\']');
+            console.log(productAdd);
+            if(productAdd.length > 1 ){
+                let valueNew = input.parentNode.parentNode.nextSibling.querySelector(".qty").value;
+                let valueOld = productAdd[0].parentNode.parentNode.nextSibling.querySelector(".qty").value;
+
+                productAdd[0].parentNode.parentNode.nextSibling.querySelector(".qty").value = parseInt(valueOld)+parseInt(valueNew);
+                input.parentElement.parentElement.parentElement.parentElement.querySelector(".col-span-4 button").click()
+            }else{
+                input.parentNode.parentNode.nextSibling.querySelector("input").value = JSON.parse(input.dataset.object).price;
+            } 
         });
 
         autocomplete(userNode, users);
@@ -375,7 +385,7 @@
     }
 
     function handleDeleteItem(){
-        event.target.parentNode.parentNode.parentNode.parentNode.remove();
+        event.currentTarget.parentNode.parentNode.parentNode.remove();
     }
 
     autocomplete(document.querySelector("#clients"), clients);
@@ -475,7 +485,7 @@
         })
         .then((res) => { 
             if (!res.ok) { 
-                location.href = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
+                //location.href = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
             }
 
             return res.json();
@@ -563,8 +573,6 @@
                 calcTotal();
             });
         });
-
-        console.log(detail);
     }
   </script>
 @stop

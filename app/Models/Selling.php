@@ -32,7 +32,8 @@ class Selling extends CustomModel
                 MONTHS.month,
                 COALESCE(SUM(sellings.subtotal), 0) AS total
             FROM (
-                SELECT MONTH(CURRENT_DATE()) - 3 AS month UNION ALL
+                SELECT MONTH(CURRENT_DATE()) - 4 AS month UNION ALL
+                SELECT MONTH(CURRENT_DATE()) - 3 UNION ALL
                 SELECT MONTH(CURRENT_DATE()) - 2 UNION ALL
                 SELECT MONTH(CURRENT_DATE()) - 1 UNION ALL
                 SELECT MONTH(CURRENT_DATE())
@@ -127,9 +128,7 @@ class Selling extends CustomModel
                 SELECT 0 AS idx UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4  
             ) AS numbers
             WHERE JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.items[', numbers.idx, ']'))) IS NOT NULL
-            AND JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.types[', numbers.idx, ']'))) = 'Productos'
-            AND sellings.updated_at >= DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY)
-            AND sellings.updated_at < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY), INTERVAL 7 DAY)
+            AND JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.types[', numbers.idx, ']'))) = 'Productos' 
         ) AS detail_expanded
         INNER JOIN products ON products.id = detail_expanded.product_id
         GROUP BY product_id, products.name

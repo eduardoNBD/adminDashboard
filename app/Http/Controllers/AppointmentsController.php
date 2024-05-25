@@ -271,6 +271,52 @@ class AppointmentsController extends Controller
         return response()->json(["status" => 1, 'appointments' => $appointments, 's' => $request->input("s")] );
     } 
 
+    public function listByDates(Request $request){ 
+        $appointment = new Appointment;
+
+        $appointments = $appointment->select([
+                                        DB::raw("CONCAT('Cita #',no) as title"),
+                                        DB::raw("CONCAT(date,' ',begin) as start"),
+                                        DB::raw("CONCAT(date,' ',end) as end"),
+                                        'services.name as service_id', 
+                                        'appointments.notes',
+                                        'appointments.id',
+                                        'appointments.status',
+                                        DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client_id")
+                                    ]) 
+                                    ->whereBetween('date', [date("Y-m-d",strtotime($request->input('start'))), date("Y-m-d",strtotime($request->input('end')))])
+                                    ->leftJoin('clients', 'clients.id', '=', 'appointments.client_id')
+                                    ->leftJoin('services', 'services.id', '=', 'appointments.service_id');
+
+        if(Auth::user()->role == "0"){
+            $appointments->where("user_id",Auth::id());
+        }
+        
+        
+
+        $appointmentsData = $appointments->get()->map(function ($appointment) {
+            $colors = Appointment::getColors();
+            $status = Appointment::getStatus();
+
+            return [
+                'id' => $appointment->id,
+                'title' => $appointment->title,
+                'start' => $appointment->start,
+                'end' => $appointment->end,
+                'backgroundColor' => $colors[$appointment->status],
+                'borderColor' => $colors[$appointment->status],
+                'description' => "Aque",
+                'extendedProps' => [
+                    'service_id' => $appointment->service_id,
+                    'client_id' => $appointment->client_id,
+                    'notes' => $appointment->notes,
+                ]
+            ];
+        });
+         
+        return response()->json(["status" => 1, 'appointments' => $appointmentsData, "where" => date("Y-m-d",strtotime($request->input('start')))." ".date("Y-m-d",strtotime($request->input('end')))] );
+    } 
+
     public function delete(Request $request, $id){ 
         $appointment = Appointment::findOr($id, function () {
             return false;

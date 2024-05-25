@@ -143,8 +143,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="my-4 mx-4 md:mx-10">
-                                    <p id="messageSuccessInf" class="text-emerald-500 text-center"></p>
+                                <div class="my-4 mx-4 md:mx-10"> 
                                     <p id="messageErrorInf" class="text-red-500 text-center"></p>
                                     <button class="bg-indigo-600 hover:bg-indigo-800 text-white w-full text-center p-2 border-[1px] border-gray-200 rounded-md cursor-pointer">Guardar</button>
                                 </div>

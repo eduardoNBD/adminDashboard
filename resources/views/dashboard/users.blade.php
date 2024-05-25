@@ -244,7 +244,7 @@
                                                 (user.status == 0 ? '<small class="float-right text-xs text-white bg-red-600 rounded-lg py-1 px-2"><i>Eliminado</i></small>' : '')+
                                                 '<div class="rounded-full w-24 h-24 pt-6 -mt-14 -mb-4 m-auto text-5xl text-center text-[#555555]">'+user.username[0]+'</div>'+
                                             '</div>'+
-                                            '<div class="text-center text-[#777777] text-sm">'+user.username+'</div>'+
+                                            '<div class="text-center text-[#777777] mb-4">'+user.username+'</div>'+
                                             '<div class="text-center clear-both">'+
                                                 '<strong>'+user.name+' '+user.lastname+'</strong>'+
                                             '</div>'+
@@ -262,14 +262,15 @@
                                                 (user.status ?
                                                     '<button  onclick="deleteUser(\''+user.id+'\')" class="float-right text-red-700" title="Eliminar">'+
                                                         '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeW-wdth="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>'+
-                                                    '</button>':
+                                                    '</button>'+
+                                                    '<a href="{{$menu['baseURL'].$menu['route']['users']['edit']('')}}'+user.id+'"  class="float-right inline-block text-blue-600" title="Editar">'+
+                                                        '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  float-right icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>'+
+                                                    '</a>'
+                                                    :
                                                     '<button  onclick="recoveryUser(\''+user.id+'\')" class="float-right text-emerald-800" title="Recuperar">'+
                                                         '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-refresh"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" /><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" /></svg>'+
                                                     '</button>'
-                                                )+
-                                                '<a href="{{$menu['baseURL'].$menu['route']['users']['edit']('')}}'+user.id+'"  class="float-right inline-block text-blue-600" title="Editar">'+
-                                                    '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  float-right icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>'+
-                                                '</a>'+
+                                                )+ 
                                                 '<div class="clear-both"></div>'+
                                             '</div>'+
                                         '</div>'+

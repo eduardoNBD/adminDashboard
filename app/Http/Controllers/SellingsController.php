@@ -7,6 +7,8 @@ use Illuminate\Http\UploadedFile;
 use App\Models\Selling;
 use App\Models\Log;
 use App\Models\Appointment;
+use App\Models\Product;
+use App\Rules\ValidQuantity;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator; 
@@ -49,8 +51,20 @@ class SellingsController extends Controller
                     Rule::exists($request->input("type")[$key] == 'Servicios' ? 'services' : 'products', 'id')
                 ];
 
+                if ($request->input("type")[$key] == 'Productos') {
+                    $rules["qty.{$key}"] = [ 
+                        'required',
+                        'integer',
+                        'min:1',
+                        new ValidQuantity($request->input("items")[$key])
+                    ];
+
+                    $textRules["qty.{$key}.valid_quantity"] = 'La cantidad solicitada del producto en la fila <strong>'.($key+1).'</strong> excede la cantidad disponible.';
+                }
+
                 $textRules["items.{$key}.required"] = $request->input("type")[$key] == 'Servicios' ? 'El campo <strong>servicio</strong> en la fila <strong>'.($key+1).'</strong> es requerido' : 'El campo <strong>producto</strong> en la fila <strong>'.($key+1).'</strong> es requerido';
                 $textRules["items.{$key}.exists"] = $request->input("type")[$key] == 'Servicios' ? 'El campo <strong>servicio</strong> en la fila <strong>'.($key+1).'</strong> debe ser un servicio valido' : 'El campo <strong>producto</strong> en la fila <strong>'.($key+1).'</strong> debe ser un producto valido';
+           
             }
         }else{
             return response()->json(["status" => 0, "message" => "Es necesario agregar servicios o productos"]);
@@ -86,13 +100,15 @@ class SellingsController extends Controller
             return false;
         });
 
-        if(!$appointment){
-            return response()->json(["status" => 0, "message" => "Cita no encontrado"]);
-        }
+        if($request->input("appointment")){
+            if(!$appointment){
+                return response()->json(["status" => 0, "message" => "Cita no encontrado"]);
+            }
 
-        if($appointment->status == 0 || $appointment->status == 2)
-        {
-            return response()->json(["status" => 0, "message" => "Cita Cancelada o ya se cobro"]);
+            if($appointment->status == 0 || $appointment->status == 2)
+            {
+                return response()->json(["status" => 0, "message" => "Cita Cancelada o ya se cobro"]);
+            }
         }
         
         $latest = Selling::latest()->first();
@@ -115,22 +131,35 @@ class SellingsController extends Controller
             "qty" => $request->input("qty"),
             "users" => $request->input("users"),
         ]);
-         
-        $selling->appointment = $appointment->id;
+        
+        if($request->input("appointment")){ 
+            $selling->appointment = $appointment->id;
+        }
+
         $selling->client = $request->input("clients");
         $selling->no     = $latestId;
         $selling->modify_by = Auth::id();
         $selling->save(); 
         
-        if($request->input("status") == 2){
-            $appointment->status = 2;
-            $appointment->save();
+        if($request->input("status") == 2 ){
+            if($request->input("appointment")){
+                $appointment->status = 2;
+                $appointment->save();
+            }
+
+            foreach ($request->input("type") as $key => $value) {
+                if($value == "Productos"){
+                    $product = Product::find($request->input("items")[$key]);
+                    $product->qty = $product->qty - intval($request->input("qty")[$key]);
+                    $product->save();
+                }
+            }
         }
 
         $log = new Log;
 
         $log->action = "create_selling";
-        $log->detail = json_encode(["id" => $selling->id, "name" => $selling->no, "appointment" => $appointment->no]);
+        $log->detail = json_encode(["id" => $selling->id, "name" => $selling->no, "appointment" => $request->input("appointment") ? $appointment->no : ""]);
         $log->user = Auth::id();
         
         $log->save();
@@ -170,6 +199,17 @@ class SellingsController extends Controller
                     'required',
                     Rule::exists($request->input("type")[$key] == 'Servicios' ? 'services' : 'products', 'id')
                 ];
+
+                if ($request->input("type")[$key] == 'Productos') {
+                    $rules["qty.{$key}"] = [ 
+                        'required',
+                        'integer',
+                        'min:1',
+                        new ValidQuantity($request->input("items")[$key])
+                    ];
+
+                    $textRules["qty.{$key}.valid_quantity"] = 'La cantidad solicitada del producto en la fila <strong>'.($key+1).'</strong> excede la cantidad disponible.';
+                }
 
                 $textRules["items.{$key}.required"] = $request->input("type")[$key] == 'Servicios' ? 'El campo <strong>servicio</strong> en la fila <strong>'.($key+1).'</strong> es requerido' : 'El campo <strong>producto</strong> en la fila <strong>'.($key+1).'</strong> es requerido';
                 $textRules["items.{$key}.exists"] = $request->input("type")[$key] == 'Servicios' ? 'El campo <strong>servicio</strong> en la fila <strong>'.($key+1).'</strong> debe ser un servicio valido' : 'El campo <strong>producto</strong> en la fila <strong>'.($key+1).'</strong> debe ser un producto valido';
@@ -221,13 +261,15 @@ class SellingsController extends Controller
             return false;
         });
 
-        if(!$appointment){
-            return response()->json(["status" => 0, "message" => "Cita no encontrado"]);
-        }
+        if($request->input("appointment")){
+            if(!$appointment){
+                return response()->json(["status" => 0, "message" => "Cita no encontrado"]);
+            }
 
-        if($appointment->status == 0  )
-        {
-            return response()->json(["status" => 0, "message" => "Cita Cancelada o ya se cobro"]);
+            if($appointment->status == 0 || $appointment->status == 2)
+            {
+                return response()->json(["status" => 0, "message" => "Cita Cancelada o ya se cobro"]);
+            }
         }
 
         $prevData = [
@@ -250,14 +292,27 @@ class SellingsController extends Controller
             "users" => $request->input("users"),
         ]);
          
-        $selling->appointment = $appointment->id;
+        if($request->input("appointment")){ 
+            $selling->appointment = $appointment->id;
+        }
+        
         $selling->client = $request->input("clients"); 
         $selling->modify_by = Auth::id();
         $selling->save(); 
         
-        if($request->input("status") == 2){
-            $appointment->status = 2;
-            $appointment->save();
+        if($request->input("status") == 2 ){
+            if($request->input("appointment")){
+                $appointment->status = 2;
+                $appointment->save();
+            }
+
+            foreach ($request->input("type") as $key => $value) {
+                if($value == "Productos"){
+                    $product = Product::find($request->input("items")[$key]);
+                    $product->qty = $product->qty - intval($request->input("qty")[$key]);
+                    $product->save();
+                }
+            }
         }
 
         $newData = [
@@ -277,7 +332,7 @@ class SellingsController extends Controller
             "name" =>  $selling->no,
             "prevData" => $prevData,
             "newData" => $newData,
-            "appointment" => $appointment->no
+            "appointment" => $request->input("appointment") ? $appointment->no : ""
         ]);
 
         $log->user = Auth::id();

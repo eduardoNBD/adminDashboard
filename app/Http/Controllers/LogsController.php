@@ -10,7 +10,7 @@ class LogsController extends Controller
     public function getLogsByUser(Request $request, $id){
         $log = new Log;
 
-        $logs = $log->where("logs.user",$id);  
+        $logs = $log->where("logs.user",$id)->orderBy('created_at', 'desc');  
 
         $perPage = 5; 
         $page = $request->input("page") ?: 1; 
@@ -23,6 +23,7 @@ class LogsController extends Controller
             'logs.id',
             'logs.action',
             'logs.detail', 
+            'logs.created_at',
         ];
         
         $logs = $logs->paginate($perPage, $fields, 'logs', $page);

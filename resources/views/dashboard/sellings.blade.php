@@ -222,7 +222,7 @@
                         '<hr> '+ 
                         '<section class="my-2 px-8">'+
                             '<span class="text-gray-400">Cliente</span>'+
-                            '<span class="float-right">'+selling.client+'</span>'+
+                            '<span class="float-right">'+(selling.client_id != null ? selling.client : "Sin Cliente")+'</span>'+
                         '</section> '+ 
                         '<div class="bg-gray-100 pt-3 pb-1 px-3"> '+ 
                             '<span class="text-gray-400">Productos y servicios</span>'+
@@ -249,8 +249,15 @@
         if(data.length){
             data.forEach(selling => { 
                 let rowHTML = '<tr class="border-b border-gray-200">'+
-                            '<th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"><a href="{{$menu['baseURL'].$menu['route']['sellings']['edit']('')}}'+selling.id+'" class="font-bold text-[#526270]">'+selling.no+'</a></td>'+
-                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"><a href="{{$menu['baseURL'].$menu['route']['clients']['edit']('')}}'+selling.client_id+'" class="font-bold text-[#526270]">'+selling.client+'</a></td>'+
+                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">'+
+                                (selling.status != 0 ?
+                                    '<a href="'+(selling.status == 1 ? '{{$menu['baseURL'].$menu['route']['sellings']['edit']('')}}' : '{{$menu['baseURL'].$menu['route']['sellings']['invoice']('')}}')+selling.id+'" class="font-bold text-[#526270]">'+
+                                        selling.no+
+                                    '</a>': 
+                                    selling.no
+                                )+
+                            '</td>'+
+                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">'+(selling.client_id != null ? '<a href="{{$menu['baseURL'].$menu['route']['clients']['edit']('')}}'+selling.client_id+'" class="font-bold text-[#526270]">'+selling.client+'</a>' : 'Sin Cliente')+'</td>'+
                             '<td class="px-4 py-3 "><span class="block text-center md:inline-block rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">'+reformatDate(selling.updated_at)+'</span></td>'+
                             '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell">$ '+selling.subtotal.toFixed(2)+'</td>'+
                             '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell"><span class="rounded-lg text-[10px] text-white '+cStatus[selling.status]+' py-1 px-2 font-bold">'+status[selling.status]+'</span></td>'+
@@ -263,16 +270,25 @@
                                     '</button>'+
                                     '<div class="absolute left-[-173px] '+(selling.status == 1 ? "top-[-40px]" : "top-[-6px]")+' group-hover:block hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow">'+
                                         '<ul class="py-1 text-sm text-gray-700">'+
+                                            (selling.status == 2 ? 
+                                                '<li>'+
+                                                    '<a href="{{$menu['baseURL'].$menu['route']['sellings']['invoice']('')}}'+selling.id+'" class="block py-2 px-4 hover:bg-gray-100">Recibo</a>'+
+                                                '</li>': 
+                                                ""
+                                            )+
                                             '<li>'+
                                                 '<button onclick=\'showDetail('+JSON.stringify(selling)+')\' class="w-full text-left py-2 px-4 hover:bg-gray-100">Detalle</button>'+
                                             '</li>'+
-                                            (selling.status == 1 ? '<li>'+
-                                                '<a href="{{$menu['baseURL'].$menu['route']['sellings']['edit']('')}}'+selling.id+'" class="block py-2 px-4 hover:bg-gray-100">Editar</a>'+
-                                            '</li>' : "")+
-                                        '</ul>'+
-                                        (selling.status == 1 ? '<div class="py-1">'+
-                                            '<button onclick="deleteSelling(\''+selling.id+'\')" class="w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Eliminar</button>'+
-                                        '</div>' : "")+
+                                            (selling.status == 1 ? 
+                                                '<li>'+
+                                                    '<a href="{{$menu['baseURL'].$menu['route']['sellings']['edit']('')}}'+selling.id+'" class="block py-2 px-4 hover:bg-gray-100">Editar</a>'+
+                                                '</li>'+
+                                                '<li>'+
+                                                    '<button onclick="deleteSelling(\''+selling.id+'\')" class="w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Eliminar</button>'+
+                                                '</li>' : 
+                                                ""
+                                            )+
+                                        '</ul>'+ 
                                     '</div>'+
                                 '</div>'+
                             '</td>'+

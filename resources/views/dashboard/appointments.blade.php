@@ -57,7 +57,7 @@
                         </svg>
                         Agregar Cita
                     </a> 
-                    <!--<a href="{{$menu['baseURL'].$menu['route']['appointments']['calendar']}}" class="flex items-center justify-center border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2">
+                    <a href="{{$menu['baseURL'].$menu['route']['appointments']['calendar']}}" class="flex items-center justify-center border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2">
                         <svg  
                             fill="none" 
                             xmlns="http://www.w3.org/2000/svg"  
@@ -76,7 +76,7 @@
                                 <path d="M18 16.5v1.5l.5 .5" />
                         </svg>
                         Ver Calendario
-                    </a> --> 
+                    </a>
                 </div>
             </div> 
             <table class="w-full text-sm text-left text-gray-700">

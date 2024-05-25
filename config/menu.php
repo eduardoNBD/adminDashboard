@@ -15,7 +15,7 @@ $routes = [
         "new" => "/dashboard/sellings/selling",
         "calendar" => "/dashboard/sellings/calendar",
         "edit" => function($id) { return "/dashboard/sellings/selling/" . $id; },
-        "detail" => function($id) { return "/dashboard/sellings/detail/" . $id; }
+        "invoice" => function($id) { return "/dashboard/sellings/invoice/" . $id; }
     ],
     "users" => [
         "root" => "/dashboard/users",

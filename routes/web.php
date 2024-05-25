@@ -55,6 +55,7 @@ Route::get("/clients/list",[ClientsController::class,"list"])->middleware('auth'
 Route::get("/dashboard/appointments",[DashboardController::class,"appointments"])->middleware('auth');
 Route::get("/dashboard/appointments/{page}",[DashboardController::class,"appointments"])->middleware('auth')->where('page', '[0-9]+');
 Route::get("/dashboard/appointments/appointment/",[DashboardController::class,"appointment"])->middleware('auth');
+Route::get("/dashboard/appointments/calendar/",[DashboardController::class,"calendar"])->middleware('auth');
 Route::get("/dashboard/appointments/appointment/{id}",[DashboardController::class,"appointment"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
 
 //ENDPOINTS APPOINTMENTS    
@@ -62,7 +63,9 @@ Route::post("/appointments/create",[AppointmentsController::class,"create"])->mi
 Route::post("/appointments/update/{id}",[AppointmentsController::class,"update"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
 Route::get("/appointments/delete/{id}",[AppointmentsController::class,"delete"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
 Route::get("/appointments/list",[AppointmentsController::class,"list"])->middleware('auth');
+Route::get("/appointments/listByDates",[AppointmentsController::class,"listByDates"])->middleware('auth');
 Route::get("/appointments/user/{id}",[AppointmentsController::class,"getAppointmentsByUser"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
+
 /*------------------------------------------------------------------------------*/
 
 /*--------------------------------ROUTES PRODUCTS----------------------------------*/
@@ -106,6 +109,7 @@ Route::get("/dashboard/sellings",[DashboardController::class,"sellings"])->middl
 Route::get("/dashboard/sellings/{page}",[DashboardController::class,"sellings"])->middleware(['auth', 'roles:1'])->where('page', '[0-9]+');
 Route::get("/dashboard/sellings/selling",[DashboardController::class,"selling"])->middleware(['auth', 'roles:1']);
 Route::get("/dashboard/sellings/selling/{id}",[DashboardController::class,"selling"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
+Route::get("/dashboard/sellings/invoice/{id}",[DashboardController::class,"invoice"])->middleware(['auth', 'roles:1'])->where('id', '[a-z0-9.\-]+');
 
 //ENDPOINTS SELLINGS    
 Route::post("/sellings/create",[SellingsController::class,"create"])->middleware(['auth', 'roles:1']);
