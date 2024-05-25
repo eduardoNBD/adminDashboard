@@ -24,8 +24,8 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
 1. **Clonar el repositorio:**
 
     ```bash
-    git clone https://github.com/tu-usuario/admindashboard.git
-    cd admindashboard
+    git clone https://github.com/eduardoNBD/adminDashboard.git
+    cd adminDashboard
     ```
 
 2. **Instalar dependencias de PHP:**
@@ -100,11 +100,4 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
 ## Uso
 
 Accede a `http://localhost:8000` en tu navegador para interactuar con el dashboard de administración. Desde aquí puedes gestionar citas, ventas de servicios y productos, generar recibos en PDF, y administrar usuarios y roles.
-
-## Contribuciones
-
-Las contribuciones son bienvenidas. Por favor, abre un issue o envía un pull request con tus mejoras y correcciones.
-
-## Licencia
-
-Este proyecto está licenciado bajo la [MIT License](https://opensource.org/licenses/MIT).
+ 
