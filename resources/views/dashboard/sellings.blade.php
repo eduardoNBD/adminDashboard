@@ -212,7 +212,7 @@
 
     function showDetail(selling){ 
         let detail  = JSON.parse(selling.detail); 
-        console.log(detail);
+      
         let rowHTML = '<div>'+
                         '<section class="my-2 clear-both px-3">'+
                             (reformatDate(selling.updated_at).split(" ").map((item,index) => { 

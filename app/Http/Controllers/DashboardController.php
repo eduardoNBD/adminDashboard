@@ -111,7 +111,10 @@ class DashboardController extends Controller
     }
 
     public function calendar($page = 1 ){
-        return view("dashboard.calendar", []);
+        return view("dashboard.calendar", [
+            "colors" => Appointment::getColorsClass(),
+            "status" => Appointment::getStatus(),
+        ]);
     }
 
     public function clients($page = 1 ){

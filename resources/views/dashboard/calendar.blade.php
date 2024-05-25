@@ -97,7 +97,8 @@
 <script src="{{ asset('https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js') }}"></script>  
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.13/locales-all.global.min.js"></script>
 <script>
- 
+    const status = {!! json_encode($status)!!};
+    const colors = {!! json_encode($colors)!!};
     var calendarEl = document.getElementById('calendar');
     var numRows;
 
@@ -164,7 +165,35 @@
         document.querySelector(id).classList.add("hidden");
     }
 
-    function showDetail(data){
+    function showDetail(data){ 
+        let rowHTML =   '<div>'+
+                            '<section class="my-2 clear-both px-3">'+
+                                '<span class="float-right rounded-lg text-[10px] text-white '+colors[data.extendedProps.status]+' py-1 px-2 font-bold">'+status[data.extendedProps.status]+'</span>'+
+                                '<span class="rounded-lg text-sm text-gray-400">'+reformatDate(data.extendedProps.start)+'</span>'+ 
+                                '<h2 class="text-xl text-[#526270] bold text-center clear-both">'+data.extendedProps.title+'</h2> '+
+                            '</section> '+
+                            '<hr> '+ 
+                            '<section class="my-2">'+
+                                '<div class="px-2 my-2 mt-[18px]">'+
+                                    '<div class="relative z-0 mb-5 group">'+
+                                        '<input type="text" readonly name="name" value="'+(data.extendedProps.client_id != null ? data.extendedProps.client_id : "Sin Cliente")+'" id="name" class="block py-1 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />'+
+                                        '<label for="name" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Cliente</label>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</section> '+  
+                            '<section class="my-2">'+
+                                '<div class="px-2 my-2 mt-[18px]">'+
+                                    '<div class="relative z-0 mb-5 group">'+
+                                        '<input type="text" readonly name="name" value="'+(data.extendedProps.service_id != null ? data.extendedProps.service_id : "Sin servicio definido")+'" id="name" class="block py-1 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />'+
+                                        '<label for="name" class="peer-focus:font-medium absolute text-sm text-[#526270] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Servicio</label>'+
+                                    '</div>'+
+                                '</div>'+ 
+                            '</section> '+ 
+                            '<h2 class="text-xl text-[#526270] bold text-center">Notas:</h2>'+
+                            '<p>'+data.extendedProps.notes+'</p>'+ 
+                        '</div>'; 
+        
+        document.querySelector("#contentDetail").innerHTML = rowHTML; 
         document.querySelector("#popup-detail").classList.remove("hidden");
         console.log(data)
     }   

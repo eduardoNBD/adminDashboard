@@ -282,6 +282,7 @@ class AppointmentsController extends Controller
                                         'appointments.notes',
                                         'appointments.id',
                                         'appointments.status',
+                                        'appointments.no',
                                         DB::raw("CONCAT(clients.name,' ',clients.lastname) AS client_id")
                                     ]) 
                                     ->whereBetween('date', [date("Y-m-d",strtotime($request->input('start'))), date("Y-m-d",strtotime($request->input('end')))])
@@ -304,12 +305,15 @@ class AppointmentsController extends Controller
                 'start' => $appointment->start,
                 'end' => $appointment->end,
                 'backgroundColor' => $colors[$appointment->status],
-                'borderColor' => $colors[$appointment->status],
-                'description' => "Aque",
+                'borderColor' => $colors[$appointment->status], 
                 'extendedProps' => [
                     'service_id' => $appointment->service_id,
                     'client_id' => $appointment->client_id,
-                    'notes' => $appointment->notes,
+                    'notes' => $appointment->notes,  
+                    'title' => "#".$appointment->no,
+                    'start' => $appointment->start,
+                    'end' => $appointment->end,
+                    'status' => $appointment->status,
                 ]
             ];
         });
