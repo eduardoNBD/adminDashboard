@@ -7,6 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet"> --> 
         <link href="{{ asset('../resources/css/build.css') }}" rel="stylesheet"> 
+        <link href="{{ asset('../resources/css/style.css') }}" rel="stylesheet"> 
         @yield('styles') 
     </head>
     <body> 

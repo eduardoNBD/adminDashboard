@@ -1,27 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ServicesController;
-use App\Http\Controllers\ProductsController;
-use App\Http\Controllers\ClientsController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\AppointmentsController;
-use App\Http\Controllers\LogsController;
-use App\Http\Controllers\SellingsController;
-use App\Http\Middleware\Authenticate;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|  
-*/
+use App\Http\Controllers\{
+    LoginController,
+    DashboardController,
+    ServicesController,
+    ProductsController,
+    ClientsController,
+    UsersController,
+    AppointmentsController,
+    LogsController,
+    SellingsController
+};
 
 Route::get("/",[LoginController::class,"Login"]);
 Route::get("/login",[LoginController::class,"Login"]); 
@@ -145,9 +135,12 @@ Route::get("/users/list",[UsersController::class,"list"])->middleware(['auth', '
 
 /*--------------------------------ROUTES LOGS----------------------------------*/
 
+//VIEWS LOGS
+Route::get("/dashboard/logs",[DashboardController::class,"logs"])->middleware('auth')->where('page', '[0-9]+');
+Route::get("/dashboard/logs/{page}",[DashboardController::class,"logs"])->middleware('auth')->where('page', '[0-9]+');
+
 //ENDPOINTS LOGS
 Route::get("/logs/user/{id}",[LogsController::class,"getLogsByUser"])->middleware('auth')->where('id', '[a-z0-9.\-]+');
+Route::get("/logs/list",[LogsController::class,"list"])->middleware('auth');
 
 /*------------------------------------------------------------------------------*/
-
-

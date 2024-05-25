@@ -406,4 +406,10 @@ class DashboardController extends Controller
             'sellings' =>  $sellings, 
         ]);
     }
+
+    public function logs($page = 1 ){
+        return view("dashboard.logs", [
+            'page' => $page, 
+        ]);
+    }
 }

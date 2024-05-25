@@ -38,11 +38,14 @@ $routes = [
         "new" => "/dashboard/services/service",
         "edit" => function($id) { return "/dashboard/services/service/" . $id; }
     ],
+    "logs" => [
+        "root" => "/dashboard/logs", 
+    ],
     "profile" => "/dashboard/profile"
 ];
 
 $menu = [
-    "group" => [
+    "group_1" => [
         "dashboard" => [
             "route" => "/dashboard",
             "title" => "Dashboard",
@@ -94,6 +97,8 @@ $menu = [
                 "url" => $routes['sellings']['new']
             ]
         ],
+    ],
+    "group_2" => [
         "users" => [
             "route" => "/dashboard/users",
             "title" => "Usuarios",
@@ -102,12 +107,18 @@ $menu = [
                 "icon" => '<svg class="h-3.5 w-3.5" fill="#ffffff" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path clipRule="evenodd" fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"></path></svg>',
                 "url" => $routes['users']['new']
             ]
-        ]
+        ],
+        "dashboard" => [
+            "route" => "/dashboard/logs",
+            "title" => "Logs",
+            "icon" => '<svg class="flex-shrink-0 mr-2 w-6 h-6" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-logs"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12h.01" /><path d="M4 6h.01" /><path d="M4 18h.01" /><path d="M8 18h2" /><path d="M8 12h2" /><path d="M8 6h2" /><path d="M14 6h6" /><path d="M14 12h6" /><path d="M14 18h6" /></svg>',
+            "button" => null
+        ], 
     ]
 ];
 
 $menuWorker = [
-    "group" => [
+    "group_1" => [
         "dashboard" => [
             "route" => "/dashboard",
             "title" => "Dashboard",
@@ -131,6 +142,14 @@ $menuWorker = [
                 "icon" => '<svg class="h-3.5 w-3.5" fill="#ffffff" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path clipRule="evenodd" fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"></path></svg>',
                 "url" =>  $routes['clients']['new']
             ]
+        ], 
+    ],
+    "group_2" => [ 
+        "dashboard" => [
+            "route" => "/dashboard/logs",
+            "title" => "Logs",
+            "icon" => '<svg class="flex-shrink-0 mr-2 w-6 h-6" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-logs"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12h.01" /><path d="M4 6h.01" /><path d="M4 18h.01" /><path d="M8 18h2" /><path d="M8 12h2" /><path d="M8 6h2" /><path d="M14 6h6" /><path d="M14 12h6" /><path d="M14 18h6" /></svg>',
+            "button" => null
         ], 
     ]
 ];

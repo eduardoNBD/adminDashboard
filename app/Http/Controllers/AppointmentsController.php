@@ -96,7 +96,7 @@ class AppointmentsController extends Controller
         $log = new Log;
 
         $log->action = "create_appointment";
-        $log->detail = json_encode(["id" => $appointment->id,"no" => $appointment->no]);
+        $log->detail = json_encode(["id" => $appointment->id,"name" => $appointment->no]);
         $log->user = Auth::id();
         
         $log->save();
@@ -210,7 +210,7 @@ class AppointmentsController extends Controller
         $log->action = "update_appointment";
         $log->detail = json_encode([
             "id" => $appointment->id,
-            "no" => $appointment->no,
+            "name" => $appointment->no,
             "prevData" => $prevData,
             "newData" => $newData
         ]);
@@ -318,7 +318,7 @@ class AppointmentsController extends Controller
             ];
         });
          
-        return response()->json(["status" => 1, 'appointments' => $appointmentsData, "where" => date("Y-m-d",strtotime($request->input('start')))." ".date("Y-m-d",strtotime($request->input('end')))] );
+        return response()->json(["status" => 1, 'appointments' => $appointmentsData, ] );
     } 
 
     public function delete(Request $request, $id){ 
@@ -336,7 +336,7 @@ class AppointmentsController extends Controller
         $log = new Log;
 
         $log->action = "delete_appointment";
-        $log->detail = json_encode(["id" => $appointment->id,"no" => $appointment->no]);
+        $log->detail = json_encode(["id" => $appointment->id,"name" => $appointment->no]);
         $log->user = Auth::id();
         
         $log->save();

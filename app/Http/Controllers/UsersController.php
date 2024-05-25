@@ -124,6 +124,15 @@ class UsersController extends Controller
             return response()->json(["status" => 0, "message" => "Usuario Eliminado"]);
         }
 
+        $prevData = [
+            "name" => $user->name,
+            "lastname" => $user->lastname,
+            "username" => $user->username,
+            "email" => $user->email,
+            "phone" => $user->phone,
+            "role" => $user->role,   
+        ];
+
         $user->name     = $request->input("name");
         $user->lastname = $request->input("lastname");
         $user->username = $request->input("username");
@@ -133,10 +142,24 @@ class UsersController extends Controller
 
         $user->save();
 
+        $newData = [
+            "name" => $user->name,
+            "lastname" => $user->lastname,
+            "username" => $user->username,
+            "email" => $user->email,
+            "phone" => $user->phone,
+            "role" => $user->role,   
+        ];
+
         $log = new Log;
 
         $log->action = "update_user";
-        $log->detail = json_encode(["id" => $user->id,"name" => $user->username ]);
+        $log->detail = json_encode([
+            "id" => $user->id,
+            "name" => $user->username,
+            "prevData" => $prevData,
+            "newData" => $newData ]);
+            
         $log->user = Auth::id();
         
         $log->save();
