@@ -65,12 +65,12 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
 
 5. **Migrar la base de datos:**
 
-    Ejecuta las migraciones para crear las tablas necesarias:
+    Ejecuta las migraciones para crear las tablas necesarias y el usuario por default (usuario: admin, password: administrator):
 
     ```bash
-    php artisan migrate
+    composer migrate-user
     ```
-
+    
 6. **Instalar dependencias de JavaScript:**
 
     Asegúrate de tener [Node.js](https://nodejs.org/) y [npm](https://www.npmjs.com/) instalados y ejecuta:
@@ -100,9 +100,5 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
 ## Uso
 
 Accede a `http://localhost:8000` en tu navegador para interactuar con el dashboard de administración. Desde aquí puedes gestionar citas, ventas de servicios y productos, generar recibos en PDF, y administrar usuarios y roles.
-
-## Comandos Útiles
-
-- `composer migrate-refresh`: Este comando refrescará todas las migraciones y volverá a ejecutar los seeders.
-- `composer migrate-user`: Este comando solo ejecutará las migraciones y los seeders relacionados con la tabla de usuarios.
+ 
 
