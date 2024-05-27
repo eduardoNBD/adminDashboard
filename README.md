@@ -68,9 +68,9 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
     Ejecuta las migraciones para crear las tablas necesarias y el usuario por default (usuario: admin, password: administrator):
 
     ```bash
-    composer migrate-user
+    composer run migrate-user
     ```
-    
+
 6. **Instalar dependencias de JavaScript:**
 
     Asegúrate de tener [Node.js](https://nodejs.org/) y [npm](https://www.npmjs.com/) instalados y ejecuta:
