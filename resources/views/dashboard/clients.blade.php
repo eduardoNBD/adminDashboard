@@ -151,7 +151,7 @@
             },   
         })
         .then((res) => res.json())
-        .then((json) => { console.log(json);
+        .then((json) => { 
             if(json.status)
             {
                 document.querySelector("#totalClients").innerHTML = json.clients.total;
@@ -199,7 +199,7 @@
             },    
         })
         .then((res) => res.json())
-        .then((json) => { console.log(json);
+        .then((json) => { 
             if(json.status){ 
                 currentClient = "";
                 document.querySelector("#popup-modal").classList.add("hidden");
@@ -240,7 +240,7 @@
     }
 
     function showDetail(client){ 
-        let detail = client.last_selling_detail ? JSON.parse(client.last_selling_detail) : []; console.log(detail);
+        let detail = client.last_selling_detail ? JSON.parse(client.last_selling_detail) : [];
         let rowHTML = '<div>'+ 
                         '<section class="my-2 px-8 text-2xl text-center">'+
                             client.name+' '+client.lastname+

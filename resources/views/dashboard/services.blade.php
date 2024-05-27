@@ -142,7 +142,7 @@
 
                 return res.json();
             })
-            .then((json) => { console.log(json);
+            .then((json) => { 
                 if(json.status)
                 {
                     document.querySelector("#totalServices").innerHTML = json.services.total;

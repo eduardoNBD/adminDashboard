@@ -300,7 +300,7 @@
                 document.querySelector("table tbody").appendChild(temp.childNodes[0]); 
             });      
         }else{
-            let rowHTML = '<tr><td colspan="5"><h1 class="text-center text-3xl m-20">Sin Citas</h1></td></tr>';
+            let rowHTML = '<tr><td colspan="5"><h1 class="text-center text-3xl m-20">Sin ventas registradas</h1></td></tr>';
             var temp       = document.createElement('tbody');
             temp.innerHTML = rowHTML;
         

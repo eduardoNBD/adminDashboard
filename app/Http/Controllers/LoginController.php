@@ -32,28 +32,7 @@ class LoginController extends Controller
     }
 
     public function LoginRequest(Request $request)
-    {
-        
-        try{
-            $user = new User;
-
-            $user->id       = Str::uuid();
-            $user->name     = "admin";
-            $user->lastname = "administrator";
-            $user->username = "admin";
-            $user->email = "admin@admin.com";
-            $user->phone = "3221564984";
-            $user->password = Hash::make("administrator");
-            $user->role     = "1";
-
-            $user->save();
-        }catch(\Throwable $error){
-            /*$user = $user->find("fb6d6b04-3819-40c5-a02b-96fafffad40a");
-            $user->password = Hash::make("administrator"); 
-
-            $user->save();*/
-        }
-
+    { 
         $validator = Validator::make(request()->all(), [
             'username' => 'required',
             'password' => 'required'

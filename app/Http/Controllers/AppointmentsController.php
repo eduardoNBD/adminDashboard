@@ -96,7 +96,15 @@ class AppointmentsController extends Controller
         $log = new Log;
 
         $log->action = "create_appointment";
-        $log->detail = json_encode(["id" => $appointment->id,"name" => $appointment->no]);
+        $log->detail = json_encode(["id" => $appointment->id,"name" => $appointment->no, "data" => [
+            "user_id" => $appointment->user_id,
+            "service_id" => $appointment->service_id,
+            "client_id" => $appointment->client_id,
+            "date" => $appointment->date,
+            "begin" => $appointment->begin,
+            "end" => $appointment->end,
+            "notes" => $appointment->notes,]
+        ]);
         $log->user = Auth::id();
         
         $log->save();
@@ -181,7 +189,7 @@ class AppointmentsController extends Controller
             "date" => $appointment->date,
             "begin" => $appointment->begin,
             "end" => $appointment->end,
-            "notesnotes" => $appointment->user_id, 
+            "notes" => $appointment->notes, 
         ];
 
         $appointment->user_id = $request->input("user");
@@ -202,7 +210,7 @@ class AppointmentsController extends Controller
             "date" => $appointment->date,
             "begin" => $appointment->begin,
             "end" => $appointment->end,
-            "notesnotes" => $appointment->user_id, 
+            "notes" => $appointment->notes, 
         ];
 
         $log = new Log;

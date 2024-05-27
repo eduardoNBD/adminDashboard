@@ -32,7 +32,7 @@
                         <div class="z-10 hidden group-hover:block text-left w-full border-[1px] absolute left-0 top-16 bg-white rounded-md p-2 ]">
                             <a href="{{$menu['baseURL']."/dashboard/profile"}}" class="p-2 block">Perfil</a>
                             <hr />
-                            <a  href="{{$menu['baseURL']}}/logout" class="p-2 block">Cerrar sesion</a>
+                            <a href="{{$menu['baseURL']}}/logout" class="p-2 block">Cerrar sesion</a>
                             <hr />
                         </div>
                     </button> 
@@ -73,7 +73,7 @@
                 </div>
             </div>
         </div>
-        <div id="loader" class="flex justify-center items-center h-screen w-screen top-0 absolute bg-[#ffffffaa] left-0 z-10">
+        <div id="loader" class="flex justify-center items-center h-screen w-screen top-0 absolute bg-[#ffffffaa] left-0 z-40">
             <div class="rounded-full h-20 w-20 bg-violet-800 animate-ping"></div>
         </div>
         <script src="{{ asset('../resources/js/app.js') }}"></script> 

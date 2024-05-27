@@ -80,6 +80,14 @@
                     </div>
                 </div>
                 <div class="col-span-2 text-right">
+                    <label class="text-red-600 text-left block">
+                        @if ($clients)
+                            <div>No hay Clientes registrados, <a class="bg-emerald-500" href="{{$menu['baseURL'].$menu['route']['clients']['new']}}">presiona aquí</a> crear cliente</div>
+                        @endif
+                        @if ($services)
+                            
+                        @endif
+                    </label>
                     <label id="errorMessage" class="text-red-600 text-left block"></label>
                     <button class="bg-violet-600 text-white border-violet-600 border-2 rounded-md px-10 py-1">
                         Enviar

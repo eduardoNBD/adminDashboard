@@ -81,7 +81,7 @@ function autocomplete(inp, arr, callback) {
                 b.innerHTML = "<strong>" + arr[i].name.substr(0, val.length) + "</strong>";
                 b.innerHTML += arr[i].name.substr(val.length); 
                 b.innerHTML += "<input type='hidden' value='"+arr[i].name+"'  data-object='" + JSON.stringify(arr[i]) + "'>"; 
-                b.addEventListener("click", (event) => {console.log(event.target);
+                b.addEventListener("click", (event) => {
                     inp.value = event.target.getElementsByTagName("input")[0].value; 
                     inp.dataset.object = event.target.getElementsByTagName("input")[0].dataset.object;
                      
@@ -130,7 +130,7 @@ function autocomplete(inp, arr, callback) {
                 b.innerHTML = "<strong>" + arr[i].name + "</strong>"; 
                 b.innerHTML += "<input type='hidden' value='" + arr[i].name + "'  data-object='" + JSON.stringify(arr[i]) + "'>"; 
 
-                b.addEventListener("click", (event) => { console.log(event.currentTarget);
+                b.addEventListener("click", (event) => { 
                     inp.value = event.currentTarget.getElementsByTagName("input")[0].value; 
                     inp.dataset.object = event.currentTarget.getElementsByTagName("input")[0].dataset.object;
 

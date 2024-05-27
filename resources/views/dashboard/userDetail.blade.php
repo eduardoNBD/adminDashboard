@@ -98,7 +98,7 @@
             },   
         })
         .then((res) => res.json())
-        .then((json) => { console.log(json);
+        .then((json) => { 
             if(json.status)
             { 
                 totalPages = Math.ceil(json.appointments.total/json.appointments.per_page);
@@ -202,7 +202,7 @@
              },   
          })
          .then((res) => res.json())
-         .then((json) => { console.log(json);
+         .then((json) => { 
              if(json.status)
              { 
                  totalPages = Math.ceil(json.logs.total/json.logs.per_page);

@@ -104,7 +104,7 @@ function hidePasswordInput(input){
     input.type = input.type == "password" ? "text" : "password";
 }
 
-function reformatDate(datetime,format = "d/m/y"){console.log(datetime);
+function reformatDate(datetime,format = "d/m/y"){ 
     
     let finalDate = new Date(datetime); 
     finalDate     = new Date(finalDate.toLocaleString("en-US", {timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}));

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->bigInteger('no'); 
-            $table->foreignUuid('user_id')->nullable()->constrained()->references('id')->on('users')->onDelete('cascade');
+            $table->foreignUuid('user_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignUuid('modify_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignUuid('service_id')->nullable()->constrained()->references('id')->on('services')->onDelete('cascade'); 
-            $table->foreignUuid('client_id')->nullable()->constrained()->references('id')->on('clients')->onDelete('cascade'); 
+            $table->foreignUuid('service_id')->nullable()->references('id')->on('services')->onDelete('cascade'); 
+            $table->foreignUuid('client_id')->nullable()->references('id')->on('clients')->onDelete('cascade'); 
             $table->date('date');
             $table->time('begin');
             $table->time('end'); 
@@ -33,6 +33,21 @@ return new class extends Migration
      */
     public function down(): void
     { 
+        Schema::table('appointments', function (Blueprint $table) {
+            if (Schema::hasColumn('appointments', 'user_id')) {
+                $table->dropForeign(['user_id']);
+            }
+            if (Schema::hasColumn('appointments', 'modify_by')) {
+                $table->dropForeign(['modify_by']);
+            }
+            if (Schema::hasColumn('appointments', 'service_id')) {
+                $table->dropForeign(['service_id']);
+            }
+            if (Schema::hasColumn('appointments', 'client_id')) {
+                $table->dropForeign(['client_id']);
+            }
+        });
+
         Schema::dropIfExists('appointments');
     }
 };

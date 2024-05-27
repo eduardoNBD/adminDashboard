@@ -332,7 +332,7 @@
 
         autocomplete(prodNode, products, (input) => { 
             let productAdd = document.querySelectorAll('.products[data-object=\''+input.dataset.object+'\']');
-            console.log(productAdd);
+          
             if(productAdd.length > 1 ){
                 let valueNew = input.parentNode.parentNode.nextSibling.querySelector(".qty").value;
                 let valueOld = productAdd[0].parentNode.parentNode.nextSibling.querySelector(".qty").value;

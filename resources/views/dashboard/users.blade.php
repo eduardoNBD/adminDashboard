@@ -132,7 +132,7 @@
                 },   
             })
             .then((res) => res.json())
-            .then((json) => { console.log(json);
+            .then((json) => { 
                 if(json.status)
                 {
                     document.querySelector("#totalUsers").innerHTML = json.users.total;
@@ -192,7 +192,7 @@
 
                 return res.json();
             })
-            .then((json) => { console.log(json);
+            .then((json) => { 
                 if(json.status){ 
                     currentUser = "";
                     document.querySelector("#popup-modal").classList.add("hidden");

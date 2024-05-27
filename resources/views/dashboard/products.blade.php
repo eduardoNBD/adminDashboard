@@ -141,7 +141,7 @@
 
                 return res.json();
             })
-            .then((json) => { console.log(json);
+            .then((json) => { 
                 if(json.status)
                 {
                     document.querySelector("#totalProducts").innerHTML = json.products.total;
@@ -196,7 +196,7 @@
 
                 return res.json();
             })
-            .then((json) => { console.log(json);
+            .then((json) => { 
                 if(json.status){ 
                     currentProduct = "";
                     document.querySelector("#popup-modal").classList.add("hidden");

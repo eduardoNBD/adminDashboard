@@ -6,7 +6,6 @@
 <section class="">
     <div class="mx-auto px-0 md:px-4 lg:px-12"> 
         <div class="bg-white relative shadow-md sm:rounded-lg">
-            
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
                     <form class="flex items-center">
@@ -47,6 +46,23 @@
         </div>
     </div>
 </section>
+<div id="popup-detail" tabindex="-1" class="hidden flex -mt-16 md:mt-0 bg-[#0000006b] overflow-hidden fixed top-14 right-0 left-0 z-50 justify-center  w-full md:inset-0 h-full">
+    <div class="relative p-4 w-full max-w-lg max-h-full">
+        <div class="relative bg-white rounded-lg shadow max-h-full overflow-hidden p-2 px-4">
+            <button onclick="closeModal('#popup-detail')" type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button> 
+            <h2 class="text-md text-[#526270] py-4 bold">Detalle de cita</h2> 
+            <hr>
+            <div id="contentDetail" class="overflow-auto max-h-[85%] overflow-x-hidden">
+                
+            </div> 
+        </div>
+    </div>
+</div>
 @stop
 
 @section('scripts') 
@@ -54,7 +70,46 @@
     let currentLog = "";
     let currentPage    = {{$page}};
     let totalPages     = 0;
+    let fieldsProduct = {
+        productname: "Nombre de producto", 
+        productkey:"Clave", 
+        productprice: "Precio", 
+        productqty: "Cantidad", 
+        productimage: "imagen",
 
+        servicename: "Nombre de servicio", 
+        servicekey:"Clave", 
+        serviceprice: "Precio", 
+        serviceqty: "Cantidad", 
+        serviceimage: "imagen",
+
+        username: "Nombre",
+        userlastname: "Apellido",
+        userusername: "Nombre de usuario",
+        useremail: "E-mail",
+        userphone: "Teléfono",
+        userrole: "Rol de usuario",
+
+        clientname: "Nombre",
+        clientlastname: "Apellido",
+        clientemail: "E-mail",
+        clientphone: "Teléfono",
+
+        appointmentclient_id: "Cliente",
+        appointmentservice_id: "Servicio",
+        appointmentdate: "Fecha",
+        appointmentbegin: "Hora de inicio",
+        appointmentend: "Hora de fin",
+        appointmentuser_id: "Atendido por",
+        appointmentnotes: "Notas de cita",
+
+        sellingappointment: "Cita",
+        sellingclient: "Cliente",
+        sellingnotes: "Notas de venta",
+        sellingsubtotal: "Sub Total",
+        sellingstatus: "Estatus",
+        
+    };
     function getPagination(currentPage){ 
         const s = document.querySelector("#simple-search").value;
         fetch('{{$menu['baseURL']."/logs/list?page="}}'+currentPage+'&s='+s, { 
@@ -71,7 +126,7 @@
 
             return res.json();
         })
-        .then((json) => {  console.log(json);
+        .then((json) => {  
             if(json.status)
             { 
                 totalPages = Math.ceil(json.logs.total/json.logs.per_page);
@@ -98,34 +153,60 @@
         document.querySelector(id).classList.add("hidden");
     }
 
-    function showDetail(selling){ 
-        let detail  = JSON.parse(selling.detail); 
-      
+    function showDetail(log){  console.log(log);
+        let action = log.action.split("_")[1];
         let rowHTML = '<div>'+
-                        '<section class="my-2 clear-both px-3">'+
-                            (reformatDate(selling.updated_at).split(" ").map((item,index) => { 
-                                return '<span class="'+(index ? "float-right" : "")+' inline-block rounded-lg text-sm text-gray-400">'+item+'</span>'
-                            }).join(""))+ 
-                        '</section> '+
-                        '<hr> '+ 
-                        '<section class="my-2 px-8">'+
-                            '<span class="text-gray-400">Cliente</span>'+
-                            '<span class="float-right">'+(selling.client_id != null ? selling.client : "Sin Cliente")+'</span>'+
-                        '</section> '+ 
-                        '<div class="bg-gray-100 pt-3 pb-1 px-3"> '+ 
-                            '<span class="text-gray-400">Productos y servicios</span>'+
-                            (detail.types.map( (row, index) => {
-                                item = row == "Servicios" ? services.filter(service => service.id == detail.items[index])[0] : products.filter(product => product.id == detail.items[index])[0];
-                                return '<section class=" pl-10 my-2 clear-both">'+
-                                    '<span>'+detail.qty[index]+' '+item.name+'</span>'+
-                                    '<span class="float-right">$ '+parseFloat(detail.price[index]).toFixed(2)+'</span>'+
-                                '</section>';
-                            }).join(""))+ 
-                        '</div> '+ 
-                        '<section class="my-2 px-3 pb-4">'+
-                            '<span class="text-gray-400">Total</span>'+
-                            '<span class="float-right">$ '+selling.subtotal.toFixed(2)+'</span>'+
-                        '</section></div>'; 
+                            '<section class="my-2 clear-both px-3">'+
+                                (reformatDate(log.created_at).split(" ").map((item,index) => { 
+                                    return '<span class="'+(index ? "float-right" : "")+' inline-block rounded-lg text-sm text-gray-400">'+item+'</span>'
+                                }).join(""))+ 
+                            '</section> '+
+                            '<section class="my-2 clear-both px-3">'+
+                                '<h2 class="text-xl text-[#526270] bold text-center clear-both">'+log.detail.actionName+'</h2> '+
+                                (log.user != "{{Auth::id()}}" ? '<a  href="{{$menu['baseURL'].$menu['route']['users']['edit']('')}}'+log.user+'" class="p-2 block text-center">'+log.fullname+'</a>' : "")+
+                            '</section>'+ 
+                            (log.detail.prevData ? 
+                                ('<section class="my-2 px-3 grid grid-cols-2">'+
+                                    '<span class="bg-gray-300 px-2 py-3">Valores Anteriores</span><span class="bg-gray-300 px-2 py-3">Valores nuevos</span>'+
+                                    (Object.entries(log.detail.prevData).filter(element => element[0] != "detail").map((value) => { 
+                                                if(typeof value[1] == "object" && value[1] != null){
+                                                    value[1] = getDataByObject(value[1]);
+                                                    log.detail.newData[value[0]] = getDataByObject(log.detail.newData[value[0]]);
+                                                }
+
+                                                return '<span class="px-3 text-sm"><strong>'+fieldsProduct[action+value[0]]+'</strong> : <br>'+value[1]+'</span>'+'<span class="px-3 text-sm"><strong>'+fieldsProduct[action+value[0]]+'</strong> : <br>'+log.detail.newData[value[0]]+'</span>' 
+                                           
+                                        }).join("<hr class='col-span-2 my-2'>")
+                                    )+ 
+                                    (log.detail.prevData.detail != undefined ?
+                                        '<div class="bg-gray-100 pt-3 pb-1 col-span-2 mt-5"> '+ 
+                                            '<span class="px-4 text-gray-400">Productos y servicios anteriores</span>'+
+                                            (log.detail.prevData.detail.types.map( (row, index) => {
+                                                return '<section class="px-4 clear-both">'+
+                                                    '<span>'+log.detail.prevData.detail.qty[index]+' '+log.detail.prevData.detail.items[index].name+'<br><span class="text-sm">'+log.detail.prevData.detail.users[index].username+'</span></span>'+
+                                                    '<span class="float-right">$ '+parseFloat(log.detail.prevData.detail.price[index]).toFixed(2)+'</span>'+
+                                                '</section>';
+                                            }).join(""))+ 
+                                        '</div> '
+                                        : ""
+                                    )+ 
+                                    (log.detail.newData.detail != undefined ?
+                                        '<div class="bg-gray-100 pt-3 pb-1 col-span-2"> '+ 
+                                            '<span class="px-4 text-gray-400">Productos y servicios nuevos</span>'+
+                                            (log.detail.newData.detail.types.map( (row, index) => {
+                                                return '<section class="px-4 clear-both">'+
+                                                    '<span>'+log.detail.newData.detail.qty[index]+' '+log.detail.newData.detail.items[index].name+'<br><span class="text-sm">'+log.detail.newData.detail.users[index].username+'</span></span>'+
+                                                    '<span class="float-right">$ '+parseFloat(log.detail.newData.detail.price[index]).toFixed(2)+'</span>'+
+                                                '</section>';
+                                            }).join(""))+ 
+                                        '</div> '
+                                        : ""
+                                    )+ 
+                                '</section>'
+                                )
+                                : ''  
+                            )+
+                      '</div>'; 
         
         document.querySelector("#contentDetail").innerHTML = rowHTML; 
         document.querySelector("#popup-detail").classList.remove("hidden");
@@ -164,7 +245,7 @@
                 document.querySelector("table tbody").appendChild(temp.childNodes[0]); 
             });      
         }else{
-            let rowHTML = '<tr><td colspan="5"><h1 class="text-center text-3xl m-20">Sin Citas</h1></td></tr>';
+            let rowHTML = '<tr><td colspan="5"><h1 class="text-center text-3xl m-20">Sin Registro de actividades</h1></td></tr>';
             var temp       = document.createElement('tbody');
             temp.innerHTML = rowHTML;
         
@@ -228,6 +309,28 @@
         getPagination(currentPage);
     }
     
+    function getDataByObject(objValue){console.log(objValue);
+        if(objValue.typeObj == "users"){
+            return `<a href="{{$menu['baseURL'].$menu['route']['users']['edit']('')}}/${objValue.id}">
+                        ${objValue.name} ${objValue.lastname}
+                    </a>`;
+        }
+
+        if(objValue.typeObj == "clients"){
+            return `<a href="{{$menu['baseURL'].$menu['route']['clients']['edit']('')}}/${objValue.id}">
+                        ${objValue.name} ${objValue.lastname}
+                    </a>`;
+        }
+
+        if(objValue.typeObj == "services"){
+            return `<a href="{{$menu['baseURL'].$menu['route']['services']['edit']('')}}/${objValue.id}">
+                        ${objValue.name} 
+                    </a>`;
+        }
+
+        return objValue.typeObj;
+    }
+
     if(document.querySelector("#simple-search").value)
     {
         search();

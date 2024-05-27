@@ -17,12 +17,11 @@ return new class extends Migration
             $table->string('notes');
             $table->json('detail');
             $table->bigInteger('no'); 
-            $table->foreignUuid('appointment')->nullable()->references('id')->on('appointments')->onDelete('restrict');
+            $table->foreignUuid('appointment')->nullable()->references('id')->on('appointments')->onDelete('cascade');
             $table->foreignUuid('client')->nullable()->references('id')->on('clients')->onDelete('restrict');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');   
+            $table->timestamps();   
             $table->tinyInteger('status')->default('1');
-            $table->foreignUuid('modify_by')->references('id')->on('users')->onDelete('restrict')->nullable();
+            $table->foreignUuid('modify_by')->nullable()->references('id')->on('users')->onDelete('restrict');
         });
     }
 
@@ -31,7 +30,19 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('sellings', function (Blueprint $table) {
+            if (Schema::hasColumn('sellings', 'appointment')) {
+                $table->dropForeign(['appointment']);
+            }
+            if (Schema::hasColumn('sellings', 'client')) {
+                $table->dropForeign(['client']);
+            }
+            if (Schema::hasColumn('sellings', 'modify_by')) {
+                $table->dropForeign(['modify_by']);
+            }
+        });
+
+        Schema::dropIfExists('sellings');
     }
 };
 

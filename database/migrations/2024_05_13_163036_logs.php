@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary(); 
             $table->string('action');
             $table->json('detail');
-            $table->foreignUuid('user')->references('id')->on('users')->onDelete('restrict')->nullable(); 
+            $table->foreignUuid('user')->nullable()->references('id')->on('users')->onDelete('restrict'); 
             $table->timestamp('created_at');  
         });
     }
@@ -25,6 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('logs', function (Blueprint $table) {
+            if (Schema::hasColumn('logs', 'user')) {
+                $table->dropForeign(['user']);
+            }
+        });
+
+        Schema::dropIfExists('logs');
     }
 };

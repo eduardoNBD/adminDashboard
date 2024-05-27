@@ -159,7 +159,7 @@
                 },   
             })
             .then((res) => res.json())
-            .then((json) => { console.log(json);
+            .then((json) => { 
                 if(json.status)
                 {
                     document.querySelector("#totalAppointments").innerHTML = json.appointments.total;
@@ -201,7 +201,7 @@
                 },    
             })
             .then((res) => res.json())
-            .then((json) => { console.log(json);
+            .then((json) => { 
                 if(json.status){ 
                     currentAppointment = "";
                     document.querySelector("#popup-modal").classList.add("hidden");
@@ -216,7 +216,7 @@
 
         function showDetail(appointment){ 
         let detail  = JSON.parse(appointment.detail); 
-        console.log(appointment.detail != null);
+         
         let rowHTML = '<div>'+
                         '<section class="my-2 clear-both px-3">'+
                             (reformatDate(appointment.date+" "+appointment.begin).split(" ").map((item,index) => { 

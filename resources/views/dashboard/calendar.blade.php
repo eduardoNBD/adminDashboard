@@ -2,8 +2,7 @@
 
 @section('title', 'Calendario - Dashboard') 
 
-@section('styles')
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet">
+@section('styles') 
     <style>
          .fc-event{
             cursor: pointer !important;
@@ -94,8 +93,8 @@
 @stop
 
 @section('scripts')
-<script src="{{ asset('https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js') }}"></script>  
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.13/locales-all.global.min.js"></script>
+<script src="{{ asset('../resources/js/libs/fullcalendar/index.global.min.js') }}"></script>  
+<script src="{{ asset('../resources/js/libs/fullcalendar/core/locales-all.global.min.js')}}"></script>
 <script>
     const status = {!! json_encode($status)!!};
     const colors = {!! json_encode($colors)!!};
@@ -194,8 +193,7 @@
                         '</div>'; 
         
         document.querySelector("#contentDetail").innerHTML = rowHTML; 
-        document.querySelector("#popup-detail").classList.remove("hidden");
-        console.log(data)
+        document.querySelector("#popup-detail").classList.remove("hidden"); 
     }   
 </script>
 @stop

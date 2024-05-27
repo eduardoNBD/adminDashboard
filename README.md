@@ -100,4 +100,9 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
 ## Uso
 
 Accede a `http://localhost:8000` en tu navegador para interactuar con el dashboard de administración. Desde aquí puedes gestionar citas, ventas de servicios y productos, generar recibos en PDF, y administrar usuarios y roles.
- 
+
+## Comandos Útiles
+
+- `composer migrate-refresh`: Este comando refrescará todas las migraciones y volverá a ejecutar los seeders.
+- `composer migrate-user`: Este comando solo ejecutará las migraciones y los seeders relacionados con la tabla de usuarios.
+

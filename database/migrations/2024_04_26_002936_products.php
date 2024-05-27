@@ -19,9 +19,8 @@ return new class extends Migration
             $table->string('image');
             $table->bigInteger('qty'); 
             $table->tinyInteger('status')->default('1');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');   
-            $table->foreignUuid('modify_by')->references('id')->on('users')->onDelete('cascade')->nullable();
+            $table->timestamps(); 
+            $table->foreignUuid('modify_by')->nullable()->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -30,7 +29,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('products', function (Blueprint $table) {
+            if (Schema::hasColumn('products', 'modify_by')) {
+                $table->dropForeign(['modify_by']);
+            }
+        });
+
+        Schema::dropIfExists('products');
     }
 };
 
