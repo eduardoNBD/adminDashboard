@@ -145,7 +145,7 @@ class DashboardController extends Controller
 
             $title.=" ".$client->name;
         }
-
+        
         return view("dashboard.client", [
             'title' => $title, 
             'client' => $client,

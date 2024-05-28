@@ -74,13 +74,31 @@
             </div>
             <hr class="col-span-2 mt-4" />
             <div class="col-span-2 mt-4 text-right">
-                <label id="errorMessage" class="text-red-600 text-left block"></label>
+                <label id="errorMessage" class="text-red-600 text-left block"></label> 
                 <input name="sell" type="submit" class="bg-violet-600 text-white border-violet-600 border-2 rounded-md px-10 py-1 mr-2" value="Cobrar" />
                 <input name="save" type="submit" class="bg-violet-600 text-white border-violet-600 border-2 rounded-md px-10 py-1" value="Guardar" />
             </div>
         </div>
     </form>
-</section>  
+</section>
+@if (!count($services) && !count($products))
+    <div id="popup-modal" tabindex="-1" class="flex bg-[#0000006b] overflow-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative bg-white rounded-lg shadow "> 
+                <div class="p-4 md:p-5 text-center">
+                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                    </svg>
+                    <h3 class="mb-5 text-lg font-normal text-gray-500 ">No hay servicios ni productos agregdos</h3>
+                    <a href="{{$menu['baseURL'].$menu['route']['services']['new']}}" class="text-white bg-emerald-600 hover:bg-emerald-800 focus:ring-4 focus:outline-none focus:ring-emerald-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                        Crear Servicio
+                    </a>
+                    <a href="{{$menu['baseURL'].$menu['route']['products']['new']}}" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Crear producto</a>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
 @stop
 
 @section('scripts')

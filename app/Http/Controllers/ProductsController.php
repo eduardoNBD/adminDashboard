@@ -66,7 +66,13 @@ class ProductsController extends Controller
         $log = new Log;
 
         $log->action = "create_product";
-        $log->detail = json_encode(["id" => $product->id, "name" => $product->name]);
+        $log->detail = json_encode(["id" => $product->id, "name" => $product->name, "data" => [
+            "name"  => $product->name, 
+            "key"   => $product->key,              
+            "price" => $product->price,
+            "qty"   => $product->qty,              
+            "image" => $product->image,]
+        ]);
         $log->user = Auth::id();
         
         $log->save();

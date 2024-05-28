@@ -226,7 +226,7 @@
                         '<hr> '+ 
                         '<section class="my-2 px-8">'+
                             '<span class="text-gray-400">Cliente</span>'+
-                            '<span class="float-right">'+(appointment.client_id != null ? appointment.client_id : "Sin cliente Definido")+'</span>'+
+                            '<span class="float-right">'+(appointment.client_id != null ? appointment.client_id : "Sin cliente definido")+'</span>'+
                         '</section> '+ 
                         (appointment.detail != null ? '<div class="bg-gray-100 pt-3 pb-1 px-3"> '+ 
                             '<span class="text-gray-400">Productos y servicios</span>'+
@@ -245,7 +245,7 @@
                         '<div class="bg-gray-100 pt-3 pb-1 px-3"> '+ 
                             '<span class="text-gray-400">Servicio</span>'+
                             '<section class=" pl-10 my-2 clear-both">'+
-                                '<span>'+(appointment.service_id != null ? appointment.service_id : "Sin servicio Definido")+'</span>'+ 
+                                '<span>'+(appointment.service_id != null ? appointment.service_id : "Sin servicio definido")+'</span>'+ 
                             '</section>'+ 
                         '</div>')+
                         '</div>'; 
@@ -263,9 +263,9 @@
                 data.forEach(appointment => { 
                     let rowHTML = '<tr class="border-b border-gray-200">'+
                             '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"><a href="{{$menu['baseURL'].$menu['route']['appointments']['edit']('')}}'+appointment.id+'" class="font-bold text-[#526270]">#'+appointment.no+'</a></td>'+
-                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap font-bold text-[#526270]">'+(appointment.client_id != null ? appointment.client_id : "Sin cliente Definido")+'</td>'+
+                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap font-bold text-[#526270]">'+(appointment.client_id != null ? appointment.client_id : "Sin cliente definido")+'</td>'+
                             '<td class="px-4 py-3 "><span class="block text-center md:inline-block rounded-lg text-[10px] text-white bg-indigo-600 py-1 px-2 font-bold">'+reformatDate(appointment.date+' '+appointment.begin)+'</span></td>'+
-                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell">'+(appointment.service_id != null ? appointment.service_id : "Sin servicio Definido")+'</td>'+
+                            '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell">'+(appointment.service_id != null ? appointment.service_id : "Sin servicio definido")+'</td>'+
                             '<td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap hidden md:table-cell"><span class="rounded-lg text-[10px] text-white '+cStatus[appointment.status]+' py-1 px-2 font-bold">'+status[appointment.status]+'</span></td>'+
                             '<td class="px-4 py-3 flex items-center justify-end">'+
                                 '<div class="group relative">'+

@@ -50,7 +50,12 @@ class ServicesController extends Controller
         $log = new Log;
 
         $log->action = "create_service";
-        $log->detail = json_encode(["id" => $service->id, "name" => $service->name]);
+        $log->detail = json_encode(["id" => $service->id, "name" => $service->name,"data" => [
+            "name"  => $service->name, 
+            "key"   => $service->key,              
+            "price" => $service->price,
+            ]
+        ]);
         $log->user = Auth::id();
         
         $log->save();
@@ -104,8 +109,6 @@ class ServicesController extends Controller
             "name"  => $service->name, 
             "key"   => $service->key,              
             "price" => $service->price,
-            "qty"   => $service->qty,              
-            "image" => $service->image,
         ];
 
         $service->name   = $request->input("name");
@@ -118,8 +121,6 @@ class ServicesController extends Controller
             "name"  => $service->name, 
             "key"   => $service->key,              
             "price" => $service->price,
-            "qty"   => $service->qty,              
-            "image" => $service->image,
         ];
 
         $log = new Log;

@@ -60,11 +60,11 @@
                 <div class="px-2 my-2">
                     <div class="flex gap-5"> 
                     <div class="w-3/6 relative group"> 
-                            <input autocomplete="off" type="time" value="{{$appointment->begin}}" id="begin" name="begin" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"/> 
+                            <input type="time" value="{{$appointment->begin}}" id="begin" name="begin" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"/> 
                             <label for="begin" class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Hora de inicio</label>
                         </div>
                         <div class="w-3/6 relative group"> 
-                            <input autocomplete="off" type="time" value="{{$appointment->end}}" id="end"  name="end" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"/> 
+                            <input type="time" value="{{$appointment->end}}" id="end"  name="end" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"/> 
                             <label for="end" class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Hora de fin</label>
                         </div>
                     </div>
@@ -81,11 +81,11 @@
                 </div>
                 <div class="col-span-2 text-right">
                     <label class="text-red-600 text-left block">
-                        @if ($clients)
-                            <div>No hay Clientes registrados, <a class="bg-emerald-500" href="{{$menu['baseURL'].$menu['route']['clients']['new']}}">presiona aquí</a> crear cliente</div>
+                        @if (count($clients) == 0)
+                            <div class=" mt-2">No hay clientes registrados, presiona <a class="bg-red-500 text-white p-1 text-sm rounded-lg" href="{{$menu['baseURL'].$menu['route']['clients']['new']}}">aquí</a> crear clientes</div>
                         @endif
-                        @if ($services)
-                            
+                        @if (count($services) == 0)
+                            <div class=" mt-2">No hay servicios registrados, presiona <a class="bg-red-500 text-white p-1 text-sm rounded-lg" href="{{$menu['baseURL'].$menu['route']['services']['new']}}">aquí</a> crear servicios</div>
                         @endif
                     </label>
                     <label id="errorMessage" class="text-red-600 text-left block"></label>

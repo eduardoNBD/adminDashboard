@@ -222,7 +222,10 @@ function autocomplete(inp, arr, callback) {
 
 autocomplete(document.querySelector("#clients"), clients);
 autocomplete(document.querySelector("#services"), services);
-autocomplete(document.querySelector("#users"), users);
+
+if(user.role != 0){
+    autocomplete(document.querySelector("#users"), users);
+}
 
 if(appointment.id){
     const client = clients.filter(client => client.id == appointment.client_id);

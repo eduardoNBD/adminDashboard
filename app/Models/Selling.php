@@ -129,6 +129,7 @@ class Selling extends CustomModel
             ) AS numbers
             WHERE JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.items[', numbers.idx, ']'))) IS NOT NULL
             AND JSON_UNQUOTE(JSON_EXTRACT(detail, CONCAT('$.types[', numbers.idx, ']'))) = 'Productos' 
+            AND sellings.status = 2
         ) AS detail_expanded
         INNER JOIN products ON products.id = detail_expanded.product_id
         GROUP BY product_id, products.name

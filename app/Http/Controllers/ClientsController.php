@@ -54,7 +54,12 @@ class ClientsController extends Controller
         $log = new Log;
 
         $log->action = "create_client";
-        $log->detail = json_encode(["id" => $client->id, "name" => $client->name." ".$client->lastname]);
+        $log->detail = json_encode(["id" => $client->id, "name" => $client->name." ".$client->lastname, "data" => [
+            "name"     => $client->name,
+            "lastname" => $client->lastname,
+            "email"    => $client->email,
+            "phone"    => $client->phone,]
+        ]);
         $log->user = Auth::id();
         
         $log->save();

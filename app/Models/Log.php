@@ -225,23 +225,59 @@ class Log extends Model
         $actions = [
             'create_appointment' => function ($detail, $isOwn) {
                 $detail->actionName = $isOwn ? "Creaste cita" : "Creo cita";
+
+                $detail->data->user_id = User::findOr($detail->data->user_id, function () { return "";});
+                $detail->data->client_id = Client::findOr($detail->data->client_id, function () { return "";});
+                $detail->data->service_id = Service::findOr($detail->data->service_id, function () { return "";});
+
+                if($detail->data->user_id){
+                    $detail->data->user_id->typeObj = "users";
+                }
+                
+                if($detail->data->client_id){
+                    $detail->data->client_id->typeObj = "clients";
+                }
+
+                if($detail->data->service_id){
+                    $detail->data->service_id->typeObj = "services";
+                }
+                
                 return $detail;
             },
             'update_appointment' => function ($detail, $isOwn) {
                 $detail->actionName = $isOwn ? "Actualizaste cita" : "Actualizo cita"; 
 
-                $detail->prevData->user_id = User::findOr($detail->prevData->user_id);
-                $detail->prevData->user_id->typeObj = "users";
-                $detail->prevData->client_id = Client::findOr($detail->prevData->client_id);
-                $detail->prevData->client_id->typeObj = "clients";
-                $detail->prevData->service_id = Service::findOr($detail->prevData->service_id);
-                $detail->prevData->service_id->typeObj = "services";
-                $detail->newData->user_id = $detail->newData->user_id == $detail->prevData->user_id ? $detail->prevData->user_id : User::findOr($detail->newData->user_id);
-                $detail->newData->user_id->typeObj = "users";
-                $detail->newData->client_id = $detail->newData->client_id == $detail->prevData->client_id ? $detail->prevData->client_id : Client::findOr($detail->newData->client_id);
-                $detail->newData->client_id->typeObj = "clients";
-                $detail->newData->service_id = $detail->newData->service_id == $detail->prevData->service_id ? $detail->prevData->service_id : Service::findOr($detail->newData->service_id);
-                $detail->newData->service_id->typeObj = "services";
+                $detail->prevData->user_id = User::findOr($detail->prevData->user_id, function () { return "";});
+                $detail->prevData->client_id = Client::findOr($detail->prevData->client_id, function () { return "";});
+                $detail->prevData->service_id = Service::findOr($detail->prevData->service_id, function () { return "";});
+
+                if($detail->prevData->user_id){
+                    $detail->prevData->user_id->typeObj = "users";
+                }
+                
+                if($detail->prevData->client_id){
+                    $detail->prevData->client_id->typeObj = "clients";
+                }
+
+                if($detail->prevData->service_id){
+                    $detail->prevData->service_id->typeObj = "services";
+                }
+
+                $detail->newData->user_id = User::findOr($detail->newData->user_id, function () { return "";});
+                $detail->newData->client_id = Client::findOr($detail->newData->client_id, function () { return "";});
+                $detail->newData->service_id = Service::findOr($detail->newData->service_id, function () { return "";});
+
+                if($detail->newData->user_id){
+                    $detail->newData->user_id->typeObj = "users";
+                }
+                
+                if($detail->newData->client_id){
+                    $detail->newData->client_id->typeObj = "clients";
+                }
+
+                if($detail->newData->service_id){
+                    $detail->newData->service_id->typeObj = "services";
+                }
 
                 return $detail;
             },
@@ -299,6 +335,42 @@ class Log extends Model
             },
             'create_selling' => function ($detail, $isOwn) {
                 $detail->actionName = $isOwn ? "Creaste venta" : "Creo venta";
+                $detail->data->client = Client::findOr($detail->data->client, function () {
+                    return "";
+                });
+
+                $detail->data->appointment = Appointment::findOr($detail->data->appointment, function () {
+                    return "";
+                });
+
+                if($detail->data->client){
+                    $detail->data->client->typeObj = "clients";
+                }
+
+                if($detail->data->appointment){
+                    $detail->data->appointment->typeObj = "appointments";
+                }
+
+                $detail->data->status = Selling::$status[$detail->data->status]; 
+
+                $detail->data->detail = json_decode($detail->data->detail); 
+
+                foreach ($detail->data->detail->types as $key => $value) {
+                    if($value == "Servicios"){
+                        $detail->data->detail->items[$key] = Service::findOr($detail->data->detail->items[$key], function () {
+                            return "";
+                        });
+                    }else{
+                        $detail->data->detail->items[$key] = Product::findOr($detail->data->detail->items[$key], function () {
+                            return "";
+                        });
+                    }
+                    
+                    $detail->data->detail->users[$key] = User::findOr($detail->data->detail->users[$key], function () {
+                        return "";
+                    });
+                } 
+
                 return $detail;
             },
             'update_selling' => function ($detail, $isOwn) {
@@ -316,7 +388,7 @@ class Log extends Model
                 }
 
                 if($detail->prevData->appointment){
-                    $detail->prevData->appointment->typeObj = "services";
+                    $detail->prevData->appointment->typeObj = "appointments";
                 }
                 
 
@@ -332,7 +404,7 @@ class Log extends Model
                 }
 
                 if($detail->newData->appointment){
-                    $detail->newData->appointment->typeObj = "services";
+                    $detail->newData->appointment->typeObj = "appointments";
                 }
 
                 $detail->prevData->status = Selling::$status[$detail->prevData->status];
@@ -389,6 +461,7 @@ class Log extends Model
             },
             'create_user' => function ($detail, $isOwn) {
                 $detail->actionName = $isOwn ? "creaste un usuario" : "Creo usuario";
+                $detail->data->role = User::$roles[$detail->data->role];
                 return $detail;
             },
             'update_user' => function ($detail, $isOwn) {

@@ -17,8 +17,22 @@ class LogsController extends Controller
             $logs->where("user",Auth::id());
         }
 
-        if($request->input("s")){
+        if($request->input("start") && $request->input("end")){
+            $logs->whereBetween('logs.created_at', [$request->input('start'), $request->input('end')]);
+        }
 
+        $modules = $request->input("modules");
+
+        $logs->where(function($query) use ($modules) {
+            foreach ($modules as $keyword) {
+                $query->orWhere('action', 'like', '%' . $keyword . '%');
+            }
+        });
+
+        if($request->input("s")){
+            $logs->where(function ($query) use ($request) {
+                $query->where(DB::raw("CONCAT(users.name,' ',users.lastname)"), 'like', $request->input("s") . '%');
+            });
         } 
 
         $perPage = 10; 

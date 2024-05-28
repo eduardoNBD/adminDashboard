@@ -18,7 +18,7 @@
                 @endforeach
             @else 
                 <tr>
-                    <td colspan="2"><h1 class="text-center py-4 text-4xl">Sin Citas Proximas</h1></td>
+                    <td colspan="2"><h1 class="text-center py-4 text-4xl">Sin Productos vendidos</h1></td>
                 </tr>
             @endif 
         </tbody>

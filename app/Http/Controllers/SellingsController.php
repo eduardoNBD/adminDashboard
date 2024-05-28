@@ -159,7 +159,14 @@ class SellingsController extends Controller
         $log = new Log;
 
         $log->action = "create_selling";
-        $log->detail = json_encode(["id" => $selling->id, "name" => $selling->no, "appointment" => $request->input("appointment") ? $appointment->no : ""]);
+        $log->detail = json_encode(["id" => $selling->id, "name" => $selling->no, "appointment" => $request->input("appointment") ? $appointment->no : "", "data" => [
+            "subtotal" => $selling->subtotal, 
+            "notes" => $selling->notes, 
+            "status" => $selling->status, 
+            "detail" => $selling->detail, 
+            "appointment" => $selling->appointment, 
+            "client" => $selling->client,  ]
+        ]);
         $log->user = Auth::id();
         
         $log->save();
