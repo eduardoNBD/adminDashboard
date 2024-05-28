@@ -16,11 +16,15 @@ use App\Http\Controllers\{
 Route::get("/",[LoginController::class,"Login"]);
 Route::get("/login",[LoginController::class,"Login"]); 
 Route::get("/logout",[LoginController::class,"Logout"]); 
+Route::get("/recovery",[LoginController::class,"Recovery"]); 
+Route::get("password/reset/{token}",[LoginController::class,"Reset"]); 
 Route::post('/login', [ 'as' => 'login', 'uses' => 'LoginController@Login']);
 Route::get("/dashboard",[DashboardController::class,"index"])->middleware('auth');
 
 //ENDPOINTS AUTH
 Route::post("/auth/login",[LoginController::class,"LoginRequest"]);
+Route::post("/auth/recover",[LoginController::class,"RecoverRequest"]);
+Route::post("/auth/reset",[LoginController::class,"ResetRequest"]);
 
 /*--------------------------------ROUTES CLIENTS----------------------------------*/
 

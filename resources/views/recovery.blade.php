@@ -1,48 +1,43 @@
 @extends('layouts.noAuth')
  
-@section('title', 'Login')
+@section('title', 'Recuperar contraseña')
  
 @section('content')
     <main class="flex h-screen flex-col justify-between bg-[#dddddd]">
         <section class="mx-auto my-10 md:my-auto max-[480px]:w-full md:w-[400px] border-l-2 border-t-2 border-t-violet-500 border-l-violet-500 rounded-tl-lg">
             <div class="rounded-lg m-5 p-5 pt-10 pb-5 bg-[#ffffff] h-full md:w-[400px] shadow-lg">
                 <span class="block rounded-full m-auto bg-gradient-to-tr from-violet-500 to-pink-400 w-[70px] h-[70px]" ></span>
-                <h1 class="text-center text-3xl mb-4 text-[#444444] font-bold">Bienvenido</h1>
+                <h1 class="text-center text-3xl mb-4 text-[#444444] font-bold">Recuperar contraseña</h1>
                 <hr />
-                <form action="{{$menu['baseURL'].$menu['route']['dashboard']['root']}}" onsubmit="Login()" class="mt-6 p-2">
+                <form action="{{$menu['baseURL'].$menu['route']['dashboard']['root']}}" onsubmit="recover()" class="mt-6 p-2">
                     <label htmlFor="" class="w-full block">
-                        <strong class="text-[#444444]">Usuario</strong> 
-                        <input type="text" name="username" placeholder="Ingresa tu usuario" class="w-full rounded-md p-2 mt-2 focus:outline-violet-500 border"/>
-                    </label>
-                    <label htmlFor="" class="w-full block mt-4">
-                        <strong class="text-[#444444]">Contraseña</strong> 
-                        <input type="password"  name="password" placeholder="Ingresa tu contraseña" class="w-full rounded-md p-2 mt-2 focus:outline-violet-500 border"/>
-                    </label>
+                        <strong class="text-[#444444]">E-mail</strong> 
+                        <input type="text" name="email" placeholder="Ingresa tu E-mail" class="w-full rounded-md p-2 mt-2 focus:outline-violet-500 border"/>
+                    </label> 
                     <button class="bg-violet-600 w-full mt-8 rounded-md p-2 text-[#ebf3ffe6]" type="submit">
-                        Iniciar Sesión
+                        Enviar token
                     </button>
                 </form>
-                <label id="errorMessage" class="text-red-600 text-center block"></label>
-                <a href="{{$menu['baseURL']."/recovery"}}" class="float-end mt-2 font-[500] text-[#666666]">¿Olvidaste tu contraseña?</a>
+                <label id="errorMessage" class="text-red-600 text-center block"></label> 
             </div>
         </section> 
     </main>
 @stop
+
 @section('scripts')
-     <script>
-        function Login(){
+    <script src="{{ asset('../resources/js/app.js') }}"></script> 
+    <script>
+        function recover(){
             event.preventDefault();
 
-            const data = new FormData(event.target); 
-            
-            data.append("timezone",Intl.DateTimeFormat().resolvedOptions().timeZone);
-            
-            fetch("{{$menu['baseURL']."/auth/login"}}", {  
+            const data = new FormData(event.target);  
+            console.log(data);
+            fetch("{{$menu['baseURL']."/auth/recover"}}", {  
                 method: "post", 
                 body: data,
             })
             .then((res) => res.json())
-            .then((json) => {
+            .then((json) => {console.log(json);
                 if(json.status){
                     location.href = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
                 }
@@ -56,5 +51,5 @@
             })
             .catch((err) => console.error("error:", err)); 
         }
-     </script>
+    </script>
 @stop
