@@ -61,7 +61,7 @@
 @stop
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ asset('../resources/js/libs/chart/chart.js') }}"></script>
     <script>
         const ctx = document.getElementById('myChart');
 

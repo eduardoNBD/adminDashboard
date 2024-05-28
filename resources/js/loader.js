@@ -1,0 +1,1 @@
+function showLoader(){document.querySelector("#loader").classList.remove("hidden");}function hideLoader(){document.querySelector("#loader").classList.add("hidden");}

@@ -9,6 +9,10 @@
     </head>
     <body>  
         @yield('content')
+        <div id="loader" class="hidden flex justify-center items-center h-screen w-screen top-0 absolute bg-[#ffffffaa] left-0 z-40">
+            <div class="rounded-full h-20 w-20 bg-violet-800 animate-ping"></div>
+        </div>
     </body>
+    <script src="{{ asset('../resources/js/loader.js') }}"></script> 
     @yield('scripts') 
 </html>

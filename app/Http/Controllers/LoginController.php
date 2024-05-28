@@ -36,6 +36,26 @@ class LoginController extends Controller
         return redirect(route("login"));
     }
 
+    public function Recovery(Request $request){
+        if (Auth::check()) { 
+            return redirect('/dashboard');
+        }
+
+        return view("recovery");
+    }
+
+    public function Reset(Request $request, $token){
+        if (Auth::check()) { 
+            return redirect('/dashboard');
+        }
+        
+        $passwordResetToken = DB::table('password_reset_tokens')
+        ->where('token', $token)
+        ->first();
+
+        return view("reset", ['token' => $passwordResetToken]);
+    }
+
     public function LoginRequest(Request $request)
     { 
         $validator = Validator::make(request()->all(), [
@@ -74,20 +94,14 @@ class LoginController extends Controller
         }
     }
 
-    public function Recovery(Request $request){
-        if (Auth::check()) { 
-            return redirect('/dashboard');
-        }
-
-        return view("recovery");
-    }
-
     public function RecoverRequest(Request $request){ 
         $validator = Validator::make(request()->all(), [
-            'email' => 'required|email'
+            'email' => 'required|email|exists:users,email|unique:password_reset_tokens'
         ],[
             'email.required' => 'Campo <strong>E-mail</strong> es requerido',
             'email.email' => 'Campo <strong>E-mail</strong> debe ser un correo electronico valido',
+            'email.exists' => 'E-mail incorrecto',
+            'email.unique' => 'Ya existe una petición de token con este correo, revisa tu E-mail o comunicate con un administrador para que elimine tu token',
         ]);
    
         if ($validator->fails()){
@@ -116,29 +130,16 @@ class LoginController extends Controller
         return response()->json(["status" => 1, "message" => "Te hemos enviado el enlace para restablecer tu contraseña a tu correo electrónico.'"]); 
     }
 
-    public function Reset(Request $request, $token){
-        if (Auth::check()) { 
-            return redirect('/dashboard');
-        }
-
-        return view("reset", ['token' => $token]);
-    }
-
-    public function ResetRequest(Request $request){
-        $request->validate([
-            'token' => 'required',
+    public function ResetRequest(Request $request){ 
+        $validator = Validator::make(request()->all(), [ 
             'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
-        ]);
-
-        $validator = Validator::make(request()->all(), [
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed|min:8',
-        ],[
-            'email.email' => 'Campo <strong>E-mail</strong> es requerido',
+        ],[ 
             'email.required' => 'Campo <strong>E-mail</strong> es requerido',
             'email.email' => 'Campo <strong>E-mail</strong> debe ser un correo electronico valido',
+            'password.required' => 'Campo <strong>Nueva contraseña</strong> es requerido', 
+            'password_confirmation.required' => 'Campo <strong>Confirmar nueva contraseña</strong> es requerido',  
+            'password.confirmed' => 'Campo <strong>Nueva contraseña</strong> debe coincidir con el <strong>Confirmar nueva Contraseña</strong>',
         ]);
    
         if ($validator->fails()){
@@ -151,27 +152,27 @@ class LoginController extends Controller
             return response()->json(["status" => 0, "message" => $messages]);
         }
 
-        $passwordReset = DB::table('password_resets')->where([
+        $passwordReset = DB::table('password_reset_tokens')->where([
             ['token', $request->token],
             ['email', $request->email],
         ])->first();
 
         if (!$passwordReset) {
-            return back()->withErrors(['email' => 'El token de restablecimiento es inválido.']);
+            return response()->json(["status" => 0, "message" => 'El token o email de restablecimiento es inválido.']); 
         }
 
-        $user = \App\Models\User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return back()->withErrors(['email' => 'No podemos encontrar un usuario con esa dirección de correo electrónico.']);
+            return response()->json(["status" => 0, "message" => "Usuario inexistente"]); 
         }
-
+        
         $user->password = Hash::make($request->password);
         $user->setRememberToken(Str::random(60));
         $user->save();
 
-        DB::table('password_resets')->where('email', $request->email)->delete();
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
-        return redirect()->route('login')->with('status', 'Tu contraseña ha sido restablecida!'); 
+        return response()->json(["status" => 1, "message" => "Contraseña cambiada, te redirigiremos a la pagina de inicio de sesión"]); 
     }
 }

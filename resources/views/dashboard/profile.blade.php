@@ -168,6 +168,7 @@
 @stop
 
 @section('scripts') 
+<script src="{{ asset('../resources/js/inputsPassword.js') }}"></script> 
 <script>
 
     function saveInformation(url){

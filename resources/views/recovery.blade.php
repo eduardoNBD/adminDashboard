@@ -18,6 +18,7 @@
                         Enviar token
                     </button>
                 </form>
+                <label id="successMessage" class="text-emerald-600 text-center block"></label>  
                 <label id="errorMessage" class="text-red-600 text-center block"></label> 
             </div>
         </section> 
@@ -25,9 +26,10 @@
 @stop
 
 @section('scripts')
-    <script src="{{ asset('../resources/js/app.js') }}"></script> 
+    <script src="{{ asset('../resources/js/loader.js') }}"></script> 
     <script>
         function recover(){
+            showLoader();
             event.preventDefault();
 
             const data = new FormData(event.target);  
@@ -37,9 +39,11 @@
                 body: data,
             })
             .then((res) => res.json())
-            .then((json) => {console.log(json);
+            .then((json) => {
+                hideLoader();
+                
                 if(json.status){
-                    location.href = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
+                    document.querySelector("#successMessage").innerHTML = json.message;
                 }
                 else{
                     document.querySelector("#errorMessage").innerHTML = json.message;
@@ -49,7 +53,7 @@
                     }, "5000");
                 }
             })
-            .catch((err) => console.error("error:", err)); 
+            .catch((err) => {hideLoader(); console.error("error:", err)}); 
         }
     </script>
 @stop

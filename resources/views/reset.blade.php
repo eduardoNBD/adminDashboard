@@ -9,11 +9,11 @@
                 <span class="block rounded-full m-auto bg-gradient-to-tr from-violet-500 to-pink-400 w-[70px] h-[70px]" ></span>
                 <h1 class="text-center text-3xl mb-4 text-[#444444] font-bold">Recuperar contraseña</h1>
                 <hr />
-                <form action="{{$menu['baseURL'].$menu['route']['dashboard']['root']}}" onsubmit="recover()" class="mt-6 p-2">
-                    <input type="hidden" name="token" value="{{ $token }}">
+                <form onsubmit="resetPassword()" class="mt-6 p-2">
+                    <input type="hidden" name="token" value="{{$token ? $token->token : ""}}">
                     <div class=" mt-[18px]">
                         <div class="relative z-0 group">
-                            <input  readOnly type="text" name="email" id="email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                            <input type="text" name="email" id="email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />
                             <label for="email" class="peer-focus:font-medium absolute text-sm text-[#526270] duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">E-mail</label>
                         </div>
                     </div> 
@@ -45,31 +45,41 @@
                             </button>
                         </div> 
                     </div> 
-                    <button class="bg-violet-600 w-full mt-8 rounded-md p-2 text-[#ebf3ffe6]" type="submit">
-                        Enviar token
-                    </button>
+                    <button class="bg-violet-600 w-full mt-8 rounded-md p-2 text-[#ebf3ffe6]" type="submit" {{!$token ? "disabled" : ""}}>Cambiar contraseña</button>
                 </form>
+                @if(!$token)
+                    <label id="errorMessage" class="text-red-600 text-center block">Token erroneo o ya se uso</label> 
+                @endif
+                <label id="successMessage" class="text-emerald-600 text-center block"></label> 
                 <label id="errorMessage" class="text-red-600 text-center block"></label> 
             </div>
         </section> 
-    </main>
+    </main> 
 @stop
 
 @section('scripts')
+    <script src="{{ asset('../resources/js/inputsPassword.js') }}"></script> 
     <script>
-        function recover(){
+        function resetPassword(){
+            showLoader();
             event.preventDefault();
 
             const data = new FormData(event.target);  
             console.log(data);
-            fetch("{{$menu['baseURL']."/auth/recover"}}", {  
+            fetch("{{$menu['baseURL']."/auth/reset"}}", {  
                 method: "post", 
                 body: data,
             })
             .then((res) => res.json())
-            .then((json) => {console.log(json);
+            .then((json) => {
+                hideLoader();
                 if(json.status){
-                    location.href = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
+                    document.querySelector("#successMessage").innerHTML = json.message;
+                    
+                    setTimeout(() => {
+                        document.querySelector("#successMessage").innerHTML = "";
+                        location.href = "{{$menu['baseURL']}}/login";
+                    }, "8000");
                 }
                 else{
                     document.querySelector("#errorMessage").innerHTML = json.message;
@@ -79,7 +89,7 @@
                     }, "5000");
                 }
             })
-            .catch((err) => console.error("error:", err)); 
+            .catch((err) => {hideLoader(); console.error("error:", err)}); 
         }
     </script>
 @stop

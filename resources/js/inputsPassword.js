@@ -1,0 +1,2 @@
+function seePasswordInput(input){let button = event.target;while(button?.type != "button"){button = button.parentNode;}button.classList.add("hidden");button.nextElementSibling.classList.remove("hidden");input.type = input.type == "password" ? "text" : "password";}
+function hidePasswordInput(input){let button = event.target;while(button?.type != "button"){button = button.parentNode;}button.classList.add("hidden");button.previousElementSibling.classList.remove("hidden");input.type = input.type == "password" ? "text" : "password";}

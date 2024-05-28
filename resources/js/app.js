@@ -6,11 +6,11 @@ const monthsNamesEsp = ["Enero","Febrero", "Marzo", "Abril", "Mayo", "Junio", "J
 const resizeWindow = (event) => { 
     if(window.innerWidth < 960)
     {
-        document.querySelector("#NavBarContent").classList.add("left-[-254px]");  
+        document.querySelector("#NavBarContent").classList.add("left-[-270px]");  
     }
     else
     { 
-        document.querySelector("#NavBarContent").classList.remove("left-[-254px]");
+        document.querySelector("#NavBarContent").classList.remove("left-[-270px]");
     }
 };
 
@@ -22,13 +22,13 @@ const openNavbar = () => {
         if(isOpen)
         {
             document.querySelector("#NavBarContent").classList.add("left-[0px]");
-            document.querySelector("#NavBarContent").classList.remove("left-[-254px]");
+            document.querySelector("#NavBarContent").classList.remove("left-[-270px]");
             document.querySelector("#buttonMenu").src = document.querySelector("#buttonMenu").src.replace("Open","Close");
         }
         else
         {
             document.querySelector("#buttonMenu").src = document.querySelector("#buttonMenu").src.replace("Close","Open");
-            document.querySelector("#NavBarContent").classList.add("left-[-254px]");
+            document.querySelector("#NavBarContent").classList.add("left-[-270px]");
             document.querySelector("#NavBarContent").classList.remove("left-[0px]");
         }
     }
@@ -47,15 +47,7 @@ function getLastElement(idenfity){
    var elements = document.querySelectorAll(idenfity);
 
    return elements[elements.length-1];
-}
-
-function showLoader(){
-    document.querySelector("#loader").classList.remove("hidden");;
-}
-
-function hideLoader(){
-    document.querySelector("#loader").classList.add("hidden");;
-}
+} 
 
 function showError(message)
 {
@@ -76,32 +68,6 @@ function showError(message)
     temp.innerHTML = alertString;
 
     document.querySelector("body main").appendChild(temp.childNodes[0]); 
-}
-
-function seePasswordInput(input){
-    let button = event.target;
-
-    while(button?.type != "button"){
-        button = button.parentNode;
-    } 
-
-    button.classList.add("hidden");
-    button.nextElementSibling.classList.remove("hidden");
-    
-    input.type = input.type == "password" ? "text" : "password";
-}
-
-function hidePasswordInput(input){
-    let button = event.target;
-
-    while(button?.type != "button"){
-        button = button.parentNode;
-    } 
-
-    button.classList.add("hidden");
-    button.previousElementSibling.classList.remove("hidden");
-    
-    input.type = input.type == "password" ? "text" : "password";
 }
 
 function reformatDate(datetime,format = "d/m/y"){ 

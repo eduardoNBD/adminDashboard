@@ -3,6 +3,7 @@
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
+![Dashboard](./img/dashboard.png)
 ## Descripción
 
 AdminDashboard es un panel de administración utilizado para el registro de citas, venta de servicios y productos, junto con su registro de ventas y generación de recibos en PDF. También incluye el registro de usuarios y manejo de roles.
@@ -63,7 +64,22 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
     DB_PASSWORD=tu_contraseña
     ```
 
-5. **Migrar la base de datos:**
+5. **Configurar smtp:**
+
+    En el archivo `.env`, configura tus credenciales de tu servidor smtp para poder recuperar contraseñas:
+
+    ```dotenv
+    MAIL_MAILER=smtp
+    MAIL_HOST=mailpit
+    MAIL_PORT=1025
+    MAIL_USERNAME=null
+    MAIL_PASSWORD=null
+    MAIL_ENCRYPTION=null
+    MAIL_FROM_ADDRESS="hello@example.com"
+    MAIL_FROM_NAME="${APP_NAME}"
+    ```
+
+6. **Migrar la base de datos:**
 
     Ejecuta las migraciones para crear las tablas necesarias y el usuario por default (usuario: admin, password: administrator):
 
@@ -71,7 +87,7 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
     composer run migrate-user
     ```
 
-6. **Instalar dependencias de JavaScript:**
+7. **Instalar dependencias de JavaScript:**
 
     Asegúrate de tener [Node.js](https://nodejs.org/) y [npm](https://www.npmjs.com/) instalados y ejecuta:
 
@@ -79,7 +95,7 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
     npm install
     ```
 
-7. **Compilar Tailwind CSS:**
+8. **Compilar Tailwind CSS:**
 
     Para generar el archivo de salida de Tailwind CSS, ejecuta:
 
@@ -87,7 +103,7 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
     npm run compileTailwind
     ```
 
-8. **Iniciar el servidor de desarrollo:**
+9. **Iniciar el servidor de desarrollo:**
 
     Finalmente, inicia el servidor de desarrollo de Laravel:
 

@@ -21,7 +21,7 @@
                     <button class="bg-violet-600 w-full mt-8 rounded-md p-2 text-[#ebf3ffe6]" type="submit">
                         Iniciar Sesión
                     </button>
-                </form>
+                </form> 
                 <label id="errorMessage" class="text-red-600 text-center block"></label>
                 <a href="{{$menu['baseURL']."/recovery"}}" class="float-end mt-2 font-[500] text-[#666666]">¿Olvidaste tu contraseña?</a>
             </div>
@@ -31,6 +31,7 @@
 @section('scripts')
      <script>
         function Login(){
+            showLoader();
             event.preventDefault();
 
             const data = new FormData(event.target); 
@@ -43,6 +44,7 @@
             })
             .then((res) => res.json())
             .then((json) => {
+                hideLoader();
                 if(json.status){
                     location.href = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
                 }
@@ -54,7 +56,7 @@
                     }, "5000");
                 }
             })
-            .catch((err) => console.error("error:", err)); 
+            .catch((err) => { hideLoader(); console.error("error:", err)}); 
         }
      </script>
 @stop

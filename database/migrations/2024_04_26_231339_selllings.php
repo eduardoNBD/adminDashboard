@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sellings', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->double('subtotal');
-            $table->string('notes');
+            $table->string('notes')->nullable();
             $table->json('detail');
             $table->bigInteger('no'); 
             $table->foreignUuid('appointment')->nullable()->references('id')->on('appointments')->onDelete('cascade');

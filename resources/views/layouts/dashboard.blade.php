@@ -39,7 +39,7 @@
                 </div>
             </div> 
             <div class="flex bg-[#ededed] border-t-[1px] border-gray-200 ">
-                <div class="md:flex md:w-64 md:flex-col z-30 shadow-md transition-all ease-in-out delay-150 fixed" id="NavBarContent">
+                <div class="w-[270px] md:w-64 z-30 shadow-md transition-all ease-in-out delay-150 fixed " id="NavBarContent">
                     <div class="h-screen flex flex-col flex-grow pt-5 overflow-y-auto bg-white mt-20">
                         <div class="flex flex-col flex-1 px-1">
                             <div class="space-y-4"> 
@@ -67,7 +67,7 @@
                     </div>
                 </div> 
                 <div class="flex flex-col flex-1 mt-20"> 
-                    <main class="p-2 ml-[0px] md:ml-[254px]">  
+                    <main class="p-2 ml-[0px] md:ml-[254px] h-[calc(100vh-81px)] overflow-auto">  
                         @yield('content')
                     </main>
                 </div>
@@ -77,6 +77,7 @@
             <div class="rounded-full h-20 w-20 bg-violet-800 animate-ping"></div>
         </div>
         <script src="{{ asset('../resources/js/app.js') }}"></script> 
+        <script src="{{ asset('../resources/js/loader.js') }}"></script> 
         <script>
             const baseURLDashboard = "{{$menu['baseURL'].$menu['route']['dashboard']['root']}}";
          </script>
