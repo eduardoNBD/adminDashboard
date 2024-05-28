@@ -3,17 +3,13 @@
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
  
-<img src="./img/home.png" alt="home" width="70%"/>
-<img src="./img/responsive.png" alt="home" width="30%" style="float:right"/>
+<img src="./img/home.png" alt="home" width="70%"/><img src="./img/responsive.png" alt="home" width="30%" style="float:right"/>
 
 ## Descripción
 
 AdminDashboard es un panel de administración adaptable a cualquier dispositivo, utilizado para el registro de citas, venta de servicios y productos, junto con su registro de ventas y generación de recibos en PDF. También incluye el registro de usuarios y manejo de roles.
 
-<img src="./img/logs.png" alt="home" width="33.33%" style="float:right"/>
-<img src="./img/calendar.png" alt="home" width="33.33%" style="float:right"/>
-<img src="./img/invoice.png" alt="home" width="33.33%" style="float:right"/>
-<div style="clear:both"></div>
+<img src="./img/logs.png" alt="home" width="33.33%" style="float:right"/><img src="./img/calendar.png" alt="home" width="33.33%" style="float:right"/><img src="./img/invoice.png" alt="home" width="33.33%" style="float:right"/><div style="clear:both"></div>
 
 ## Tecnologías Usadas
 
