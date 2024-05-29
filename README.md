@@ -3,7 +3,7 @@
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
  
-<img src="./img/home.png" alt="home" width="70%"/><img src="./img/responsive.png" alt="home" width="30%" style="float:right"/>
+<img src="./img/desktop.png" alt="home" width="50%"/><img src="./img/movil.png" alt="home" width="50%" style="float:right"/>
 
 ## Descripción
 
@@ -81,8 +81,18 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
     MAIL_FROM_ADDRESS="hello@example.com"
     MAIL_FROM_NAME="${APP_NAME}"
     ```
+6. **Ajustar los permisos del sistema de archivos:**
 
-6. **Migrar la base de datos:**
+    Asegúrate de que el servidor web tenga los permisos adecuados para escribir en las carpetas `storage` y `bootstrap/cache`:
+
+    ```bash
+    sudo chown -R www-data:www-data storage
+    sudo chmod -R 775 storage
+    sudo chown -R www-data:www-data bootstrap/cache
+    sudo chmod -R 775 bootstrap/cache
+    ```
+
+7. **Migrar la base de datos:**
 
     Ejecuta las migraciones para crear las tablas necesarias y el usuario por default (usuario: admin, password: administrator):
 
@@ -90,7 +100,7 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
     composer run migrate-user
     ```
 
-7. **Instalar dependencias de JavaScript:**
+8. **Instalar dependencias de JavaScript:**
 
     Asegúrate de tener [Node.js](https://nodejs.org/) y [npm](https://www.npmjs.com/) instalados y ejecuta:
 
@@ -98,7 +108,7 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
     npm install
     ```
 
-8. **Compilar Tailwind CSS:**
+9. **Compilar Tailwind CSS:**
 
     Para generar el archivo de salida de Tailwind CSS, ejecuta:
 
@@ -106,18 +116,6 @@ Sigue estos pasos para configurar y ejecutar el proyecto:
     npm run compileTailwind
     ```
 
-9. **Iniciar el servidor de desarrollo:**
-
-    Finalmente, inicia el servidor de desarrollo de Laravel:
-
-    ```bash
-    php artisan serve
-    ```
-
-    Tu aplicación debería estar corriendo en `http://localhost:8000`.
-
-## Uso
-
-Accede a `http://localhost:8000` en tu navegador para interactuar con el dashboard de administración. Desde aquí puedes gestionar citas, ventas de servicios y productos, generar recibos en PDF, y administrar usuarios y roles.
+ 
  
 
